@@ -212,7 +212,6 @@ class BaseDatosScript(private val vcontext: Context) {
 
              */
 
-
             //-------------------------------------------
 
             sql = "CREATE TABLE [Params] (" +
