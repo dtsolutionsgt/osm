@@ -1,16 +1,19 @@
 package com.dts.osm
 
+import android.R
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.widget.ImageView
+import android.widget.ListView
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import com.dts.base.clsClasses
+import com.dts.classes.clsEstadoObj
 import com.dts.classes.clsProdprecioObj
 import com.dts.classes.clsProductoObj
 import com.dts.classes.clsUsuarioObj
@@ -34,6 +37,7 @@ class Comunicacion : PBase() {
     var UsuarioObj: clsUsuarioObj? = null
     var ProductoObj: clsProductoObj? = null
     var ProdprecioObj: clsProdprecioObj? = null
+    var EstadoObj: clsEstadoObj? = null
 
     var updrem = ArrayList<String>()
     var updloc = ArrayList<String>()
@@ -58,29 +62,32 @@ class Comunicacion : PBase() {
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
             super.onCreate(savedInstanceState)
-            setContentView(R.layout.activity_comunicacion)
+            setContentView(R.layout.activity_list_item)
 
             super.initbase(savedInstanceState)
 
             onBackPressedDispatcher.addCallback(this,backPress)
 
+            /*
             lblstat = findViewById(R.id.textView10);lblstat?.text=""
             relcom = findViewById(R.id.relcom);
             pbar = findViewById(R.id.progressBar2);pbar?.visibility=View.INVISIBLE
             imgpend = findViewById(R.id.imageView29);imgpend?.isVisible=false
+
+             */
 
             http = HttpClient()
 
             UsuarioObj = clsUsuarioObj(this, Con!!, db!!)
             ProductoObj = clsProductoObj(this, Con!!, db!!)
             ProdprecioObj = clsProdprecioObj(this, Con!!, db!!)
+            //EstadoObj = clsEstadoObj(this, Con!!, db!!)
+
 
         } catch (e:Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+". "+e.message)
         }
     }
-
-
 
     //region Events
 
@@ -127,7 +134,7 @@ class Comunicacion : PBase() {
 
             http!!.processRequest(request, { cbUsuarios() })
         } catch (e: java.lang.Exception) {
-            finerr(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message);
+            finerr(object : Any() {}.javaClass.enclosingMethod.name ,e.message!!);
         }
     }
 
@@ -167,7 +174,7 @@ class Comunicacion : PBase() {
                 db!!.endTransaction()
             } catch (e: java.lang.Exception) {
                 db!!.endTransaction()
-                finerr(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
+                finerr(object : Any() {}.javaClass.enclosingMethod.name ,e.message!!)
                 return
             }
 
@@ -176,7 +183,7 @@ class Comunicacion : PBase() {
 
         } catch (e: java.lang.Exception) {
             var es=e.message
-            finerr(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message);
+            finerr(object : Any() {}.javaClass.enclosingMethod.name ,e.message!!);
         }
     }
 
@@ -193,7 +200,7 @@ class Comunicacion : PBase() {
 
             http!!.processRequest(request, { cbProductos() })
         } catch (e: java.lang.Exception) {
-            finerr(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message);
+            finerr(object : Any() {}.javaClass.enclosingMethod.name ,e.message!!);
         }
     }
 
@@ -235,7 +242,144 @@ class Comunicacion : PBase() {
                 db!!.endTransaction()
             } catch (e: java.lang.Exception) {
                 db!!.endTransaction()
-                finerr(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
+                finerr(object : Any() {}.javaClass.enclosingMethod.name,e.message!!)
+                return
+            }
+
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed({recPrecios()}, 200)
+
+        } catch (e: java.lang.Exception) {
+            var es=e.message
+            finerr(object : Any() {}.javaClass.enclosingMethod.name ,e.message!!);
+        }
+
+    }
+
+    fun recPrecios() {
+        try {
+            runOnUiThread {lblstat?.text = "Actualizando precios . . ."}
+
+            http?.url=gl?.urlbase+"api/Users/GetProductosPrecio?pEmpresa="+gl?.idemp!!
+
+            val request: Request = Request.Builder()
+                .url(http?.url!!).get()
+                .addHeader("accept", "*/*")
+                .build()
+
+            http!!.processRequest(request, { cbPrecios() })
+        } catch (e: java.lang.Exception) {
+            finerr(object : Any() {}.javaClass.enclosingMethod.name , e.message!!);
+        }
+    }
+
+    fun cbPrecios() {
+        var jss: ClassesAPI.clsAPIProdprecio? = null
+        var item: clsClasses.clsProdprecio
+
+        try {
+            try {
+                if (http!!.retcode!=1) {
+                    stoperr("Error: "+http!!.data);return
+                }
+
+                val parsedList =http?.splitJsonArray()
+                val RType = object : TypeToken<ClassesAPI.clsAPIProdprecio>() {}.type
+
+                db!!.beginTransaction()
+
+                db!!.execSQL("DELETE FROM Prodprecio");
+
+                for (pls in parsedList!!) {
+
+                    jss=gson.fromJson(pls, RType)
+                    item= clsClasses.clsProdprecio()
+
+                    item.codigo_precio = jss?.CODIGO_PRECIO!!
+                    item.codigo_producto = jss?.CODIGO_PRODUCTO!!
+                    item.nivel = jss?.NIVEL!!
+                    item.precio = jss?.PRECIO!!
+                    item.unidadmedida = jss?.UNIDADMEDIDA!!
+
+                    try {
+                        ProdprecioObj?.add(item)
+                    } catch (e: Exception) {
+                        throw Exception("  "+e.message+"\n"+ProdprecioObj?.addItemSql(item))
+                    }
+                }
+
+                db!!.setTransactionSuccessful()
+                db!!.endTransaction()
+            } catch (e: java.lang.Exception) {
+                db!!.endTransaction()
+                throw Exception( e.message)
+                return
+            }
+
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed({recEstados()}, 200)
+
+        } catch (e: java.lang.Exception) {
+            var es=e.message
+            finerr(object : Any() {}.javaClass.enclosingMethod.name , e.message!!);
+        }
+
+    }
+
+    fun recEstados() {
+        try {
+            runOnUiThread {lblstat?.text = "Actualizando estados . . ."}
+
+            http?.url=gl?.urlbase+"api/Users/Get_P_Ticket_Estado"
+
+            val request: Request = Request.Builder()
+                .url(http?.url!!).get()
+                .addHeader("accept", "*/*")
+                .build()
+
+            http!!.processRequest(request, { cbEstados() })
+        } catch (e: java.lang.Exception) {
+            finerr(object : Any() {}.javaClass.enclosingMethod.name , e.message!!);
+        }
+    }
+
+    fun cbEstados() {
+        var jss: ClassesAPI.clsAPIEstado? = null
+        var item: clsClasses.clsEstado
+
+        try {
+            try {
+                if (http!!.retcode!=1) {
+                    stoperr("Error: "+http!!.data);return
+                }
+
+                val parsedList =http?.splitJsonArray()
+                val RType = object : TypeToken<ClassesAPI.clsAPIEstado>() {}.type
+
+                db!!.beginTransaction()
+
+                db!!.execSQL("DELETE FROM Estado");
+
+                for (pls in parsedList!!) {
+
+                    jss=gson.fromJson(pls, RType)
+                    item= clsClasses.clsEstado()
+
+                    item.codigo_ticket_estado = jss?.CODIGO_TICKET_ESTADO!!
+                    item.nombre = jss?.Nombre!!
+
+                    try {
+                        EstadoObj?.add(item)
+                    } catch (e: Exception) {
+                        throw Exception("  "+e.message+"\n"+EstadoObj?.addItemSql(item))
+                    }
+                }
+
+                db!!.setTransactionSuccessful()
+                db!!.endTransaction()
+            } catch (e: java.lang.Exception) {
+                db!!.endTransaction()
+                throw Exception( e.message)
                 return
             }
 
@@ -245,7 +389,7 @@ class Comunicacion : PBase() {
             finok()
         } catch (e: java.lang.Exception) {
             var es=e.message
-            finerr(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message);
+            finerr(object : Any() {}.javaClass.enclosingMethod.name , e.message!!);
         }
 
     }
@@ -295,10 +439,12 @@ class Comunicacion : PBase() {
 
     }
 
-    fun finerr(msg: String) {
+    fun finerr(msg1: String,msg2: String) {
         idle=true
-        lblstat?.text="Sincronización termino con error:\n"+msg!!
+        val ss="Sincronización termino con error: \n"+msg1+"\n"+msg2
+        runOnUiThread { lblstat?.text = ss }
         pbar?.visibility=View.INVISIBLE
+
 
         //app?.params()
         //envioConfirmacion(false)
@@ -336,6 +482,7 @@ class Comunicacion : PBase() {
             UsuarioObj!!.reconnect(Con!!, db!!)
             ProdprecioObj!!.reconnect(Con!!, db!!)
             ProductoObj!!.reconnect(Con!!, db!!)
+            EstadoObj!!.reconnect(Con!!, db!!)
 
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)

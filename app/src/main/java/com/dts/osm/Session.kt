@@ -515,7 +515,63 @@ class Session : PBase() {
             db?.execSQL(sql);
         } catch (e: Exception) {}
 
+        try {
+            sql="CREATE TABLE [Estado] ("+
+                    "codigo_ticket_estado INTEGER NOT NULL,"+
+                    "nombre TEXT NOT NULL,"+
+                    "PRIMARY KEY ([codigo_ticket_estado])"+
+                    ");";
+            db?.execSQL(sql);
+        } catch (e: Exception) {}
 
+        try {
+            sql="CREATE TABLE [Tiposervicios] ("+
+                    "codigo_tipo_estado INTEGER NOT NULL,"+
+                    "codigo_tipo_departamento INTEGER NOT NULL,"+
+                    "nombre TEXT NOT NULL,"+
+                    "PRIMARY KEY ([codigo_tipo_estado])"+
+                    ");";
+            db?.execSQL(sql);
+        } catch (e: Exception) {}
+
+        try {
+            sql="CREATE TABLE [Cliente] ("+
+                    "Codigo_Cliente INTEGER NOT NULL,"+
+                    "Telefono TEXT NOT NULL,"+
+                    "Direccion TEXT NOT NULL,"+
+                    "PRIMARY KEY ([Codigo_Cliente])"+
+                    ");";
+            db?.execSQL(sql);
+        } catch (e: Exception) {}
+
+        try {
+            sql="CREATE TABLE [Clientecontacto] ("+
+                    "Codigo_Cliente_Contacto INTEGER NOT NULL,"+
+                    "Codigo_Cliente INTEGER NOT NULL,"+
+                    "Nombre TEXT NOT NULL,"+
+                    "Telefono TEXT NOT NULL,"+
+                    "Correo TEXT NOT NULL,"+
+                    "Direccion TEXT NOT NULL,"+
+                    "PRIMARY KEY ([Codigo_Cliente_Contacto])"+
+                    ");";
+            db?.execSQL(sql);
+
+            sql="CREATE INDEX Clientecontacto_idx1 ON Clientecontacto(Codigo_Cliente)";db?.execSQL(sql)
+        } catch (e: Exception) {}
+
+        try {
+            sql="CREATE TABLE [Clientedir] ("+
+                    "Codigo_Direccion INTEGER NOT NULL,"+
+                    "Codigo_Cliente INTEGER NOT NULL,"+
+                    "Direccion TEXT NOT NULL,"+
+                    "Telefono TEXT NOT NULL,"+
+                    "Referencia TEXT NOT NULL,"+
+                    "PRIMARY KEY ([Codigo_Direccion])"+
+                    ");";
+            db?.execSQL(sql);
+
+            sql="CREATE INDEX Clientedir_idx1 ON Clientedir(Codigo_Cliente)";db?.execSQL(sql)
+        } catch (e: Exception) {}
 
 
 
@@ -528,7 +584,6 @@ class Session : PBase() {
         } catch (e: Exception) {}
 
     }
-
 
     //endregion
 

@@ -1,8 +1,39 @@
 package com.dts.base
 
+import kotlinx.serialization.Serializable
+
 
 class clsClasses {
 
+
+    data class clsCliente (
+        var Codigo_Cliente : Int = 0,
+        var Telefono : String = "",
+        var Direccion : String = "",
+    )
+
+    data class clsClienteContacto(
+        var CODIGO_CLIENTE_CONTACTO : Int = 0,
+        var CODIGO_CLIENTE : String = "",
+        var NOMBRE : String = "",
+        var TELEFONO : String = "",
+        var CORREO : String = "",
+        var DIRECCION : String = "",
+        var Empresa : Int = 0,
+    )
+
+    data class clsClienteDir(
+        var CODIGO_DIRECCION : Int = 0,
+        var CODIGO_CLIENTE : Int = 0,
+        var DIRECCION : String = "",
+        var TELEFONO : String = "",
+        var REFERENCIA : String = "",
+    )
+
+    data class clsEstado(
+        var codigo_ticket_estado : Int = 0,
+        var nombre : String = "",
+    )
 
     data class clsProdprecio (
         var codigo_precio : Int = 0,
@@ -17,6 +48,21 @@ class clsClasses {
         var desclarga : String = "",
         var codigo_tipo : String = "",
     )
+
+    data class clsUsuario (
+        var id : Int = 0,
+        var nombre : String = "",
+        var pin :  Int = 0,
+        var rol : String = "",
+    )
+
+    data class clsTipoServicio(
+        var CODIGO_TIPO_SERVICIO_DEP : Int = 0,
+        var CODIGO_TICKET_DEPARTAMENTO : Int = 0,
+        var Nombre : String = "",
+    )
+
+    // ----------------------------------------------------------
 
     data class clsLocItem(
         var id: Int = 0,
@@ -41,12 +87,7 @@ class clsClasses {
         var valor : String = "",
     )
 
-    data class clsUsuario (
-        var id : Int = 0,
-        var nombre : String = "",
-        var pin :  Int = 0,
-        var rol : String = "",
-    )
+
 
 
 

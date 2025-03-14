@@ -2,6 +2,7 @@ package com.dts.osm
 
 import android.os.Bundle
 import android.view.View
+import com.dts.classes.RecyclerItemClickListener
 
 class Productos : PBase() {
 
@@ -22,6 +23,7 @@ class Productos : PBase() {
     fun doExit(view: View) {
         finish()
     }
+
 
     //endregion
 
