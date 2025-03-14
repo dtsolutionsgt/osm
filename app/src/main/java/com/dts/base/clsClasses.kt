@@ -4,6 +4,55 @@ package com.dts.base
 class clsClasses {
 
 
+    data class clsProdprecio (
+        var codigo_precio : Int = 0,
+        var codigo_producto : Int = 0,
+        var nivel : Int = 0,
+        var precio : Int = 0,
+        var unidadmedida : String = "",
+    )
+
+    data class clsProducto (
+        var codigo_producto : Int = 0,
+        var desclarga : String = "",
+        var codigo_tipo : String = "",
+    )
+
+    data class clsLocItem(
+        var id: Int = 0,
+        var fecha: Long = 0L,
+        var longit: Double = 0.0,
+        var latit: Double = 0.0,
+        var bandera: Long = 0L,
+    )
+
+    data class clsParam (
+        var codigo : Int = 0,
+        var empresa : Int = 0,
+        var id : Int = 0,
+        var userid : Int = 0,
+        var nombre : String = "",
+        var valor : String = "",
+    )
+
+    // 0 - idempresa, 1 - idusuario, 2 - Nombre Empresa, 3 - modo aplicacion
+    data class clsSavepos (
+        var id : Int = 0,
+        var valor : String = "",
+    )
+
+    data class clsUsuario (
+        var id : Int = 0,
+        var nombre : String = "",
+        var pin :  Int = 0,
+        var rol : String = "",
+    )
+
+
+
+
+    // -----------------------------------
+
     data class clsEnvioimagen (
         var id : String = "",
         var tipo : Int = 0,
@@ -19,13 +68,7 @@ class clsClasses {
         val nombre: String
     )
 
-    data class clsLocItem(
-        var id: Int = 0,
-        var fecha: Long = 0L,
-        var longit: Double = 0.0,
-        var latit: Double = 0.0,
-        var bandera: Long = 0L,
-    )
+
 
     data class clsCoordItem(
         var id: Int = 0,
@@ -125,20 +168,7 @@ class clsClasses {
         var idestado : Int = 0,
     )
 
-    data class clsParam (
-        var codigo : Int = 0,
-        var empresa : Int = 0,
-        var id : Int = 0,
-        var userid : Int = 0,
-        var nombre : String = "",
-        var valor : String = "",
-    )
 
-    // 0 - idempresa, 1 - idusuario, 2 - Nombre Empresa, 3 - modo aplicacion
-    data class clsSavepos (
-        var id : Int = 0,
-        var valor : String = "",
-    )
 
     data class clsSyntaxlog (
         var id : Int = 0,
@@ -175,16 +205,7 @@ class clsClasses {
         var cmd : String = "",
     )
 
-    // NivelLicencia
-    // 1 - admin, 2 - tecnico, 3 - supervisor tecnicos, 4 - gerente tecnicos
-    // 5 - venderor, 6 - supervisor vendedores, 7 - gerente vendedores
-    data class clsUsuario (
-        var id : Int = 0,
-        var nombre : String = "",
-        var clave : String = "",
-        var activo : Int = 0,
-        var rol : Int = 0,
-    )
+
 
     data class clsUsuarioMarker (
         var id : Int = 0,

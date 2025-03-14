@@ -1,9 +1,8 @@
-package com.dts.mant
+package com.dts.osm
 
 import android.database.Cursor
 import android.graphics.Color
 import android.graphics.Typeface
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.DisplayMetrics
@@ -18,8 +17,6 @@ import android.widget.Spinner
 import android.widget.TextView
 import com.dts.ladapt.ListAdaptTablas
 import com.dts.ladapt.ListAdaptTablas2
-import com.dts.osm.PBase
-import com.dts.osm.R
 
 class Tablas : PBase() {
 

@@ -5,10 +5,10 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.dts.base.BaseDatos
 import com.dts.base.clsClasses
-import com.dts.base.clsClasses.clsUsuario
+import com.dts.base.clsClasses.clsProdprecio
 
 
-class clsUsuarioObj {
+class clsProdprecioObj {
 
     var count=0
 
@@ -19,9 +19,9 @@ class clsUsuarioObj {
     var upd: BaseDatos.Update? = null
     val clsCls = clsClasses()
 
-    val sel ="SELECT * FROM Usuario"
+    val sel ="SELECT * FROM Prodprecio"
     var sql: String? = null
-    var items = ArrayList<clsUsuario>()
+    var items = ArrayList<clsProdprecio>()
 
     constructor(context: Context, dbconnection: BaseDatos, dbase: SQLiteDatabase) {
         cont = context
@@ -39,15 +39,15 @@ class clsUsuarioObj {
         db = dbase
     }
 
-    fun add(item: clsUsuario?) {
+    fun add(item: clsProdprecio?) {
         addItem(item!!)
     }
 
-    fun update(item: clsUsuario?) {
+    fun update(item: clsProdprecio?) {
         updateItem(item!!)
     }
 
-    fun delete(item: clsUsuario?) {
+    fun delete(item: clsProdprecio?) {
         deleteItem(item!!)
     }
 
@@ -67,53 +67,57 @@ class clsUsuarioObj {
         fillItems(sq)
     }
 
-    fun first(): clsUsuario?  {
+    fun first(): clsProdprecio?  {
         return items[0]
     }
 
+
     //region Private
 
-    private fun addItem(item: clsUsuario) {
-        ins!!.init("Usuario")
-        ins!!.add("id", item.id)
-        ins!!.add("nombre", item.nombre)
-        ins!!.add("pin", item.pin)
-        ins!!.add("rol", item.rol)
+    private fun addItem(item: clsProdprecio) {
+        ins!!.init("Prodprecio")
+        ins!!.add("CODIGO_PRECIO", item.codigo_precio)
+        ins!!.add("CODIGO_PRODUCTO", item.codigo_producto)
+        ins!!.add("NIVEL", item.nivel)
+        ins!!.add("PRECIO", item.precio)
+        ins!!.add("UNIDADMEDIDA", item.unidadmedida)
         db!!.execSQL(ins!!.sql())
     }
 
-    private fun updateItem(item: clsUsuario) {
-        upd!!.init("Usuario")
-        upd!!.add("nombre", item.nombre)
-        upd!!.add("pin", item.pin)
-        upd!!.add("rol", item.rol)
-        upd!!.Where("(id=" + item.id + ")")
+    private fun updateItem(item: clsProdprecio) {
+        upd!!.init("Prodprecio")
+        upd!!.add("CODIGO_PRODUCTO", item.codigo_producto)
+        upd!!.add("NIVEL", item.nivel)
+        upd!!.add("PRECIO", item.precio)
+        upd!!.add("UNIDADMEDIDA", item.unidadmedida)
+        upd!!.Where("(CODIGO_PRECIO=" + item.codigo_precio + ")")
         db!!.execSQL(upd!!.sql())
     }
 
-    private fun deleteItem(item: clsUsuario) {
-        sql = "DELETE FROM Usuario WHERE (id=" + item.id + ")"
+    private fun deleteItem(item: clsProdprecio) {
+        sql = "DELETE FROM Prodprecio WHERE (CODIGO_PRECIO=" + item.codigo_precio + ")"
         db!!.execSQL(sql)
     }
 
     private fun deleteItem(id: Int) {
-        sql = "DELETE FROM Usuario WHERE id=$id"
+        sql = "DELETE FROM Prodprecio WHERE id=$id"
         db!!.execSQL(sql)
     }
 
     private fun fillItems(sq: String) {
         val dt: Cursor
-        var item: clsUsuario
+        var item: clsProdprecio
         items.clear()
         dt = Con!!.OpenDT(sq)
         count = dt.count
         if (dt.count > 0) dt.moveToFirst()
         while (!dt.isAfterLast) {
-            item = clsClasses.clsUsuario()
-            item.id = dt.getInt(0)
-            item.nombre = dt.getString(1)
-            item.pin = dt.getInt(2)
-            item.rol = dt.getString(3)
+            item = clsProdprecio()
+            item.codigo_precio = dt.getInt(0)
+            item.codigo_producto = dt.getInt(1)
+            item.nivel = dt.getInt(2)
+            item.precio = dt.getInt(3)
+            item.unidadmedida = dt.getString(4)
             items.add(item)
             dt.moveToNext()
         }
@@ -134,21 +138,23 @@ class clsUsuarioObj {
         return nid
     }
 
-    fun addItemSql(item: clsUsuario): String? {
-        ins!!.init("Usuario")
-        ins!!.add("id", item.id)
-        ins!!.add("nombre", item.nombre)
-        ins!!.add("pin", item.pin)
-        ins!!.add("rol", item.rol)
+    fun addItemSql(item: clsProdprecio): String? {
+        ins!!.init("Prodprecio")
+        ins!!.add("CODIGO_PRECIO", item.codigo_precio)
+        ins!!.add("CODIGO_PRODUCTO", item.codigo_producto)
+        ins!!.add("NIVEL", item.nivel)
+        ins!!.add("PRECIO", item.precio)
+        ins!!.add("UNIDADMEDIDA", item.unidadmedida)
         return ins!!.sql()
     }
 
-    fun updateItemSql(item: clsUsuario): String? {
-        upd!!.init("Usuario")
-        upd!!.add("nombre", item.nombre)
-        upd!!.add("pin", item.pin)
-        upd!!.add("rol", item.rol)
-        upd!!.Where("(id=" + item.id + ")")
+    fun updateItemSql(item: clsProdprecio): String? {
+        upd!!.init("Prodprecio")
+        upd!!.add("CODIGO_PRODUCTO", item.codigo_producto)
+        upd!!.add("NIVEL", item.nivel)
+        upd!!.add("PRECIO", item.precio)
+        upd!!.add("UNIDADMEDIDA", item.unidadmedida)
+        upd!!.Where("(CODIGO_PRECIO=" + item.codigo_precio + ")")
         return upd!!.sql()
     }
 

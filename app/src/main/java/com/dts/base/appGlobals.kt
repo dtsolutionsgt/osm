@@ -21,6 +21,7 @@ class appGlobals : Application() {
     var gbool=false
     var fbkey=""
 
+    var idemp=0
     var iduser=0
     var idrol=0
     var idorden=0
@@ -59,6 +60,8 @@ class appGlobals : Application() {
 
     fun saveInstance(savedInstanceState: Bundle) {
         try {
+
+            savedInstanceState.putInt("idemp", idemp)
             savedInstanceState.putInt("gint", gint)
             savedInstanceState.putInt("iduser", iduser)
             savedInstanceState.putInt("idorden", idorden)
@@ -94,8 +97,9 @@ class appGlobals : Application() {
 
     fun restoreInstance(savedInstanceState: Bundle) {
         try {
+            idemp = savedInstanceState.getInt("idemp")
             gint = savedInstanceState.getInt("gint")
-             iduser = savedInstanceState.getInt("iduser")
+            iduser = savedInstanceState.getInt("iduser")
             idorden = savedInstanceState.getInt("idorden")
             idordfoto = savedInstanceState.getInt("idordfoto")
             modoapp = savedInstanceState.getInt("modoapp")

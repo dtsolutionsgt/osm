@@ -6,14 +6,9 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.net.Uri
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
-import android.os.Handler
-import android.os.Looper
 import android.os.StrictMode
-import android.provider.Settings
 import android.text.InputType
 import android.view.View
 import android.widget.EditText
@@ -24,7 +19,6 @@ import com.dts.base.clsClasses
 import com.dts.classes.clsSaveposObj
 import com.dts.classes.clsUsuarioObj
 import com.dts.classes.extListDlg
-import com.dts.mant.Tablas
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.IOException
@@ -80,16 +74,11 @@ class Session : PBase() {
     //region Events
 
     fun doLogin(view: View) {
-        /*
-        if (gl?.idemp==0) {
-            toastlong("La aplicacion no está registrada");ingresaEmpresa();return;
-        }
-        */
-
         try {
-            if (gl?.iduser!!>0) {
-                UsuarioObj?.fill("WHERE (id="+gl?.iduser!!+")")
-                var rol=UsuarioObj?.first()?.rol
+            //if (gl?.iduser!!>0) {
+                //UsuarioObj?.fill("WHERE (id="+gl?.iduser!!+")")
+                //var rol=UsuarioObj?.first()?.rol
+                var rol=1;
                 gl?.idrol=rol!!
 
                 /*
@@ -107,10 +96,11 @@ class Session : PBase() {
                  */
 
                 if (rol in vmode) gl?.modoapp=1 else gl?.modoapp=0
+                startActivity(Intent(this,Lista::class.java))
 
-            } else {
-                msgbox("Falta seleccionar un usuario.")
-            }
+            //} else {
+            //    msgbox("Falta seleccionar un usuario.")
+            //}
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
@@ -140,7 +130,7 @@ class Session : PBase() {
 
     fun doUser(view: View) {
         try {
-            //startActivity(Intent(this,UsuarioLista::class.java))
+            startActivity(Intent(this,Usuarios::class.java))
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
@@ -163,6 +153,8 @@ class Session : PBase() {
         var rol=0
 
         try {
+            gl?.idemp=44
+
             gl?.iduser=0;gl?.nuser="Sin usuario"
 
             val SaveposObj = clsSaveposObj(this, Con!!, db!!)
@@ -178,8 +170,8 @@ class Session : PBase() {
                 UsuarioObj.fill("WHERE (id="+gl?.iduser+")")
 
                 try {
-                    gl?.nuser=UsuarioObj?.first()?.nombre.toString()
-                    gl?.idrol=UsuarioObj?.first()?.rol!!
+                    //gl?.nuser=UsuarioObj?.first()?.nombre.toString()
+                    //gl?.idrol=UsuarioObj?.first()?.rol!!
                     rol=gl?.idrol!!
                 } catch (e: Exception) {
                     gl?.iduser=0;gl?.nuser="Sin usuario";rol=0
@@ -383,7 +375,7 @@ class Session : PBase() {
             when (menuidx) {
                 1 -> {
                     gl?.com_pend=false
-                    //startActivity(Intent(this,Comunicacion::class.java))
+                    startActivity(Intent(this,Comunicacion::class.java))
                 }
                 2 -> { showSupportMenu() }
                 3 -> {
@@ -480,6 +472,50 @@ class Session : PBase() {
     //region Aux
 
     fun scripttables() {
+
+        try {
+            sql="CREATE TABLE [Usuario] ("+
+                    "id INTEGER NOT NULL,"+
+                    "nombre TEXT NOT NULL,"+
+                    "pin INTEGER NOT NULL,"+
+                    "rol TEXT NOT NULL,"+
+                    "PRIMARY KEY ([id])"+
+                    ");";
+            db?.execSQL(sql);
+        } catch (e: Exception) {}
+
+        try {
+            sql = "CREATE TABLE [Savepos] (" +
+                    "id INTEGER NOT NULL," +
+                    "valor TEXT NOT NULL," +
+                    "PRIMARY KEY ([id])" +
+                    ");";
+            db?.execSQL(sql);
+        } catch (e: Exception) {}
+
+        try {
+            sql="CREATE TABLE [Producto] ("+
+                    "CODIGO_PRODUCTO INTEGER NOT NULL,"+
+                    "DESCLARGA TEXT NOT NULL,"+
+                    "CODIGO_TIPO TEXT NOT NULL,"+
+                    "PRIMARY KEY ([CODIGO_PRODUCTO])"+
+                    ");";
+            db?.execSQL(sql);
+        } catch (e: Exception) {}
+
+        try {
+            sql="CREATE TABLE [Prodprecio] ("+
+                    "CODIGO_PRECIO INTEGER NOT NULL,"+
+                    "CODIGO_PRODUCTO INTEGER NOT NULL,"+
+                    "NIVEL INTEGER NOT NULL,"+
+                    "PRECIO RERAL NOT NULL,"+
+                    "UNIDADMEDIDA TEXT NOT NULL,"+
+                    "PRIMARY KEY ([CODIGO_PRECIO])"+
+                    ");";
+            db?.execSQL(sql);
+        } catch (e: Exception) {}
+
+
 
 
 

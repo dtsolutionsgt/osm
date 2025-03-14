@@ -22,6 +22,43 @@ class BaseDatosScript(private val vcontext: Context) {
 
         try {
 
+            sql="CREATE TABLE [Prodprecio] ("+
+                    "CODIGO_PRECIO INTEGER NOT NULL,"+
+                    "CODIGO_PRODUCTO INTEGER NOT NULL,"+
+                    "NIVEL INTEGER NOT NULL,"+
+                    "PRECIO RERAL NOT NULL,"+
+                    "UNIDADMEDIDA TEXT NOT NULL,"+
+                    "PRIMARY KEY ([CODIGO_PRECIO])"+
+                    ");";
+            db?.execSQL(sql);
+
+            sql="CREATE TABLE [Producto] ("+
+                    "CODIGO_PRODUCTO INTEGER NOT NULL,"+
+                    "DESCLARGA TEXT NOT NULL,"+
+                    "CODIGO_TIPO TEXT NOT NULL,"+
+                    "PRIMARY KEY ([CODIGO_PRODUCTO])"+
+                    ");";
+            db?.execSQL(sql);
+
+            sql = "CREATE TABLE [Savepos] (" +
+                    "id INTEGER NOT NULL," +
+                    "valor TEXT NOT NULL," +
+                    "PRIMARY KEY ([id])" +
+                    ");";
+            db.execSQL(sql);
+
+
+            sql="CREATE TABLE [Usuario] ("+
+                    "id INTEGER NOT NULL,"+
+                    "nombre TEXT NOT NULL,"+
+                    "pin INTEGER NOT NULL,"+
+                    "rol TEXT NOT NULL,"+
+                    "PRIMARY KEY ([id])"+
+                    ");";
+            db?.execSQL(sql);
+
+
+
             /*
 
             sql = "CREATE TABLE [Envioimagen] (" +
@@ -150,12 +187,6 @@ class BaseDatosScript(private val vcontext: Context) {
             db?.execSQL(sql);
 
 
-            sql = "CREATE TABLE [Savepos] (" +
-                    "id INTEGER NOT NULL," +
-                    "valor TEXT NOT NULL," +
-                    "PRIMARY KEY ([id])" +
-                    ");";
-            db.execSQL(sql);
 
 
             sql="CREATE TABLE [Syntaxlog] ("+

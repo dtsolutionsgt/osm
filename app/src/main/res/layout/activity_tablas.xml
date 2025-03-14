@@ -4,7 +4,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/color_light"
-        tools:context="com.dts.mant.Tablas">
+        tools:context=".Tablas">
 
         <RelativeLayout
             android:id="@+id/relRoad"

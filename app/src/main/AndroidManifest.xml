@@ -36,12 +36,7 @@
         android:theme="@style/Theme.OSM"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-        <activity
-            android:name="com.dts.mant.Tablas"
-            android:exported="false" />
-        <activity
-            android:name=".Session"
-            android:exported="false" />
+
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -65,6 +60,34 @@
         <activity
             android:name=".PBase"
             android:exported="false" />
+        <activity
+            android:name=".Lista"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".Tablas"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".Session"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".Usuarios"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".Productos"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".Comunicacion"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".InvLista"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysHidden" />
     </application>
 
 </manifest>
