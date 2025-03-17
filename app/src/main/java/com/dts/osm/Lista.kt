@@ -24,7 +24,8 @@ class Lista : PBase() {
 
     fun doInventario(view: View) {
         try {
-            startActivity(Intent(this,InvLista::class.java))
+            //startActivity(Intent(this,InvLista::class.java))
+            startActivity(Intent(this,UsuariosPrueba::class.java))
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
@@ -32,7 +33,7 @@ class Lista : PBase() {
 
     fun doCom(view: View) {
         try {
-            startActivity(Intent(this,Comunicacion::class.java))
+            startActivity(Intent(this,Com::class.java))
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }

@@ -78,7 +78,7 @@ class Session : PBase() {
             //if (gl?.iduser!!>0) {
                 //UsuarioObj?.fill("WHERE (id="+gl?.iduser!!+")")
                 //var rol=UsuarioObj?.first()?.rol
-                var rol=1;
+                var rol="TEC";
                 gl?.idrol=rol!!
 
                 /*
@@ -95,7 +95,7 @@ class Session : PBase() {
 
                  */
 
-                if (rol in vmode) gl?.modoapp=1 else gl?.modoapp=0
+                //if (rol in vmode) gl?.modoapp=1 else gl?.modoapp=0
                 startActivity(Intent(this,Lista::class.java))
 
             //} else {
@@ -150,7 +150,7 @@ class Session : PBase() {
     //region Main
 
     fun initSession() {
-        var rol=0
+        var rol=""
 
         try {
             gl?.idemp=44
@@ -170,11 +170,11 @@ class Session : PBase() {
                 UsuarioObj.fill("WHERE (id="+gl?.iduser+")")
 
                 try {
-                    //gl?.nuser=UsuarioObj?.first()?.nombre.toString()
-                    //gl?.idrol=UsuarioObj?.first()?.rol!!
+                    gl?.nuser=UsuarioObj?.first()?.nombre.toString()
+                    gl?.idrol=UsuarioObj?.first()?.rol!!
                     rol=gl?.idrol!!
                 } catch (e: Exception) {
-                    gl?.iduser=0;gl?.nuser="Sin usuario";rol=0
+                    gl?.iduser=0;gl?.nuser="Sin usuario";rol="TEC"
                     msgbox("Usuario no existe")
                 }
 
@@ -375,7 +375,7 @@ class Session : PBase() {
             when (menuidx) {
                 1 -> {
                     gl?.com_pend=false
-                    startActivity(Intent(this,Comunicacion::class.java))
+                    startActivity(Intent(this,Com::class.java))
                 }
                 2 -> { showSupportMenu() }
                 3 -> {
@@ -472,107 +472,6 @@ class Session : PBase() {
     //region Aux
 
     fun scripttables() {
-
-        try {
-            sql="CREATE TABLE [Usuario] ("+
-                    "id INTEGER NOT NULL,"+
-                    "nombre TEXT NOT NULL,"+
-                    "pin INTEGER NOT NULL,"+
-                    "rol TEXT NOT NULL,"+
-                    "PRIMARY KEY ([id])"+
-                    ");";
-            db?.execSQL(sql);
-        } catch (e: Exception) {}
-
-        try {
-            sql = "CREATE TABLE [Savepos] (" +
-                    "id INTEGER NOT NULL," +
-                    "valor TEXT NOT NULL," +
-                    "PRIMARY KEY ([id])" +
-                    ");";
-            db?.execSQL(sql);
-        } catch (e: Exception) {}
-
-        try {
-            sql="CREATE TABLE [Producto] ("+
-                    "CODIGO_PRODUCTO INTEGER NOT NULL,"+
-                    "DESCLARGA TEXT NOT NULL,"+
-                    "CODIGO_TIPO TEXT NOT NULL,"+
-                    "PRIMARY KEY ([CODIGO_PRODUCTO])"+
-                    ");";
-            db?.execSQL(sql);
-        } catch (e: Exception) {}
-
-        try {
-            sql="CREATE TABLE [Prodprecio] ("+
-                    "CODIGO_PRECIO INTEGER NOT NULL,"+
-                    "CODIGO_PRODUCTO INTEGER NOT NULL,"+
-                    "NIVEL INTEGER NOT NULL,"+
-                    "PRECIO RERAL NOT NULL,"+
-                    "UNIDADMEDIDA TEXT NOT NULL,"+
-                    "PRIMARY KEY ([CODIGO_PRECIO])"+
-                    ");";
-            db?.execSQL(sql);
-        } catch (e: Exception) {}
-
-        try {
-            sql="CREATE TABLE [Estado] ("+
-                    "codigo_ticket_estado INTEGER NOT NULL,"+
-                    "nombre TEXT NOT NULL,"+
-                    "PRIMARY KEY ([codigo_ticket_estado])"+
-                    ");";
-            db?.execSQL(sql);
-        } catch (e: Exception) {}
-
-        try {
-            sql="CREATE TABLE [Tiposervicios] ("+
-                    "codigo_tipo_estado INTEGER NOT NULL,"+
-                    "codigo_tipo_departamento INTEGER NOT NULL,"+
-                    "nombre TEXT NOT NULL,"+
-                    "PRIMARY KEY ([codigo_tipo_estado])"+
-                    ");";
-            db?.execSQL(sql);
-        } catch (e: Exception) {}
-
-        try {
-            sql="CREATE TABLE [Cliente] ("+
-                    "Codigo_Cliente INTEGER NOT NULL,"+
-                    "Telefono TEXT NOT NULL,"+
-                    "Direccion TEXT NOT NULL,"+
-                    "PRIMARY KEY ([Codigo_Cliente])"+
-                    ");";
-            db?.execSQL(sql);
-        } catch (e: Exception) {}
-
-        try {
-            sql="CREATE TABLE [Clientecontacto] ("+
-                    "Codigo_Cliente_Contacto INTEGER NOT NULL,"+
-                    "Codigo_Cliente INTEGER NOT NULL,"+
-                    "Nombre TEXT NOT NULL,"+
-                    "Telefono TEXT NOT NULL,"+
-                    "Correo TEXT NOT NULL,"+
-                    "Direccion TEXT NOT NULL,"+
-                    "PRIMARY KEY ([Codigo_Cliente_Contacto])"+
-                    ");";
-            db?.execSQL(sql);
-
-            sql="CREATE INDEX Clientecontacto_idx1 ON Clientecontacto(Codigo_Cliente)";db?.execSQL(sql)
-        } catch (e: Exception) {}
-
-        try {
-            sql="CREATE TABLE [Clientedir] ("+
-                    "Codigo_Direccion INTEGER NOT NULL,"+
-                    "Codigo_Cliente INTEGER NOT NULL,"+
-                    "Direccion TEXT NOT NULL,"+
-                    "Telefono TEXT NOT NULL,"+
-                    "Referencia TEXT NOT NULL,"+
-                    "PRIMARY KEY ([Codigo_Direccion])"+
-                    ");";
-            db?.execSQL(sql);
-
-            sql="CREATE INDEX Clientedir_idx1 ON Clientedir(Codigo_Cliente)";db?.execSQL(sql)
-        } catch (e: Exception) {}
-
 
 
         try {

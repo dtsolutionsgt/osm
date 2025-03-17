@@ -1,21 +1,23 @@
 package com.dts.osm
 
-import android.R
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.widget.ImageView
-import android.widget.ListView
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import com.dts.base.clsClasses
+import com.dts.classes.clsClienteObj
+import com.dts.classes.clsClientecontactoObj
+import com.dts.classes.clsClientedirObj
 import com.dts.classes.clsEstadoObj
 import com.dts.classes.clsProdprecioObj
 import com.dts.classes.clsProductoObj
+import com.dts.classes.clsTiposerviciosObj
 import com.dts.classes.clsUsuarioObj
 import com.dts.restapi.ClassesAPI
 import com.dts.restapi.HttpClient
@@ -23,8 +25,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okhttp3.Request
 
-
-class Comunicacion : PBase() {
+class Com : PBase() {
 
     var lblstat: TextView? = null
     var relcom: RelativeLayout? = null
@@ -38,6 +39,10 @@ class Comunicacion : PBase() {
     var ProductoObj: clsProductoObj? = null
     var ProdprecioObj: clsProdprecioObj? = null
     var EstadoObj: clsEstadoObj? = null
+    var TiposervicioObj: clsTiposerviciosObj? = null
+    var ClienteObj: clsClienteObj? = null
+    var ClientecontactoObj: clsClientecontactoObj? = null
+    var ClientedirObj: clsClientedirObj? = null
 
     var updrem = ArrayList<String>()
     var updloc = ArrayList<String>()
@@ -60,28 +65,30 @@ class Comunicacion : PBase() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         try {
             super.onCreate(savedInstanceState)
-            setContentView(R.layout.activity_list_item)
+            setContentView(R.layout.activity_com)
 
             super.initbase(savedInstanceState)
 
             onBackPressedDispatcher.addCallback(this,backPress)
 
-            /*
             lblstat = findViewById(R.id.textView10);lblstat?.text=""
             relcom = findViewById(R.id.relcom);
-            pbar = findViewById(R.id.progressBar2);pbar?.visibility=View.INVISIBLE
+            pbar = findViewById(R.id.progressBar2);pbar?.visibility= View.INVISIBLE
             imgpend = findViewById(R.id.imageView29);imgpend?.isVisible=false
-
-             */
 
             http = HttpClient()
 
             UsuarioObj = clsUsuarioObj(this, Con!!, db!!)
             ProductoObj = clsProductoObj(this, Con!!, db!!)
             ProdprecioObj = clsProdprecioObj(this, Con!!, db!!)
-            //EstadoObj = clsEstadoObj(this, Con!!, db!!)
+            EstadoObj = clsEstadoObj(this, Con!!, db!!)
+            TiposervicioObj = clsTiposerviciosObj(this, Con!!, db!!)
+            ClienteObj = clsClienteObj(this, Con!!, db!!)
+            ClientecontactoObj = clsClientecontactoObj(this, Con!!, db!!)
+            ClientedirObj = clsClientedirObj(this, Con!!, db!!)
 
 
         } catch (e:Exception) {
@@ -295,8 +302,8 @@ class Comunicacion : PBase() {
                     jss=gson.fromJson(pls, RType)
                     item= clsClasses.clsProdprecio()
 
-                    item.codigo_precio = jss?.CODIGO_PRECIO!!
-                    item.codigo_producto = jss?.CODIGO_PRODUCTO!!
+                    item.codigo_precio = jss?.CODIGO_PRODUCTO!!
+                    item.codigo_producto = jss?.CODIGO_PRECIO!!
                     item.nivel = jss?.NIVEL!!
                     item.precio = jss?.PRECIO!!
                     item.unidadmedida = jss?.UNIDADMEDIDA!!
@@ -383,6 +390,283 @@ class Comunicacion : PBase() {
                 return
             }
 
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed({recTipoServicio()}, 200)
+
+        } catch (e: java.lang.Exception) {
+            var es=e.message
+            finerr(object : Any() {}.javaClass.enclosingMethod.name , e.message!!);
+        }
+
+    }
+
+    fun recTipoServicio() {
+        try {
+            runOnUiThread {lblstat?.text = "Actualizando tipos . . ."}
+
+            http?.url=gl?.urlbase+"api/Users/Get_P_TipoServicioDepartamento"
+
+            val request: Request = Request.Builder()
+                .url(http?.url!!).get()
+                .addHeader("accept", "*/*")
+                .build()
+
+            http!!.processRequest(request, { cbTipoServicio() })
+        } catch (e: java.lang.Exception) {
+            finerr(object : Any() {}.javaClass.enclosingMethod.name , e.message!!);
+        }
+    }
+
+    fun cbTipoServicio() {
+        var jss: ClassesAPI.clsAPITipoServicio? = null
+        var item: clsClasses.clsTiposervicios
+
+        try {
+            try {
+                if (http!!.retcode!=1) {
+                    stoperr("Error: "+http!!.data);return
+                }
+
+                val parsedList =http?.splitJsonArray()
+                val RType = object : TypeToken<ClassesAPI.clsAPITipoServicio>() {}.type
+
+                db!!.beginTransaction()
+
+                db!!.execSQL("DELETE FROM Tiposervicios");
+
+                for (pls in parsedList!!) {
+
+                    jss=gson.fromJson(pls, RType)
+                    item= clsClasses.clsTiposervicios()
+
+                    item.codigo_tipo_departamento  = jss?.CODIGO_TIPO_SERVICIO_DEP!!
+                    item.codigo_ticket_departamento  = jss?.CODIGO_TICKET_DEPARTAMENTO!!
+                    item.nombre = jss?.Nombre!!
+
+                    try {
+                        TiposervicioObj?.add(item)
+                    } catch (e: Exception) {
+                        throw Exception("  "+e.message+"\n"+TiposervicioObj?.addItemSql(item))
+                    }
+                }
+
+                db!!.setTransactionSuccessful()
+                db!!.endTransaction()
+            } catch (e: java.lang.Exception) {
+                db!!.endTransaction()
+                throw Exception( e.message)
+                return
+            }
+
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed({recClientes()}, 200)
+
+        } catch (e: java.lang.Exception) {
+            var es=e.message
+            finerr(object : Any() {}.javaClass.enclosingMethod.name , e.message!!);
+        }
+
+    }
+
+    fun recClientes() {
+        try {
+            runOnUiThread {lblstat?.text = "Actualizando clientes . . ."}
+
+            http?.url=gl?.urlbase+"api/Users/GetPCliente?Empresa="+gl?.idemp!!
+
+            val request: Request = Request.Builder()
+                .url(http?.url!!).get()
+                .addHeader("accept", "*/*")
+                .build()
+
+            http!!.processRequest(request, { cbClientes() })
+        } catch (e: java.lang.Exception) {
+            finerr(object : Any() {}.javaClass.enclosingMethod.name , e.message!!);
+        }
+    }
+
+    fun cbClientes() {
+        var jss: ClassesAPI.clsAPICliente? = null
+        var item: clsClasses.clsCliente
+
+        try {
+            try {
+                if (http!!.retcode!=1) {
+                    stoperr("Error: "+http!!.data);return
+                }
+
+                val parsedList =http?.splitJsonArray()
+                val RType = object : TypeToken<ClassesAPI.clsAPICliente>() {}.type
+
+                db!!.beginTransaction()
+
+                db!!.execSQL("DELETE FROM Cliente");
+
+                for (pls in parsedList!!) {
+
+                    jss=gson.fromJson(pls, RType)
+                    item= clsClasses.clsCliente()
+
+                    item.codigo_cliente = jss?.Codigo_Cliente!!
+                    item.telefono = jss?.Telefono!!
+                    item.direccion = jss?.Direccion!!
+
+                    try {
+                        ClienteObj?.add(item)
+                    } catch (e: Exception) {
+                        throw Exception("  "+e.message+"\n"+ClienteObj?.addItemSql(item))
+                    }
+                }
+
+                db!!.setTransactionSuccessful()
+                db!!.endTransaction()
+            } catch (e: java.lang.Exception) {
+                db!!.endTransaction()
+                throw Exception( e.message)
+                return
+            }
+
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed({recClienteDir()}, 200)
+
+        } catch (e: java.lang.Exception) {
+            var es=e.message
+            finerr(object : Any() {}.javaClass.enclosingMethod.name , e.message!!);
+        }
+
+    }
+
+    fun recClienteDir() {
+        try {
+            runOnUiThread {lblstat?.text = "Actualizando direcciones . . ."}
+
+            http?.url=gl?.urlbase+"api/Users/GetClienteDir?pEmpresa="+gl?.idemp!!
+
+            val request: Request = Request.Builder()
+                .url(http?.url!!).get()
+                .addHeader("accept", "*/*")
+                .build()
+
+            http!!.processRequest(request, { cbClienteDir() })
+        } catch (e: java.lang.Exception) {
+            finerr(object : Any() {}.javaClass.enclosingMethod.name , e.message!!);
+        }
+    }
+
+    fun cbClienteDir() {
+        var jss: ClassesAPI.clsAPIClienteDir? = null
+        var item: clsClasses.clsClientedir
+
+        try {
+            try {
+                if (http!!.retcode!=1) {
+                    stoperr("Error: "+http!!.data);return
+                }
+
+                val parsedList =http?.splitJsonArray()
+                val RType = object : TypeToken<ClassesAPI.clsAPIClienteDir>() {}.type
+
+                db!!.beginTransaction()
+
+                db!!.execSQL("DELETE FROM Clientedir");
+
+                for (pls in parsedList!!) {
+
+                    jss=gson.fromJson(pls, RType)
+                    item= clsClasses.clsClientedir()
+
+                    item.codigo_direccion = jss?.CODIGO_DIRECCION!!
+                    item.codigo_cliente = jss?.CODIGO_CLIENTE!!
+                    item.direccion = jss?.DIRECCION!!
+                    item.telefono = jss?.TELEFONO!!
+                    item.referencia = jss?.REFERENCIA!!
+
+                    try {
+                        ClientedirObj?.add(item)
+                    } catch (e: Exception) {
+                        throw Exception("  "+e.message+"\n"+ClientedirObj?.addItemSql(item))
+                    }
+                }
+
+                db!!.setTransactionSuccessful()
+                db!!.endTransaction()
+            } catch (e: java.lang.Exception) {
+                db!!.endTransaction()
+                throw Exception( e.message)
+                return
+            }
+
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed({recClienteContacto()}, 200)
+
+        } catch (e: java.lang.Exception) {
+            var es=e.message
+            finerr(object : Any() {}.javaClass.enclosingMethod.name , e.message!!);
+        }
+
+    }
+
+    fun recClienteContacto() {
+        try {
+            runOnUiThread {lblstat?.text = "Actualizando contactos . . ."}
+
+            http?.url=gl?.urlbase+"api/Users/GetClienteContacto?pEmpresa="+gl?.idemp!!
+
+            val request: Request = Request.Builder()
+                .url(http?.url!!).get()
+                .addHeader("accept", "*/*")
+                .build()
+
+            http!!.processRequest(request, { cbClienteContacto() })
+        } catch (e: java.lang.Exception) {
+            finerr(object : Any() {}.javaClass.enclosingMethod.name , e.message!!);
+        }
+    }
+
+    fun cbClienteContacto() {
+        var jss: ClassesAPI.clsAPIClienteContacto? = null
+        var item: clsClasses.clsClientecontacto
+
+        try {
+            try {
+                if (http!!.retcode!=1) {
+                    stoperr("Error: "+http!!.data);return
+                }
+
+                val parsedList =http?.splitJsonArray()
+                val RType = object : TypeToken<ClassesAPI.clsAPIClienteContacto>() {}.type
+
+                db!!.beginTransaction()
+
+                db!!.execSQL("DELETE FROM Clientecontacto");
+
+                for (pls in parsedList!!) {
+
+                    jss=gson.fromJson(pls, RType)
+                    item= clsClasses.clsClientecontacto()
+
+                    item.codigo_cliente_contacto = jss?.CODIGO_CLIENTE_CONTACTO!!
+                    item.codigo_cliente = jss?.CODIGO_CLIENTE!!
+                    item.nombre = jss?.NOMBRE!!
+                    item.telefono = jss?.TELEFONO!!
+                    item.correo = jss?.CORREO!!
+                    item.direccion = jss?.DIRECCION!!
+
+                    try {
+                        ClientecontactoObj?.add(item)
+                    } catch (e: Exception) {
+                        throw Exception("  "+e.message+"\n"+ClientecontactoObj?.addItemSql(item))
+                    }
+                }
+
+                db!!.setTransactionSuccessful()
+                db!!.endTransaction()
+            } catch (e: java.lang.Exception) {
+                db!!.endTransaction()
+                throw Exception( e.message)
+                return
+            }
+
             //val handler = Handler(Looper.getMainLooper())
             //handler.postDelayed({recEstados()}, 200)
 
@@ -393,8 +677,6 @@ class Comunicacion : PBase() {
         }
 
     }
-
-
 
     //endregion
 
@@ -483,6 +765,10 @@ class Comunicacion : PBase() {
             ProdprecioObj!!.reconnect(Con!!, db!!)
             ProductoObj!!.reconnect(Con!!, db!!)
             EstadoObj!!.reconnect(Con!!, db!!)
+            TiposervicioObj!!.reconnect(Con!!, db!!)
+            ClienteObj!!.reconnect(Con!!, db!!)
+            ClientecontactoObj!!.reconnect(Con!!, db!!)
+            ClientedirObj!!.reconnect(Con!!, db!!)
 
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)

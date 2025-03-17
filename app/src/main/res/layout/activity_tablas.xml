@@ -34,20 +34,20 @@
                 android:textColor="#1A8AC6" />
         </RelativeLayout>
 
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="207dp"
-            android:layout_height="42dp"
-            android:layout_below="@+id/relRoad"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="false"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginStart="3dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginEnd="3dp"
-            android:layout_marginBottom="3dp"
-            android:background="@drawable/spinner_style" />
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="207dp"
+        android:layout_height="42dp"
+        android:layout_below="@+id/relRoad"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="100dp"
+        android:layout_marginBottom="3dp"
+        android:background="@drawable/spinner_style" />
 
 
         <RelativeLayout
@@ -152,4 +152,14 @@
             android:text="¡No olvide que la base de datos es Case sensitive !"
             android:textSize="10sp" />
 
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/spinner"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="10dp"
+        android:text="TextView" />
+
+</RelativeLayout>

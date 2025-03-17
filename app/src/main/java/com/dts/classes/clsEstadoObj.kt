@@ -24,7 +24,7 @@ public class clsEstadoObj {
     private var sql: String? = null
     var items = ArrayList<clsEstado>()
 
-    fun clsEstadoObj(context: Context, dbconnection: BaseDatos, dbase: SQLiteDatabase) {
+    constructor(context: Context, dbconnection: BaseDatos, dbase: SQLiteDatabase) {
         cont = context
         Con = dbconnection
         ins = Con!!.Ins

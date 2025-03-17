@@ -86,10 +86,10 @@ class BaseDatosScript(private val vcontext: Context) {
             db.execSQL(sql);
 
             sql="CREATE TABLE [Tiposervicios] ("+
-                    "codigo_tipo_estado INTEGER NOT NULL,"+
                     "codigo_tipo_departamento INTEGER NOT NULL,"+
+                    "codigo_ticket_departamento INTEGER NOT NULL,"+
                     "nombre TEXT NOT NULL,"+
-                    "PRIMARY KEY ([codigo_tipo_estado])"+
+                    "PRIMARY KEY ([codigo_tipo_departamento])"+
                     ");";
             db?.execSQL(sql);
 
@@ -219,21 +219,6 @@ class BaseDatosScript(private val vcontext: Context) {
             sql = "CREATE INDEX Ordenfoto_idx1 ON Ordenfoto(idOrden)";db?.execSQL(sql)
             sql = "CREATE INDEX Ordenfoto_idx2 ON Ordenfoto(statcom)";db?.execSQL(sql)
 
-
-            sql="CREATE TABLE [Param] ("+
-                    "codigo INTEGER NOT NULL,"+
-                    "empresa INTEGER NOT NULL,"+
-                    "id INTEGER NOT NULL,"+
-                    "userid INTEGER NOT NULL,"+
-                    "nombre TEXT NOT NULL,"+
-                    "valor TEXT NOT NULL,"+
-                    "PRIMARY KEY ([codigo])"+
-                    ");";
-            db?.execSQL(sql);
-
-
-
-
             sql="CREATE TABLE [Syntaxlog] ("+
                     "id INTEGER NOT NULL,"+
                     "fecha INTEGER NOT NULL,"+
@@ -285,6 +270,17 @@ class BaseDatosScript(private val vcontext: Context) {
                     "PRIMARY KEY ([id])"+
                     ");";
             db.execSQL(sql);
+
+            sql="CREATE TABLE [Param] ("+
+                    "codigo INTEGER NOT NULL,"+
+                    "empresa INTEGER NOT NULL,"+
+                    "id INTEGER NOT NULL,"+
+                    "userid INTEGER NOT NULL,"+
+                    "nombre TEXT NOT NULL,"+
+                    "valor TEXT NOT NULL,"+
+                    "PRIMARY KEY ([codigo])"+
+                    ");";
+            db?.execSQL(sql);
 
              */
 

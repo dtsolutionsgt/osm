@@ -7,27 +7,27 @@ class clsClasses {
 
 
     data class clsCliente (
-        var Codigo_Cliente : Int = 0,
-        var Telefono : String = "",
-        var Direccion : String = "",
+        var codigo_cliente : Int = 0,
+        var telefono : String = "",
+        var direccion : String = "",
     )
 
-    data class clsClienteContacto(
-        var CODIGO_CLIENTE_CONTACTO : Int = 0,
-        var CODIGO_CLIENTE : String = "",
-        var NOMBRE : String = "",
-        var TELEFONO : String = "",
-        var CORREO : String = "",
-        var DIRECCION : String = "",
+    data class clsClientecontacto(
+        var codigo_cliente_contacto : Int = 0,
+        var codigo_cliente : String = "",
+        var nombre : String = "",
+        var telefono : String = "",
+        var correo : String = "",
+        var direccion : String = "",
         var Empresa : Int = 0,
     )
 
-    data class clsClienteDir(
-        var CODIGO_DIRECCION : Int = 0,
-        var CODIGO_CLIENTE : Int = 0,
-        var DIRECCION : String = "",
-        var TELEFONO : String = "",
-        var REFERENCIA : String = "",
+    data class clsClientedir(
+        var codigo_direccion : Int = 0,
+        var codigo_cliente : Int = 0,
+        var direccion : String = "",
+        var telefono : String = "",
+        var referencia : String = "",
     )
 
     data class clsEstado(
@@ -56,11 +56,13 @@ class clsClasses {
         var rol : String = "",
     )
 
-    data class clsTipoServicio(
-        var CODIGO_TIPO_SERVICIO_DEP : Int = 0,
-        var CODIGO_TICKET_DEPARTAMENTO : Int = 0,
-        var Nombre : String = "",
+    data class clsTiposervicios (
+        var codigo_tipo_departamento : Int = 0,
+        var codigo_ticket_departamento : Int = 0,
+        var nombre : String = "",
     )
+
+
 
     // ----------------------------------------------------------
 
@@ -81,7 +83,8 @@ class clsClasses {
         var valor : String = "",
     )
 
-    // 0 - idempresa, 1 - idusuario, 2 - Nombre Empresa, 3 - modo aplicacion
+    // 0-idempresa, 1-idusuario, 2-Nombre Empresa, 3-modo,4-rol,
+    // 5-pais, 6-idsucursal, 7-moneda
     data class clsSavepos (
         var id : Int = 0,
         var valor : String = "",
@@ -227,12 +230,6 @@ class clsClasses {
 
     data class clsTipoorden (
         var id : Int = 0,
-        var nombre : String = "",
-    )
-
-    data class clsTiposervicio (
-        var id : Int = 0,
-        var idticket : Int = 0,
         var nombre : String = "",
     )
 

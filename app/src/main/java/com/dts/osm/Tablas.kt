@@ -26,6 +26,7 @@ class Tablas : PBase() {
     var spinf: Spinner? = null
     var pbar: ProgressBar? = null
     var txt1: EditText? = null
+    var lblcant: TextView? = null
 
     val spinlist = ArrayList<String>()
     val values = ArrayList<String>()
@@ -50,6 +51,7 @@ class Tablas : PBase() {
             spin = findViewById(R.id.spinner) as Spinner
             pbar = findViewById(R.id.progressBar3) as ProgressBar; pbar?.visibility= View.INVISIBLE
             txt1 = findViewById(R.id.editText1) as EditText
+            lblcant = findViewById(R.id.textView5) as TextView;lblcant?.text="";
 
             val displayMetrics = DisplayMetrics()
             windowManager.defaultDisplay.getMetrics(displayMetrics)
@@ -158,6 +160,7 @@ class Tablas : PBase() {
     //region Main
 
     // Main
+
     private fun processTable() {
         try {
             pbar!!.visibility = View.VISIBLE
@@ -191,6 +194,7 @@ class Tablas : PBase() {
         var ss = ""
         var cc = 1
         var j: Int
+        var rows=0
 
         try {
             ss = "SELECT "
@@ -235,7 +239,9 @@ class Tablas : PBase() {
 
         try {
             dt = Con!!.OpenDT(ss)
-            if (dt.count == 0) {
+
+            rows=dt.count
+            if (rows == 0) {
                 pbar!!.visibility = View.INVISIBLE; return
             }
             dt.moveToFirst()
@@ -262,6 +268,7 @@ class Tablas : PBase() {
         dadapter = ListAdaptTablas2(this, dvalues)
         dgrid!!.adapter = dadapter
         pbar!!.visibility = View.INVISIBLE
+        lblcant?.text="( "+rows+" ) ";
     }
 
 

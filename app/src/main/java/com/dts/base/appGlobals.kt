@@ -23,7 +23,7 @@ class appGlobals : Application() {
 
     var idemp=0
     var iduser=0
-    var idrol=0
+    var idrol=""
     var idorden=0
     var idfoto=""
     var idordfoto=0
@@ -67,8 +67,8 @@ class appGlobals : Application() {
             savedInstanceState.putInt("idorden", idorden)
             savedInstanceState.putInt("idordfoto", idordfoto)
             savedInstanceState.putInt("modoapp", modoapp)
-            savedInstanceState.putInt("idrol", idrol)
 
+            savedInstanceState.putString("idrol", idrol)
             savedInstanceState.putString("gstr", gstr)
             savedInstanceState.putString("fbkey", fbkey)
             savedInstanceState.putString("urlbase", urlbase)
@@ -103,8 +103,8 @@ class appGlobals : Application() {
             idorden = savedInstanceState.getInt("idorden")
             idordfoto = savedInstanceState.getInt("idordfoto")
             modoapp = savedInstanceState.getInt("modoapp")
-            idrol = savedInstanceState.getInt("idrol")
 
+            idrol = savedInstanceState.getString("idrol").toString()
             gstr = savedInstanceState.getString("gstr").toString()
             fbkey = savedInstanceState.getString("fbkey").toString()
             urlbase = savedInstanceState.getString("urlbase").toString()

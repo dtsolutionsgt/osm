@@ -36,7 +36,9 @@
         android:theme="@style/Theme.OSM"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
+        <activity
+            android:name=".UsuariosPrueba"
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -81,11 +83,19 @@
             android:exported="false"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".Comunicacion"
+            android:name=".Com"
             android:exported="false"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".InvLista"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".Clientes"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".TareaNueva"
             android:exported="false"
             android:windowSoftInputMode="stateAlwaysHidden" />
     </application>
