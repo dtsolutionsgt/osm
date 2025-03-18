@@ -302,8 +302,8 @@ class Com : PBase() {
                     jss=gson.fromJson(pls, RType)
                     item= clsClasses.clsProdprecio()
 
-                    item.codigo_precio = jss?.CODIGO_PRODUCTO!!
-                    item.codigo_producto = jss?.CODIGO_PRECIO!!
+                    item.codigo_precio = jss?.CODIGO_PRECIO!!
+                    item.codigo_producto = jss?.CODIGO_PRODUCTO!!
                     item.nivel = jss?.NIVEL!!
                     item.precio = jss?.PRECIO!!
                     item.unidadmedida = jss?.UNIDADMEDIDA!!
@@ -508,6 +508,7 @@ class Com : PBase() {
                     item= clsClasses.clsCliente()
 
                     item.codigo_cliente = jss?.Codigo_Cliente!!
+                    item.nombre = jss?.Nombre!!
                     item.telefono = jss?.Telefono!!
                     item.direccion = jss?.Direccion!!
 

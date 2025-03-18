@@ -65,7 +65,7 @@
         android:layout_above="@id/relbot"
         android:layout_marginHorizontal="3dp"
         android:orientation="horizontal"
-        android:weightSum="4">
+        android:weightSum="3">
 
         <TextView
             android:id="@+id/textView11"
@@ -98,21 +98,6 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/textView9"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="3dp"
-            android:layout_weight="1"
-            android:background="@drawable/frame_btn"
-            android:clickable="true"
-            android:gravity="center"
-            android:onClick="doCliente"
-            android:padding="5dp"
-            android:text="Nuevo  Cliente"
-            android:textColor="#0002F5"
-            android:textStyle="bold" />
-
-        <TextView
             android:id="@+id/textView8"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -123,7 +108,7 @@
             android:gravity="center"
             android:onClick="doNuevo"
             android:padding="5dp"
-            android:text="Nuevo  Servicio"
+            android:text="Nuevo servicio"
             android:textColor="#0002F5"
             android:textStyle="bold" />
     </LinearLayout>

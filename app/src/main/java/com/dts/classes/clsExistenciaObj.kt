@@ -5,11 +5,10 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.dts.base.BaseDatos
 import com.dts.base.clsClasses
-import com.dts.base.clsClasses.clsCliente
+import com.dts.base.clsClasses.clsExistencia
 
 
-class clsClienteObj {
-
+class clsExistenciaObj {
 
     var count=0
 
@@ -20,9 +19,9 @@ class clsClienteObj {
     var upd: BaseDatos.Update? = null
     val clsCls = clsClasses()
 
-    val sel ="SELECT * FROM Cliente"
+    val sel ="SELECT * FROM Existencia"
     var sql: String? = null
-    var items = ArrayList<clsCliente>()
+    var items = ArrayList<clsExistencia>()
 
     constructor(context: Context, dbconnection: BaseDatos, dbase: SQLiteDatabase) {
         cont = context
@@ -40,15 +39,15 @@ class clsClienteObj {
         db = dbase
     }
 
-    fun add(item: clsCliente?) {
+    fun add(item: clsExistencia?) {
         addItem(item!!)
     }
 
-    fun update(item: clsCliente?) {
+    fun update(item: clsExistencia?) {
         updateItem(item!!)
     }
 
-    fun delete(item: clsCliente?) {
+    fun delete(item: clsExistencia?) {
         deleteItem(item!!)
     }
 
@@ -68,54 +67,51 @@ class clsClienteObj {
         fillItems(sq)
     }
 
-    fun first(): clsCliente?  {
+    fun first(): clsExistencia?  {
         return items[0]
     }
 
 
     //region Private
 
-    private fun addItem(item: clsCliente) {
-        ins!!.init("Cliente")
-        ins!!.add("Codigo_Cliente", item.codigo_cliente)
-        ins!!.add("Nombre", item.nombre)
-        ins!!.add("Telefono", item.telefono)
-        ins!!.add("Direccion", item.direccion)
+    private fun addItem(item: clsExistencia) {
+        ins!!.init("Existencia")
+        ins!!.add("codigo", item.codigo)
+        ins!!.add("nombre", item.nombre)
+        ins!!.add("cant", item.cant)
         db!!.execSQL(ins!!.sql())
     }
 
-    private fun updateItem(item: clsCliente) {
-        upd!!.init("Cliente")
-        upd!!.add("Nombre", item.nombre)
-        upd!!.add("Telefono", item.telefono)
-        upd!!.add("Direccion", item.direccion)
-        upd!!.Where("(Codigo_Cliente=" + item.codigo_cliente + ")")
+    private fun updateItem(item: clsExistencia) {
+        upd!!.init("Existencia")
+        upd!!.add("nombre", item.nombre)
+        upd!!.add("cant", item.cant)
+        upd!!.Where("(codigo=" + item.codigo + ")")
         db!!.execSQL(upd!!.sql())
     }
 
-    private fun deleteItem(item: clsCliente) {
-        sql = "DELETE FROM Cliente WHERE (Codigo_Cliente=" + item.codigo_cliente + ")"
+    private fun deleteItem(item: clsExistencia) {
+        sql = "DELETE FROM Existencia WHERE (codigo=" + item.codigo + ")"
         db!!.execSQL(sql)
     }
 
     private fun deleteItem(id: Int) {
-        sql = "DELETE FROM Cliente WHERE id=$id"
+        sql = "DELETE FROM Existencia WHERE id=$id"
         db!!.execSQL(sql)
     }
 
     private fun fillItems(sq: String) {
         val dt: Cursor
-        var item: clsCliente
+        var item: clsExistencia
         items.clear()
         dt = Con!!.OpenDT(sq)
         count = dt.count
         if (dt.count > 0) dt.moveToFirst()
         while (!dt.isAfterLast) {
-            item = clsCliente()
-            item.codigo_cliente = dt.getInt(0)
+            item = clsExistencia()
+            item.codigo = dt.getInt(0)
             item.nombre = dt.getString(1)
-            item.telefono = dt.getString(2)
-            item.direccion = dt.getString(3)
+            item.cant = dt.getDouble(2)
             items.add(item)
             dt.moveToNext()
         }
@@ -136,21 +132,19 @@ class clsClienteObj {
         return nid
     }
 
-    fun addItemSql(item: clsCliente): String? {
-        ins!!.init("Cliente")
-        ins!!.add("Codigo_Cliente", item.codigo_cliente)
-        ins!!.add("Nombre", item.nombre)
-        ins!!.add("Telefono", item.telefono)
-        ins!!.add("Direccion", item.direccion)
+    fun addItemSql(item: clsExistencia): String? {
+        ins!!.init("Existencia")
+        ins!!.add("codigo", item.codigo)
+        ins!!.add("nombre", item.nombre)
+        ins!!.add("cant", item.cant)
         return ins!!.sql()
     }
 
-    fun updateItemSql(item: clsCliente): String? {
-        upd!!.init("Cliente")
-        upd!!.add("Nombre", item.nombre)
-        upd!!.add("Telefono", item.telefono)
-        upd!!.add("Direccion", item.direccion)
-        upd!!.Where("(Codigo_Cliente=" + item.codigo_cliente + ")")
+    fun updateItemSql(item: clsExistencia): String? {
+        upd!!.init("Existencia")
+        upd!!.add("nombre", item.nombre)
+        upd!!.add("cant", item.cant)
+        upd!!.Where("(codigo=" + item.codigo + ")")
         return upd!!.sql()
     }
 

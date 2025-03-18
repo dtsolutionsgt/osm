@@ -115,7 +115,6 @@ class Usuarios : PBase() {
 
     private fun ingresoClave(sclave:Int) {
 
-
         val alert: AlertDialog.Builder = AlertDialog.Builder(this)
         alert.setTitle("Ingrese PIN")
         val input = EditText(this)

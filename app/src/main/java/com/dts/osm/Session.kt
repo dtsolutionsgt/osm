@@ -58,7 +58,7 @@ class Session : PBase() {
 
             scripttables()
 
-            mPref = getSharedPreferences("com.dts.sermov", MODE_PRIVATE)
+            mPref = getSharedPreferences("com.dts.osm", MODE_PRIVATE)
             mPEdit = mPref?.edit()
 
             UsuarioObj = clsUsuarioObj(this, Con!!, db!!)
@@ -473,6 +473,18 @@ class Session : PBase() {
 
     fun scripttables() {
 
+        try {
+            sql="CREATE TABLE [Existencia] ("+
+                    "codigo INTEGER NOT NULL,"+
+                    "nombre TEXT NOT NULL,"+
+                    "cant REAL NOT NULL,"+
+                    "PRIMARY KEY ([codigo])"+
+                    ");";
+            db?.execSQL(sql);
+
+        } catch (e: Exception) {}
+
+
 
         try {
 
@@ -481,6 +493,7 @@ class Session : PBase() {
         try {
 
         } catch (e: Exception) {}
+
 
     }
 

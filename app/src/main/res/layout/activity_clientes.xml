@@ -34,6 +34,20 @@
                 android:onClick="doExit"
                 app:srcCompat="@drawable/arr_back" />
 
+            <ImageView
+                android:id="@+id/imageView15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="1dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="1dp"
+                android:layout_marginBottom="1dp"
+                android:background="#FFFFFF"
+                android:clickable="true"
+                android:onClick="doSave"
+                app:srcCompat="@drawable/icon_check" />
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -66,42 +80,42 @@
 
         </RelativeLayout>
 
-        <EditText
-            android:id="@+id/editTextText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/reltop"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginEnd="30dp"
-            android:layout_toStartOf="@+id/textView4"
-            android:ems="10"
-            android:inputType="text" />
+    <EditText
+        android:id="@+id/editTextText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reltop"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="40dp"
+        android:ems="10"
+        android:inputType="text" />
 
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/reltop"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="17dp"
-            android:background="@drawable/frame_btn"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="5dp"
-            android:text="BUSCAR"
-            android:textColor="#202020"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/relbot"
+        android:layout_below="@+id/editTextText"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="3dp" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvlista"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/relbot"
-            android:layout_below="@+id/editTextText"
-            android:layout_marginTop="1dp"
-            android:layout_marginBottom="3dp" />
+    <ImageView
+        android:id="@+id/imageView17"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reltop"
+        android:layout_alignBottom="@+id/editTextText"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp"
+        android:clickable="true"
+        android:onClick="doClear"
+        android:padding="8dp"
+        app:srcCompat="@drawable/icon_del" />
 
-    </RelativeLayout>
+</RelativeLayout>
