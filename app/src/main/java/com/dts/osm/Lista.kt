@@ -49,12 +49,11 @@ class Lista : PBase() {
 
     fun doNuevo(view: View) {
         try {
-            //startActivity(Intent(this,Servicio::class.java))
+            startActivity(Intent(this,TareaNueva::class.java))
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
     }
-
 
     //endregion
 

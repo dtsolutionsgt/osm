@@ -8,8 +8,7 @@ class ClassesAPI {
     data class clsAPICliente (
         var type : String = "",
         var Codigo_Cliente : Int = 0,
-        var Empresa : Int = 0,
-        var Bloqueado : Boolean = true,
+        var Nombre : String = "",
         var Telefono : String = "",
         var Direccion : String = "",
     )

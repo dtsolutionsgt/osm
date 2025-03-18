@@ -113,10 +113,12 @@ class MainActivity : AppCompatActivity() {
     private fun startApp() {
         try {
 
+            /*
             if (!isAllFilesAccessGranted()) {
                 grandAllFilesAccess()
                 return
             }
+            */
 
             try {
                 val directory = externalMediaDirs[0]

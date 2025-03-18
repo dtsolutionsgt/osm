@@ -24,6 +24,7 @@ class BaseDatosScript(private val vcontext: Context) {
 
             sql="CREATE TABLE [Cliente] ("+
                     "Codigo_Cliente INTEGER NOT NULL,"+
+                    "Nombre TEXT NOT NULL,"+
                     "Telefono TEXT NOT NULL,"+
                     "Direccion TEXT NOT NULL,"+
                     "PRIMARY KEY ([Codigo_Cliente])"+
@@ -57,6 +58,14 @@ class BaseDatosScript(private val vcontext: Context) {
                     "codigo_ticket_estado INTEGER NOT NULL,"+
                     "nombre TEXT NOT NULL,"+
                     "PRIMARY KEY ([codigo_ticket_estado])"+
+                    ");";
+            db?.execSQL(sql);
+
+            sql="CREATE TABLE [Existencia] ("+
+                    "codigo INTEGER NOT NULL,"+
+                    "nombre TEXT NOT NULL,"+
+                    "cant REAL NOT NULL,"+
+                    "PRIMARY KEY ([codigo])"+
                     ");";
             db?.execSQL(sql);
 

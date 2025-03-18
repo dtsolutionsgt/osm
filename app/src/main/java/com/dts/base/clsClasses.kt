@@ -8,6 +8,7 @@ class clsClasses {
 
     data class clsCliente (
         var codigo_cliente : Int = 0,
+        var nombre : String = "",
         var telefono : String = "",
         var direccion : String = "",
     )
@@ -33,6 +34,12 @@ class clsClasses {
     data class clsEstado(
         var codigo_ticket_estado : Int = 0,
         var nombre : String = "",
+    )
+
+    data class clsExistencia (
+        var codigo : Int = 0,
+        var nombre : String = "",
+        var cant : Double = 0.0,
     )
 
     data class clsProdprecio (
