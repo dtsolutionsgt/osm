@@ -23,7 +23,7 @@
             android:layout_marginBottom="1.00dp">
 
             <TextView
-                android:id="@+id/textViewUsername"
+                android:id="@+id/textViewProducto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="20dp"

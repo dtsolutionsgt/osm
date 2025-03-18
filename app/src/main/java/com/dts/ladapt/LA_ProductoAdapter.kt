@@ -9,13 +9,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dts.osm.R
 import com.dts.base.clsClasses
 
-class LA_UsuarioAdapter(val itemList: ArrayList<clsClasses.clsUsuario>) : RecyclerView.Adapter<LA_UsuarioAdapter.ViewHolder>() {
+class LA_ProductoAdapter(val itemList: ArrayList<clsClasses.clsProducto>) :
+    RecyclerView.Adapter<LA_ProductoAdapter.ViewHolder>() {
 
     var selectedItemPosition: Int = -1
     lateinit var lay: LinearLayout
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LA_UsuarioAdapter.ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.lv_usuarioitem, parent, false)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): LA_ProductoAdapter.ViewHolder {
+        val v = LayoutInflater.from(parent.context)
+            .inflate(R.layout.lvproductoitem, parent, false)
         return ViewHolder(v)
     }
 
@@ -23,7 +28,7 @@ class LA_UsuarioAdapter(val itemList: ArrayList<clsClasses.clsUsuario>) : Recycl
         return itemList.size
     }
 
-    override fun onBindViewHolder(holder: LA_UsuarioAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: LA_ProductoAdapter.ViewHolder, position: Int) {
         val item = itemList[position]
         val isSelected = position == selectedItemPosition
 
@@ -40,7 +45,7 @@ class LA_UsuarioAdapter(val itemList: ArrayList<clsClasses.clsUsuario>) : Recycl
         }
     }
 
-    fun setSelectedItem(selpos:Int) {
+    fun setSelectedItem(selpos: Int) {
         val previousSelectedPosition = selectedItemPosition
         selectedItemPosition = selpos
 
@@ -48,17 +53,18 @@ class LA_UsuarioAdapter(val itemList: ArrayList<clsClasses.clsUsuario>) : Recycl
         notifyItemChanged(selpos)
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
 
-        fun bindItems(mitem: clsClasses.clsUsuario) {
-            val textViewName = itemView.findViewById(R.id.textViewProducto) as TextView
+        fun bindItems(mitem: clsClasses.clsProducto) {
+            val textViewDesc = itemView.findViewById(R.id.textViewProducto) as TextView
             lay = itemView.findViewById(R.id.relitem) as LinearLayout
-            textViewName.text = mitem.nombre
+            textViewDesc.text = mitem.desclarga
+
         }
 
-        fun bind(mitem: clsClasses.clsUsuario, isSelected: Boolean) {
-            lay.setBackgroundResource(if (isSelected)
-                R.drawable.frame_round_flatb_sel else R.drawable.frame_round_flatb)
+        fun bind(mitem: clsClasses.clsProducto, isSelected: Boolean) {
+            lay.setBackgroundResource(R.drawable.frame_round)
         }
 
         override fun onClick(p0: View?) {}

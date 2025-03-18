@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1033737623115",
+    "project_id": "ordserv-232e6",
+    "storage_bucket": "ordserv-232e6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1033737623115:android:7539d0db1190bee69b5fce",
+        "android_client_info": {
+          "package_name": "com.dts.osm"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9MULyxPezNnFU8JeuAxAWZV4e0R_vqCk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

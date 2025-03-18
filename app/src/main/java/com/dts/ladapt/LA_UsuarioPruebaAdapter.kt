@@ -3,20 +3,24 @@ package com.dts.ladapt
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dts.osm.R
 import com.dts.base.clsClasses
 
-class LA_UsuarioPruebaAdapter(val itemList: ArrayList<clsClasses.clsUsuario>) : RecyclerView.Adapter<LA_UsuarioPruebaAdapter.ViewHolder>() {
+class LA_UsuarioPruebaAdapter(val itemList: ArrayList<clsClasses.clsUsuario>) :
+    RecyclerView.Adapter<LA_UsuarioPruebaAdapter.ViewHolder>() {
 
     var selectedItemPosition: Int = -1
     lateinit var lay: LinearLayout
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LA_UsuarioPruebaAdapter.ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.lv_usuariopruebaitem, parent, false)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): LA_UsuarioPruebaAdapter.ViewHolder {
+        val v = LayoutInflater.from(parent.context)
+            .inflate(R.layout.lv_usuariopruebaitem, parent, false)
         return ViewHolder(v)
     }
 
@@ -41,7 +45,7 @@ class LA_UsuarioPruebaAdapter(val itemList: ArrayList<clsClasses.clsUsuario>) : 
         }
     }
 
-    fun setSelectedItem(selpos:Int) {
+    fun setSelectedItem(selpos: Int) {
         val previousSelectedPosition = selectedItemPosition
         selectedItemPosition = selpos
 
@@ -49,19 +53,21 @@ class LA_UsuarioPruebaAdapter(val itemList: ArrayList<clsClasses.clsUsuario>) : 
         notifyItemChanged(selpos)
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
 
         fun bindItems(mitem: clsClasses.clsUsuario) {
-            val textViewName = itemView.findViewById(R.id.textViewUsername) as TextView
+            val textViewName = itemView.findViewById(R.id.textViewProducto) as TextView
             lay = itemView.findViewById(R.id.relitem) as LinearLayout
             textViewName.text = mitem.nombre
         }
 
         fun bind(mitem: clsClasses.clsUsuario, isSelected: Boolean) {
-           //lay.setBackgroundResource(if (isSelected)
-           //     R.drawable.frame_round_flatb_sel else R.drawable.frame_round_flatb)
+            //lay.setBackgroundResource(if (isSelected)
+            //     R.drawable.frame_round_flatb_sel else R.drawable.frame_round_flatb)
             lay.setBackgroundResource(
-                 R.drawable.frame_round )
+                R.drawable.frame_round
+            )
         }
 
         override fun onClick(p0: View?) {}

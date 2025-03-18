@@ -3,8 +3,11 @@ package com.dts.osm
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
+import androidx.recyclerview.widget.RecyclerView
 
 class InvLista : PBase() {
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
