@@ -20,6 +20,9 @@ class appGlobals : Application() {
     var gint=0
     var gbool=false
     var fbkey=""
+    var gint2=0
+    var gint3=0
+    var gnota=""
 
     var idemp=0
     var iduser=0
@@ -63,6 +66,8 @@ class appGlobals : Application() {
 
             savedInstanceState.putInt("idemp", idemp)
             savedInstanceState.putInt("gint", gint)
+            savedInstanceState.putInt("gint2", gint2)
+            savedInstanceState.putInt("gint3", gint3)
             savedInstanceState.putInt("iduser", iduser)
             savedInstanceState.putInt("idorden", idorden)
             savedInstanceState.putInt("idordfoto", idordfoto)
@@ -74,6 +79,7 @@ class appGlobals : Application() {
             savedInstanceState.putString("urlbase", urlbase)
             savedInstanceState.putString("nuser", nuser)
             savedInstanceState.putString("idphoto", idfoto)
+            savedInstanceState.putString("gnota", gnota)
 
             savedInstanceState.putBoolean("gbool", gbool)
             savedInstanceState.putBoolean("changed", changed)
@@ -99,6 +105,8 @@ class appGlobals : Application() {
         try {
             idemp = savedInstanceState.getInt("idemp")
             gint = savedInstanceState.getInt("gint")
+            gint2= savedInstanceState.getInt("gint2")
+            gint3 = savedInstanceState.getInt("gint3")
             iduser = savedInstanceState.getInt("iduser")
             idorden = savedInstanceState.getInt("idorden")
             idordfoto = savedInstanceState.getInt("idordfoto")
@@ -110,6 +118,7 @@ class appGlobals : Application() {
             urlbase = savedInstanceState.getString("urlbase").toString()
             nuser = savedInstanceState.getString("nuser").toString()
             idfoto = savedInstanceState.getString("idphoto").toString()
+            gnota = savedInstanceState.getString("gnota").toString()
 
             gbool = savedInstanceState.getBoolean("gbool")
             changed = savedInstanceState.getBoolean("changed")

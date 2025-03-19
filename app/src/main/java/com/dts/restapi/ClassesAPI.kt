@@ -17,7 +17,7 @@ class ClassesAPI {
     data class clsAPIClienteContacto(
         var type : String = "",
         var CODIGO_CLIENTE_CONTACTO : Int = 0,
-        var CODIGO_CLIENTE : String = "",
+        var CODIGO_CLIENTE : Int = 0,
         var NOMBRE : String = "",
         var TELEFONO : String = "",
         var CORREO : String = "",

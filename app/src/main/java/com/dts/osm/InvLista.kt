@@ -3,8 +3,14 @@ package com.dts.osm
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import com.dts.base.clsClasses
+import com.dts.classes.clsClienteObj
+import com.dts.classes.clsExistenciaObj
 
 class InvLista : PBase() {
+
+
+    var ExistenciasObj: clsExistenciaObj? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -12,6 +18,9 @@ class InvLista : PBase() {
             setContentView(R.layout.activity_inv_lista)
 
             super.initbase(savedInstanceState)
+
+            ExistenciasObj = clsExistenciaObj(this, Con!!, db!!)
+
 
         } catch (e:Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+". "+e.message)
@@ -38,6 +47,7 @@ class InvLista : PBase() {
 
     fun doIngreso(view: View) {
         try {
+            callback=1
             startActivity(Intent(this,Productos::class.java))
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
@@ -52,6 +62,9 @@ class InvLista : PBase() {
 
     //region Main
 
+    fun  agregar() {
+
+    }
 
     //endregion
 
@@ -80,6 +93,17 @@ class InvLista : PBase() {
         try {
             super.onResume()
             gl?.dialogr = Runnable { dialogswitch() }
+
+            ExistenciasObj!!.reconnect(Con!!, db!!)
+
+            if (callback==1) {
+                callback=0
+                if (gl?.gint!=0) {
+                    agregar()
+                }
+
+            }
+
 
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
