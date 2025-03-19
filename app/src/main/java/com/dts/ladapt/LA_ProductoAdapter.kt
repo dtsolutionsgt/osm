@@ -64,8 +64,9 @@ class LA_ProductoAdapter(val itemList: ArrayList<clsClasses.clsProducto>) :
         }
 
         fun bind(mitem: clsClasses.clsProducto, isSelected: Boolean) {
-            lay.setBackgroundResource(R.drawable.frame_round)
+            lay.setBackgroundResource(if (isSelected) R.drawable.frame_round_flatb_sel else R.drawable.frame_round_flatb)
         }
+
 
         override fun onClick(p0: View?) {}
 
