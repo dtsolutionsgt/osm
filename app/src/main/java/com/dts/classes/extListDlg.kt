@@ -28,6 +28,7 @@ class extListDlg {
     var selidx=-1
     var selcod=""
     var selcodint=0
+    var selvalue=""
 
     private var mList: RecyclerView? = null
 
@@ -105,6 +106,13 @@ class extListDlg {
                     } catch (e: Exception) {
                         selcodint=-1
                     }
+
+                    try {
+                        selvalue=data.get(position).text
+                    } catch (e: Exception) {
+                        selvalue=""
+                    }
+
 
                     runClickListener()
 

@@ -15,7 +15,7 @@ class clsClasses {
 
     data class clsClientecontacto(
         var codigo_cliente_contacto : Int = 0,
-        var codigo_cliente : String = "",
+        var codigo_cliente : Int = 0,
         var nombre : String = "",
         var telefono : String = "",
         var correo : String = "",

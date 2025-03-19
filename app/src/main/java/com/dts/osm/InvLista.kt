@@ -24,6 +24,9 @@ class InvLista : PBase() {
             super.initbase(savedInstanceState)
             ExistenciasObj = clsExistenciaObj(this, Con!!, db!!)
 
+            ExistenciasObj = clsExistenciaObj(this, Con!!, db!!)
+
+
         } catch (e:Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+". "+e.message)
         }

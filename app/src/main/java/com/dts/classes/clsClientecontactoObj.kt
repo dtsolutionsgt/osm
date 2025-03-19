@@ -115,7 +115,7 @@ class clsClientecontactoObj {
         while (!dt.isAfterLast) {
             item = clsClientecontacto()
             item.codigo_cliente_contacto = dt.getInt(0)
-            item.codigo_cliente =""+ dt.getInt(1)
+            item.codigo_cliente =dt.getInt(1)
             item.nombre = dt.getString(2)
             item.telefono = dt.getString(3)
             item.correo = dt.getString(4)
