@@ -11,7 +11,8 @@ class clsClasses {
         var nombre : String = "",
         var telefono : String = "",
         var direccion : String = "",
-        var Nivel : Int = 0,
+        var nivel : Int = 0,
+        var nit : String = "",
     )
 
     data class clsClientecontacto(

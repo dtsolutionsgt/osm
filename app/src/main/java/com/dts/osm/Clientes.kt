@@ -126,7 +126,7 @@ class Clientes : PBase() {
                         override fun onItemClick(view: View, position: Int) {
                             idcli=items.get(position).codigo_cliente
                             nomcli=items.get(position).nombre
-                            gl?.gintval=items.get(position).Nivel
+                            gl?.gintval=items.get(position).nivel
 
                             initCliente()
                         }
@@ -158,7 +158,7 @@ class Clientes : PBase() {
         try {
             var flt=txtflt?.text?.toString()
             if (flt?.isNotEmpty()!!) {
-                ClienteObj!!.fill("WHERE (Nombre LIKE '%"+flt+"%') ORDER BY Nombre")
+                ClienteObj!!.fill("WHERE ((Nombre LIKE '%"+flt+"%') OR (Nit LIKE '%"+flt+"%')) ORDER BY Nombre")
             } else {
                 ClienteObj!!.fill("ORDER BY Nombre")
             }
@@ -198,7 +198,7 @@ class Clientes : PBase() {
 
             ClientedirObj?.fill("WHERE (codigo_cliente="+idcli+") ORDER BY direccion")
             if (ClientedirObj?.count==0) {
-                msgbox("No está definida ninguna dirección de clienmte");return;
+                msgbox("No está definida ninguna dirección de cliente");return;
             }
 
             val listdlg = extListDlg();
@@ -206,7 +206,7 @@ class Clientes : PBase() {
             listdlg.buildDialog(this,"Dirección")
             //listdlg.setLines(4);
             listdlg.setCenterScreenPosition()
-            listdlg.setWidth(10000)
+            listdlg.setWidth(-1)
 
             for (itm in ClientedirObj?.items!!) {
                 listdlg.addData(itm.codigo_direccion,itm.direccion)

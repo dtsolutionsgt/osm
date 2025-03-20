@@ -12,6 +12,7 @@ class ClassesAPI {
         var Telefono : String = "",
         var Direccion : String = "",
         var Nivel : Int = 0,
+        var Nit : String = "",
     )
 
     @Serializable
