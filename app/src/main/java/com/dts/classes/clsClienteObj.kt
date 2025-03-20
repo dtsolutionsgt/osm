@@ -81,7 +81,8 @@ class clsClienteObj {
         ins!!.add("Nombre", item.nombre)
         ins!!.add("Telefono", item.telefono)
         ins!!.add("Direccion", item.direccion)
-        ins!!.add("Nivel",item.Nivel);
+        ins!!.add("Nivel", item.nivel)
+        ins!!.add("Nit", item.nit)
         db!!.execSQL(ins!!.sql())
     }
 
@@ -90,7 +91,8 @@ class clsClienteObj {
         upd!!.add("Nombre", item.nombre)
         upd!!.add("Telefono", item.telefono)
         upd!!.add("Direccion", item.direccion)
-        upd!!.add("Nivel",item.Nivel);
+        upd!!.add("Nivel", item.nivel)
+        upd!!.add("Nit", item.nit)
         upd!!.Where("(Codigo_Cliente=" + item.codigo_cliente + ")")
         db!!.execSQL(upd!!.sql())
     }
@@ -118,7 +120,8 @@ class clsClienteObj {
             item.nombre = dt.getString(1)
             item.telefono = dt.getString(2)
             item.direccion = dt.getString(3)
-            item.Nivel = dt.getInt(4)
+            item.nivel = dt.getInt(4)
+            item.nit = dt.getString(5)
             items.add(item)
             dt.moveToNext()
         }
@@ -145,7 +148,8 @@ class clsClienteObj {
         ins!!.add("Nombre", item.nombre)
         ins!!.add("Telefono", item.telefono)
         ins!!.add("Direccion", item.direccion)
-        ins!!.add("Nivel",item.Nivel);
+        ins!!.add("Nivel", item.nivel)
+        ins!!.add("Nit", item.nit)
         return ins!!.sql()
     }
 
@@ -154,11 +158,13 @@ class clsClienteObj {
         upd!!.add("Nombre", item.nombre)
         upd!!.add("Telefono", item.telefono)
         upd!!.add("Direccion", item.direccion)
-        upd!!.add("Nivel",item.Nivel);
+        upd!!.add("Nivel", item.nivel)
+        upd!!.add("Nit", item.nit)
         upd!!.Where("(Codigo_Cliente=" + item.codigo_cliente + ")")
         return upd!!.sql()
     }
 
     //endregion
+
 
 }

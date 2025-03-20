@@ -28,6 +28,7 @@ class BaseDatosScript(private val vcontext: Context) {
                     "Telefono TEXT NOT NULL,"+
                     "Direccion TEXT NOT NULL,"+
                     "Nivel INTEGER NOT NULL,"+
+                    "Nit TEXT NOT NULL,"+
                     "PRIMARY KEY ([Codigo_Cliente])"+
                     ");";
             db?.execSQL(sql);

@@ -55,7 +55,7 @@ class LA_ClienteAdapter(val itemList: ArrayList<clsClasses.clsCliente>) : Recycl
         fun bindItems(mitem: clsClasses.clsCliente) {
             val textViewName = itemView.findViewById(R.id.textViewUsername) as TextView
             lay = itemView.findViewById(R.id.relitem) as LinearLayout
-            textViewName.text = mitem.nombre
+            textViewName.text = mitem.nombre+" ["+mitem.nit+"]"
         }
 
         fun bind(mitem: clsClasses.clsCliente, isSelected: Boolean) {

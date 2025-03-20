@@ -511,7 +511,8 @@ class Com : PBase() {
                     item.nombre = jss?.Nombre!!
                     item.telefono = jss?.Telefono!!
                     item.direccion = jss?.Direccion!!
-                    item.Nivel = jss?.Nivel!!
+                    item.nivel = jss?.Nivel!!
+                    item.nit = jss?.Nit!!
 
                     try {
                         ClienteObj?.add(item)
