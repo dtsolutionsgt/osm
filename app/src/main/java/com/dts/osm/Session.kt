@@ -393,6 +393,7 @@ class Session : PBase() {
 
     fun showSupportMenu() {
         try {
+
             val listdlg = extListDlg();
 
             listdlg.buildDialog(this@Session, "Menu soporte")
