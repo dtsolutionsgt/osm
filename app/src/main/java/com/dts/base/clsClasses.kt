@@ -11,6 +11,7 @@ class clsClasses {
         var nombre : String = "",
         var telefono : String = "",
         var direccion : String = "",
+        var Nivel : Int = 0,
     )
 
     data class clsClientecontacto(
@@ -42,11 +43,18 @@ class clsClasses {
         var cant : Double = 0.0,
     )
 
+    data class clsMaterial (
+        var codigo_producto : Int = 0,
+        var desclarga : String = "",
+        var cant : Double = 0.0,
+        var precio : Double = 0.0,
+    )
+
     data class clsProdprecio (
         var codigo_precio : Int = 0,
         var codigo_producto : Int = 0,
         var nivel : Int = 0,
-        var precio : Int = 0,
+        var precio : Double = 0.0,
         var unidadmedida : String = "",
     )
 

@@ -11,6 +11,7 @@ class ClassesAPI {
         var Nombre : String = "",
         var Telefono : String = "",
         var Direccion : String = "",
+        var Nivel : Int = 0,
     )
 
     @Serializable
@@ -48,7 +49,7 @@ class ClassesAPI {
         var CODIGO_PRECIO : Int = 0,
         var CODIGO_PRODUCTO : Int = 0,
         var NIVEL : Int = 0,
-        var PRECIO : Int = 0,
+        var PRECIO : Double = 0.0,
         var UNIDADMEDIDA : String = "",
     )
 

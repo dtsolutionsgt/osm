@@ -79,6 +79,7 @@ class Clientes : PBase() {
                 msgbox("Falta seleccionar un cliente.");return
             }
 
+            /*
             if (iddir==0) {
                 msgbox("Falta seleccionar una dirección.");return
             }
@@ -86,7 +87,7 @@ class Clientes : PBase() {
             if (idcont==0) {
                 msgbox("Falta seleccionar un contacto.");return
             }
-
+            */
 
             gl?.gint=idcli
             gl?.gstr=nomcli
@@ -125,6 +126,8 @@ class Clientes : PBase() {
                         override fun onItemClick(view: View, position: Int) {
                             idcli=items.get(position).codigo_cliente
                             nomcli=items.get(position).nombre
+                            gl?.gintval=items.get(position).Nivel
+
                             initCliente()
                         }
 

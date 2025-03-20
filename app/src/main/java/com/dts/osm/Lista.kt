@@ -3,9 +3,14 @@ package com.dts.osm
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import com.dts.classes.clsTiposerviciosObj
 import com.dts.classes.extListDlg
 
 class Lista : PBase() {
+
+
+
+    var TiposervicioObj: clsTiposerviciosObj? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,6 +19,9 @@ class Lista : PBase() {
             setContentView(R.layout.activity_lista)
 
             super.initbase(savedInstanceState)
+
+            TiposervicioObj = clsTiposerviciosObj(this, Con!!, db!!)
+
 
         } catch (e:Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+". "+e.message)
@@ -49,7 +57,7 @@ class Lista : PBase() {
 
     fun doNuevo(view: View) {
         try {
-            startActivity(Intent(this,TareaNueva::class.java))
+            listaTipos()
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
@@ -74,6 +82,46 @@ class Lista : PBase() {
         }
     }
 
+    fun listaTipos() {
+        try {
+
+            TiposervicioObj?.fill("ORDER BY nombre")
+            if (TiposervicioObj?.count==0) {
+                msgbox("No está definido ninguna tipo de servicio, no se puede continuar");return;
+            }
+
+            val listdlg = extListDlg();
+
+            listdlg.buildDialog(this,"Tipo de servicio")
+            //listdlg.setLines(4);
+            listdlg.setCenterScreenPosition()
+            listdlg.setWidth(10000)
+
+            for (itm in TiposervicioObj?.items!!) {
+                listdlg.addData(itm.codigo_tipo_departamento,itm.nombre)
+            }
+
+            listdlg.clickListener= Runnable { processDirMenu(listdlg.selcodint,listdlg.selvalue) }
+
+            listdlg.setOnLeftClick { v: View? -> listdlg.dismiss() }
+            listdlg.show()
+
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
+        }
+    }
+
+    fun processDirMenu(value:Int,text:String) {
+        try {
+
+            gl?.gint=value
+            gl?.gstr=text!!
+            startActivity(Intent(this,TareaNueva::class.java))
+
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
+        }
+    }
 
 
     //endregion
@@ -89,6 +137,8 @@ class Lista : PBase() {
         try {
             super.onResume()
             gl?.dialogr = Runnable { dialogswitch() }
+
+            TiposervicioObj?.reconnect(Con!!, db!!)
 
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
