@@ -1,8 +1,12 @@
 package com.dts.osm
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
@@ -11,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dts.base.clsClasses
 import com.dts.classes.RecyclerItemClickListener
 import com.dts.classes.clsExistenciaObj
+import com.dts.classes.extListDlg
 import com.dts.ladapt.LA_ExistenciasAdapter
 import com.dts.ladapt.LA_ProductoAdapter
 
@@ -21,6 +26,7 @@ class InvLista : PBase() {
     private var adapter: LA_ExistenciasAdapter? = null
     private var items = ArrayList<clsClasses.clsExistencia>()
     private var editText: EditText? = null
+    var selindex=-1
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,11 +96,14 @@ class InvLista : PBase() {
                 RecyclerItemClickListener(this, recyclerView!!,
                     object : RecyclerItemClickListener.OnItemClickListener {
                         override fun onItemClick(view: View, position: Int) {
+                            selindex = position
                             val existenciaSeleccionada = items[position]
                             //msgbox("Producto seleccionado: ${productoSeleccionado.desclarga}")()
 
                             gl?.gcant=existenciaSeleccionada.cant
                             gl?.gstr=existenciaSeleccionada.nombre
+
+                            showItemMenu()
 
                         }
                         override fun onItemLongClick(view: View?, position: Int) {}
@@ -114,6 +123,7 @@ class InvLista : PBase() {
 
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+
         }
     }
     //endregion
@@ -132,6 +142,73 @@ class InvLista : PBase() {
         }
     }
 
+    fun EditItem(nc: Double) {
+        try {
+            if (selindex in items.indices) {
+                val existencia = items[selindex]
+                existencia.cant = nc  // Actualizar en la lista
+
+                // Actualizar en la base de datos
+                ExistenciasObj?.update(existencia)
+
+                adapter?.notifyDataSetChanged()
+            } else {
+                msgbox("Índice fuera de rango: $selindex")
+            }
+        } catch (e: Exception) {
+            msgbox("EditItem: " + e.message)
+        }
+    }
+
+    fun DelItem() {
+        val alert: AlertDialog.Builder = AlertDialog.Builder(this)
+        alert.setTitle("Ingrese unidades a devolver")
+
+        val input = EditText(this)
+        input.inputType = InputType.TYPE_CLASS_NUMBER
+        input.setText("")
+        input.requestFocus()
+        alert.setView(input)
+
+        alert.setPositiveButton("Devolver") { _, _ ->
+            try {
+                val unidades = input.text.toString().toDoubleOrNull()
+                if (unidades == null || unidades <= 0) {
+                    msgbox("Cantidad inválida")
+                    return@setPositiveButton
+                }
+                if (selindex in items.indices) {
+                    val existencia = items[selindex]
+                    if (unidades > existencia.cant) {
+                        msgbox("No puedes devolver más de lo que existe")
+                        return@setPositiveButton
+                    }
+
+                    existencia.cant -= unidades
+
+                    if (existencia.cant == 0.0) {
+                        ExistenciasObj?.delete(existencia.codigo)
+                        items.removeAt(selindex)
+                    } else {
+                        ExistenciasObj?.update(existencia)
+                    }
+
+                    adapter?.notifyDataSetChanged()
+                } else {
+                    msgbox("Ítem no válido")
+                }
+            } catch (e: Exception) {
+                msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+            }
+        }
+
+        alert.setNegativeButton("Cancelar", null)
+
+        val dialog: AlertDialog = alert.create()
+        dialog.show()
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK)
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK)
+    }
 
     private fun buscarProducto(filtro: String) {
         try {
@@ -190,6 +267,74 @@ class InvLista : PBase() {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
         }
     }
+    fun showItemMenu() {
+        try {
+            val listdlg = extListDlg();
+
+            listdlg.buildDialog(this@InvLista,"Opciones")
+            listdlg.setLines(2)
+            listdlg.setWidth(-1)
+            listdlg.setCenterScreenPosition()
+
+            listdlg.addData(1,"Ajustar cantidad")
+            listdlg.addData(2,"Devolver unidades")
+
+            listdlg.clickListener = Runnable { processItemMenu(listdlg.selcodint) }
+
+            listdlg.setOnLeftClick { v: View? -> listdlg.dismiss() }
+            listdlg.show()
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
+        }
+    }
+
+    fun processItemMenu(menuidx:Int) {
+        try {
+            when (menuidx) {
+                1 -> { ingresoCantidad() }
+                2 -> { DelItem() }
+            }
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
+        }
+    }
+
+    private fun ingresoCantidad() {
+        val alert: AlertDialog.Builder = AlertDialog.Builder(this)
+        alert.setTitle("Ingrese cantidad")
+
+        val input = EditText(this)
+        input.inputType = InputType.TYPE_CLASS_NUMBER
+        input.setText("")
+        input.requestFocus()
+        alert.setView(input)
+
+        alert.setPositiveButton("Aplicar") { _, _ ->
+            try {
+                val ide = input.text.toString().toDoubleOrNull()
+                if (ide == null || ide < 0) {
+                    msgbox("Cantidad inválida")
+                    return@setPositiveButton
+                }
+                if (selindex in items.indices) {
+                    EditItem(ide)
+                } else {
+
+                    msgbox("No se seleccionó un ítem válido")
+                }
+            } catch (e: Exception) {
+                msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+            }
+        }
+
+        alert.setNegativeButton("Cancelar", null)
+
+        val dialog: AlertDialog = alert.create()
+        dialog.show()
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK)
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK)
+    }
+
 
     //endregion
 
