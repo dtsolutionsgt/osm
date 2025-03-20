@@ -16,10 +16,11 @@ import com.dts.classes.RecyclerItemClickListener
 import com.dts.classes.clsProductoObj
 import com.dts.ladapt.LA_ProductoAdapter
 
-class Productos : PBase() {
 
-    private var recyclerView: RecyclerView? = null
-    private var editText: EditText? = null
+class Material : PBase() {
+
+    var recview: RecyclerView? = null
+    var txtflt: EditText? = null
 
     private var productoObj: clsProductoObj? = null
     private var adapter: LA_ProductoAdapter? = null
@@ -28,25 +29,27 @@ class Productos : PBase() {
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
             super.onCreate(savedInstanceState)
-            setContentView(R.layout.activity_productos)
+            setContentView(R.layout.activity_material)
 
             super.initbase(savedInstanceState)
 
-            recyclerView = findViewById(R.id.recview)
-            editText = findViewById(R.id.editTextText)
+            recview = findViewById<View>(R.id.recview) as RecyclerView
+            recview?.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
 
-            recyclerView?.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+            txtflt = findViewById<View>(R.id.editTextText) as EditText
+
 
             productoObj = clsProductoObj(this, Con!!, db!!)
 
             listItems()
             setHandlers()
-        } catch (e: Exception) {
-            msgbox("Error en onCreate: " + e.message)
+        } catch (e:Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+". "+e.message)
         }
     }
 
-    //region Eventos
+
+    //region Events
 
     fun doExit(view: View) {
         finish()
@@ -54,8 +57,8 @@ class Productos : PBase() {
 
     private fun setHandlers() {
         try {
-            recyclerView?.addOnItemTouchListener(
-                RecyclerItemClickListener(this, recyclerView!!,
+            recview?.addOnItemTouchListener(
+                RecyclerItemClickListener(this, recview!!,
                     object : RecyclerItemClickListener.OnItemClickListener {
                         override fun onItemClick(view: View, position: Int) {
                             val productoSeleccionado = items[position]
@@ -63,6 +66,7 @@ class Productos : PBase() {
 
                             gl?.gint=productoSeleccionado.codigo_producto
                             gl?.gstr=productoSeleccionado.desclarga
+
                             ingresoCantidad()
                         }
 
@@ -70,9 +74,9 @@ class Productos : PBase() {
                     })
             )
 
-           editText?.addTextChangedListener(object : TextWatcher {
+            txtflt?.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
-                    val filtro = editText?.text.toString()
+                    val filtro = txtflt?.text.toString()
                     if (filtro.isNotEmpty()) buscarProducto(filtro) else listItems()
                 }
 
@@ -100,7 +104,7 @@ class Productos : PBase() {
             }
 
             adapter = LA_ProductoAdapter(items)
-            recyclerView?.adapter = adapter
+            recview?.adapter = adapter
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
@@ -108,13 +112,13 @@ class Productos : PBase() {
 
     private fun buscarProducto(filtro: String) {
         try {
-            productoObj?.fill("WHERE (desclarga LIKE '%$filtro%') AND CODIGO_TIPO = 'P' ORDER BY desclarga")
+            productoObj?.fill("WHERE (desclarga LIKE '%$filtro%') ORDER BY desclarga")
 
             items.clear()
             productoObj?.items?.let { items.addAll(it) }
 
             adapter = LA_ProductoAdapter(items)
-            recyclerView?.adapter = adapter
+            recview?.adapter = adapter
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
@@ -153,4 +157,39 @@ class Productos : PBase() {
     }
 
     //endregion
+
+    //region Dialogs
+
+    fun dialogswitch() {
+        try {
+            when (gl?.dialogid) {
+                0 -> {  }
+            }
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
+        }
+    }
+
+    //endregion
+
+    //region Aux
+
+
+    //endregion
+
+    //region Activity Events
+
+    override fun onResume() {
+        try {
+            super.onResume()
+            gl?.dialogr = Runnable { dialogswitch() }
+
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
+        }
+    }
+
+    //endregion
+
+
 }

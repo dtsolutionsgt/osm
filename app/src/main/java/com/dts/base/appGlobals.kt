@@ -18,11 +18,14 @@ class appGlobals : Application() {
 
     var gstr=""
     var gint=0
-    var gcant=0.0
-    var gbool=false
-    var fbkey=""
     var gint2=0
     var gint3=0
+    var gintval=0
+    var gcant=0.0
+    var gdbl=0.0
+    var gbool=false
+    var fbkey=""
+
     var gnota=""
 
     var idemp=0
@@ -87,6 +90,7 @@ class appGlobals : Application() {
             savedInstanceState.putBoolean("com_pend", com_pend)
 
             savedInstanceState.putDouble("gcant", gcant)
+            savedInstanceState.putDouble("gdbl", gdbl)
 
             //Params
 
@@ -128,6 +132,7 @@ class appGlobals : Application() {
             com_pend = savedInstanceState.getBoolean("com_pend")
 
             gcant = savedInstanceState.getDouble("gcant")
+            gdbl = savedInstanceState.getDouble("gdbl")
 
             //Params
 

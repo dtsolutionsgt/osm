@@ -116,7 +116,7 @@ class clsProdprecioObj {
             item.codigo_precio = dt.getInt(0)
             item.codigo_producto = dt.getInt(1)
             item.nivel = dt.getInt(2)
-            item.precio = dt.getInt(3)
+            item.precio = dt.getDouble(3)
             item.unidadmedida = dt.getString(4)
             items.add(item)
             dt.moveToNext()

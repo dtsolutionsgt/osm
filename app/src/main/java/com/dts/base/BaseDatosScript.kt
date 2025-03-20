@@ -27,6 +27,7 @@ class BaseDatosScript(private val vcontext: Context) {
                     "Nombre TEXT NOT NULL,"+
                     "Telefono TEXT NOT NULL,"+
                     "Direccion TEXT NOT NULL,"+
+                    "Nivel INTEGER NOT NULL,"+
                     "PRIMARY KEY ([Codigo_Cliente])"+
                     ");";
             db?.execSQL(sql);
@@ -73,7 +74,7 @@ class BaseDatosScript(private val vcontext: Context) {
                     "CODIGO_PRECIO INTEGER NOT NULL,"+
                     "CODIGO_PRODUCTO INTEGER NOT NULL,"+
                     "NIVEL INTEGER NOT NULL,"+
-                    "PRECIO RERAL NOT NULL,"+
+                    "PRECIO REAL NOT NULL,"+
                     "UNIDADMEDIDA TEXT NOT NULL,"+
                     "PRIMARY KEY ([CODIGO_PRECIO])"+
                     ");";
