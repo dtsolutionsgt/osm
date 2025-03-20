@@ -57,7 +57,7 @@ class LA_ProductoAdapter(val itemList: ArrayList<clsClasses.clsProducto>) :
         View.OnClickListener {
 
         fun bindItems(mitem: clsClasses.clsProducto) {
-            val textViewDesc = itemView.findViewById(R.id.textViewProducto) as TextView
+            val textViewDesc = itemView.findViewById(R.id.textViewExistencia) as TextView
             lay = itemView.findViewById(R.id.relitem) as LinearLayout
             textViewDesc.text = mitem.desclarga
 

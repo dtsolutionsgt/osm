@@ -51,7 +51,7 @@ class LA_UsuarioAdapter(val itemList: ArrayList<clsClasses.clsUsuario>) : Recycl
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
         fun bindItems(mitem: clsClasses.clsUsuario) {
-            val textViewName = itemView.findViewById(R.id.textViewProducto) as TextView
+            val textViewName = itemView.findViewById(R.id.textViewExistencia) as TextView
             lay = itemView.findViewById(R.id.relitem) as LinearLayout
             textViewName.text = mitem.nombre
         }

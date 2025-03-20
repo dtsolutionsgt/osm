@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dts.osm.R
 import com.dts.base.clsClasses
 
-class LA_UsuarioPruebaAdapter(val itemList: ArrayList<clsClasses.clsUsuario>) :
-    RecyclerView.Adapter<LA_UsuarioPruebaAdapter.ViewHolder>() {
+class LA_ExistenciasAdapter(val itemList: ArrayList<clsClasses.clsExistencia>) :
+    RecyclerView.Adapter<LA_ExistenciasAdapter.ViewHolder>() {
 
     var selectedItemPosition: Int = -1
     lateinit var lay: LinearLayout
@@ -18,9 +18,9 @@ class LA_UsuarioPruebaAdapter(val itemList: ArrayList<clsClasses.clsUsuario>) :
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): LA_UsuarioPruebaAdapter.ViewHolder {
+    ): LA_ExistenciasAdapter.ViewHolder {
         val v = LayoutInflater.from(parent.context)
-            .inflate(R.layout.lv_usuariopruebaitem, parent, false)
+            .inflate(R.layout.lv_existencias, parent, false)
         return ViewHolder(v)
     }
 
@@ -28,7 +28,7 @@ class LA_UsuarioPruebaAdapter(val itemList: ArrayList<clsClasses.clsUsuario>) :
         return itemList.size
     }
 
-    override fun onBindViewHolder(holder: LA_UsuarioPruebaAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: LA_ExistenciasAdapter.ViewHolder, position: Int) {
         val item = itemList[position]
         val isSelected = position == selectedItemPosition
 
@@ -56,19 +56,19 @@ class LA_UsuarioPruebaAdapter(val itemList: ArrayList<clsClasses.clsUsuario>) :
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
 
-        fun bindItems(mitem: clsClasses.clsUsuario) {
-            val textViewName = itemView.findViewById(R.id.textViewExistencia) as TextView
+        fun bindItems(mitem: clsClasses.clsExistencia) {
+            val textViewDesc = itemView.findViewById(R.id.textViewExistencia) as TextView
+            val textViewCantidad = itemView.findViewById<TextView>(R.id.textViewCantidad)
             lay = itemView.findViewById(R.id.relitem) as LinearLayout
-            textViewName.text = mitem.nombre
+            textViewDesc.text = mitem.nombre
+            textViewCantidad.text = "${mitem.cant}"
+
         }
 
-        fun bind(mitem: clsClasses.clsUsuario, isSelected: Boolean) {
-            //lay.setBackgroundResource(if (isSelected)
-            //     R.drawable.frame_round_flatb_sel else R.drawable.frame_round_flatb)
-            lay.setBackgroundResource(
-                R.drawable.frame_round
-            )
+        fun bind(mitem: clsClasses.clsExistencia, isSelected: Boolean) {
+            lay.setBackgroundResource(if (isSelected) R.drawable.frame_round_flatb_sel else R.drawable.frame_round_flatb)
         }
+
 
         override fun onClick(p0: View?) {}
 

@@ -106,19 +106,19 @@ class Productos : PBase() {
         }
     }
 
-    private fun buscarProducto(filtro: String) {
-        try {
-            productoObj?.fill("WHERE (desclarga LIKE '%$filtro%') AND CODIGO_TIPO = 'P' ORDER BY desclarga")
+        private fun buscarProducto(filtro: String) {
+            try {
+                productoObj?.fill("WHERE (desclarga LIKE '%$filtro%') AND CODIGO_TIPO = 'P' ORDER BY desclarga")
 
-            items.clear()
-            productoObj?.items?.let { items.addAll(it) }
+                items.clear()
+                productoObj?.items?.let { items.addAll(it) }
 
-            adapter = LA_ProductoAdapter(items)
-            recyclerView?.adapter = adapter
-        } catch (e: Exception) {
-            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+                adapter = LA_ProductoAdapter(items)
+                recyclerView?.adapter = adapter
+            } catch (e: Exception) {
+                msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+            }
         }
-    }
 
     private fun ingresoCantidad() {
         val alert: AlertDialog.Builder = AlertDialog.Builder(this)
