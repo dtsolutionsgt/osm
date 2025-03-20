@@ -41,6 +41,9 @@ class Clientes : PBase() {
     var nomcli=""
     var idcont=0
     var iddir=0
+    var clidir=""
+    var clicont=""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -62,6 +65,8 @@ class Clientes : PBase() {
             ClientecontactoObj = clsClientecontactoObj(this, Con!!, db!!)
 
             gl?.gint=0;gl?.gstr=""
+            gl?.gint2=0;gl?.gint3=0
+            gl?.nomdir="";gl?.nomcont=""
 
             listItems()
 
@@ -79,20 +84,12 @@ class Clientes : PBase() {
                 msgbox("Falta seleccionar un cliente.");return
             }
 
-            /*
-            if (iddir==0) {
-                msgbox("Falta seleccionar una dirección.");return
-            }
-
-            if (idcont==0) {
-                msgbox("Falta seleccionar un contacto.");return
-            }
-            */
-
             gl?.gint=idcli
             gl?.gstr=nomcli
             gl?.gint2=iddir
             gl?.gint3=idcont
+            gl?.nomdir=clidir
+            gl?.nomcont=clicont
 
             finish()
         } catch (e: Exception) {
@@ -126,7 +123,12 @@ class Clientes : PBase() {
                         override fun onItemClick(view: View, position: Int) {
                             idcli=items.get(position).codigo_cliente
                             nomcli=items.get(position).nombre
+                            clidir=items.get(position).direccion
+                            clicont=items.get(position).telefono
+
                             gl?.gintval=items.get(position).nivel
+                            gl?.gint2=0;gl?.gint3=0
+                            gl?.nomdir="";gl?.nomcont=""
 
                             initCliente()
                         }
@@ -227,6 +229,7 @@ class Clientes : PBase() {
             onResume()
             iddir=value
             cbdir?.text=text!!
+            clidir=text!!
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
         }
@@ -271,6 +274,7 @@ class Clientes : PBase() {
             onResume()
             idcont=value
             cbcont?.text=text!!
+            clicont=text!!
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
         }

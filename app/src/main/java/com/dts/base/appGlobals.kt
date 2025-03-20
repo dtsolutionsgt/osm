@@ -35,6 +35,8 @@ class appGlobals : Application() {
     var idfoto=""
     var idordfoto=0
     var modoapp=0
+    var nomdir=""
+    var nomcont=""
 
     var urlbase=""
     var nuser=""

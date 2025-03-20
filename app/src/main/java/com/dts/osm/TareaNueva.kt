@@ -27,6 +27,7 @@ class TareaNueva : PBase() {
     var lbltipo: TextView? = null
     var lblcli: TextView? = null
     var lbldesc: TextView? = null
+    var lbldir: TextView? = null
 
     var ProdprecioObj: clsProdprecioObj? = null
 
@@ -47,6 +48,7 @@ class TareaNueva : PBase() {
     var nivel=0
     var selindex=-1
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
             super.onCreate(savedInstanceState)
@@ -59,6 +61,7 @@ class TareaNueva : PBase() {
             lbltipo = findViewById<View>(R.id.editTextText2) as TextView
             lblcli = findViewById<View>(R.id.editTextText) as TextView
             lbldesc = findViewById<View>(R.id.editTextText3) as TextView
+            lbldir = findViewById<View>(R.id.textView17) as TextView;lbldir?.visibility=View.GONE
 
             ProdprecioObj = clsProdprecioObj(this, Con!!, db!!)
 
@@ -97,7 +100,7 @@ class TareaNueva : PBase() {
     }
 
     fun doSave(view: View) {
-        if (checkValues()) save()
+        if (checkValues()) msgask(2,"Crear un nuevo orden de servicio?")
     }
 
     fun doNote(view: View) {
@@ -132,7 +135,6 @@ class TareaNueva : PBase() {
         }
     }
 
-
     //endregion
 
     //region Main
@@ -149,6 +151,8 @@ class TareaNueva : PBase() {
     fun save() {
         try {
 
+
+            finish()
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
@@ -212,6 +216,7 @@ class TareaNueva : PBase() {
         try {
             when (gl?.dialogid) {
                 1 -> {  DelItem() }
+                2 -> { save() }
             }
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
@@ -328,6 +333,38 @@ class TareaNueva : PBase() {
         return true
     }
 
+    fun asignaCliente() {
+        try {
+
+            idcli=gl?.gint!!
+            nomcli=gl?.gstr!!;lblcli?.text=nomcli
+            iddir=gl?.gint2!!
+            idcont=gl?.gint3!!
+            nivel=gl?.gintval!!
+
+            var nomdir=gl?.nomdir
+            var nomcont=gl?.nomcont
+            var nn=nomdir+nomcont;
+
+            lbldir?.text=nn;lbldir?.visibility=View.GONE
+
+            if (nn?.isNotEmpty()!!) {
+
+                if (nomdir?.isNotEmpty()!!) {
+                    nn=nomdir
+                    if (nomcont?.isNotEmpty()!!) nn=nn+"\n"+nomcont
+                } else {
+                    nn=nomcont!!
+                }
+                lbldir?.text=nn
+                lbldir?.visibility=View.VISIBLE
+            }
+
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
+    }
+
     //endregion
 
     //region Activity Events
@@ -341,16 +378,7 @@ class TareaNueva : PBase() {
 
             if (callback==1) {
                 callback=0
-                if (gl?.gint!=0) {
-
-                    idcli=gl?.gint!!
-                    nomcli=gl?.gstr!!
-                    iddir=gl?.gint2!!
-                    idcont=gl?.gint3!!
-                    nivel=gl?.gintval!!
-
-                    lblcli?.text=nomcli
-                }
+                if (gl?.gint!=0) asignaCliente()
             }
 
             if (callback==2) {
