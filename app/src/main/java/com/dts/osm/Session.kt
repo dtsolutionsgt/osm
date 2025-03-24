@@ -76,6 +76,7 @@ class Session : PBase() {
     fun doLogin(view: View) {
         try {
             //if (gl?.iduser!!>0) {
+            //if (gl?.iduser!!>0) {
                 //UsuarioObj?.fill("WHERE (id="+gl?.iduser!!+")")
                 //var rol=UsuarioObj?.first()?.rol
                 var rol="TEC";
@@ -135,6 +136,8 @@ class Session : PBase() {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
     }
+
+
 
     fun setHandlers() {
         try {
