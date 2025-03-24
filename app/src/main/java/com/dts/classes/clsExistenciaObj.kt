@@ -96,7 +96,7 @@ class clsExistenciaObj {
     }
 
     private fun deleteItem(id: Int) {
-        sql = "DELETE FROM Existencia WHERE id=$id"
+        sql = "DELETE FROM Existencia WHERE codigo=$id"
         db!!.execSQL(sql)
     }
 
