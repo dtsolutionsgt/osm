@@ -7,6 +7,7 @@ import android.widget.Toast
 import com.dts.osm.R
 import java.io.File
 import java.text.DecimalFormat
+import java.util.Calendar
 import java.util.Locale
 
 class MiscUtils {
@@ -271,4 +272,27 @@ class MiscUtils {
         v2 = Math.round(v2).toDouble()
         return frmintnum(v1) + "' " + frmintnum(v2) + " ''"
     }
+
+    fun frm2num(n: Int): String? {
+        return if (n > 9) n.toString() else "0$n"
+    }
+
+    fun getCorelBase(): String? {
+        var cyear: Int;val cmonth: Int;val cday: Int
+        val ch: Int;val cm: Int;val cs: Int;var vd: Int;var vh: Int
+        var s: String?;val c = Calendar.getInstance()
+
+        cyear = c[Calendar.YEAR]
+        cyear = cyear % 100;s = frm2num(cyear)
+        cmonth = c[Calendar.MONTH] + 1;s += frm2num(cmonth)
+        cday = c[Calendar.DAY_OF_MONTH];s += frm2num(cday)
+        ch = c[Calendar.HOUR_OF_DAY];s += frm2num(ch)
+        cm = c[Calendar.MINUTE];s += frm2num(cm)
+        cs = c[Calendar.SECOND];s += frm2num(cs)
+
+        return s
+    }
+
+
+
 }

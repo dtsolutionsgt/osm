@@ -45,6 +45,36 @@ class ClassesAPI {
     )
 
     @Serializable
+    data class clsAPIOrdenDet (
+        var type : String = "",
+        var CODIGO_ORDEN_SERVICIO_DET : Int = 0,
+        var CODIGO_ORDEN_SERVICIO : Int = 0,
+        var CODIGO_PRODUCTO  : Int = 0,
+        var DESCRIPCION : String = "",
+        var REALIZADO  : Int = 0,
+        var CANTIDAD : Double = 0.0,
+        var ACTIVO  : Int = 0,
+    )
+
+    @Serializable
+    data class clsAPIOrdenEnc (
+        var type : String = "",
+        var CODIGO_ORDEN_SERVICIO : Int = 0,
+        var NUMERO : String = "",
+        var FECHA : Long = 0L,
+        var FECHA_CIERRE : Long = 0L,
+        var HORA_SERVICIO_INI : Long = 0L,
+        var HORA_SERVICIO_FIN : Long = 0L,
+        var CODIGO_USUARIO_ASIGNADO : Int = 0,
+        var CODIGO_ESTADO_ORDEN_SERVICIO : Int = 0,
+        var CODIGO_TIPO_ORDEN_SERVICIO : Int = 0,
+        var CODIGO_CLIENTE_CONTACTO : Int = 0,
+        var CODIGO_DIRECCION : Int = 0,
+        var CODIGO_CLIENTE : Int = 0,
+        var DESCRIPCION : String = "",
+    )
+
+    @Serializable
     data class clsAPIProdprecio (
         var type : String = "",
         var CODIGO_PRECIO : Int = 0,
