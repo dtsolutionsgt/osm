@@ -78,6 +78,62 @@ class clsClasses {
         var nombre : String = "",
     )
 
+    data class clsOrdendet (
+        var id : Int = 0,
+        var idorden : Int = 0,
+        var idproducto : Int = 0,
+        var descripcion : String = "",
+        var realizado : Int = 0,
+        var cant : Double = 0.0,
+        var activo : Int = 0,
+    )
+
+    data class clsOrdenenc (
+        var idorden : Int = 0,
+        var numero : String = "",
+        var fecha : Long = 0L,
+        var idusuario : Int = 0,
+        var idestado : Int = 0,
+        var idtipo : Int = 0,
+        var idclicontact : Int = 0,
+        var iddir : Int = 0,
+        var idcliente : Int = 0,
+        var descripcion : String = "",
+        var fecha_cierre : Long = 0L,
+        var hora_ini : Long = 0L,
+        var hora_fin : Long = 0L,
+    )
+
+    data class clsT_ordendet (
+        var codigo_orden_servicio_det : Int = 0,
+        var codigo_orden_servicio : Int = 0,
+        var codigo_producto : Int = 0,
+        var descripcion : String = "",
+        var precio : Double = 0.0,
+        var realizado : Int = 0,
+        var cantidad : Double = 0.0,
+        var total : Double = 0.0,
+        var activo : Int = 0,
+    )
+
+    data class clsT_ordenenc (
+        var codigo_orden_servicio : Int = 0,
+        var numero : String = "",
+        var codigo_cliente : Int = 0,
+        var codigo_sucursal : Int = 0,
+        var codigo_empresa : Int = 0,
+        var codigo_tipo_orden_servicio : Int = 0,
+        var codigo_estado_orden_servicio : Int = 0,
+        var codigo_cliente_contacto : Int = 0,
+        var codigo_direccion : Int = 0,
+        var codigo_moneda : Int = 0,
+        var total : Double = 0.0,
+        var anulada : Int = 0,
+        var activa : Int = 0,
+        var cerrada : Int = 0,
+        var descripcion : String = "",
+        var observacion : String = "",
+    )
 
 
     // ----------------------------------------------------------
@@ -100,7 +156,7 @@ class clsClasses {
     )
 
     // 0-idempresa, 1-idusuario, 2-Nombre Empresa, 3-modo,4-rol,
-    // 5-pais, 6-idsucursal, 7-moneda
+    // 5-pais, 6-idsucursal, 7-moneda simb, 8 - moneda id
     data class clsSavepos (
         var id : Int = 0,
         var valor : String = "",
@@ -176,16 +232,6 @@ class clsClasses {
         var tel : String = "",
     )
 
-    data class clsOrdendet (
-        var id : Int = 0,
-        var idorden : Int = 0,
-        var idproducto : Int = 0,
-        var descripcion : String = "",
-        var realizado : Int = 0,
-        var cant : Double = 0.0,
-        var activo : Int = 0,
-    )
-
     data class clsOrdendir (
         var id : Int = 0,
         var idcliente : Int = 0,
@@ -193,22 +239,6 @@ class clsClasses {
         var dir : String = "",
         var zona : String = "",
         var tel : String = "",
-    )
-
-    data class clsOrdenenc (
-        var idorden : Int = 0,
-        var numero : String = "",
-        var fecha : Long = 0L,
-        var idusuario : Int = 0,
-        var idestado : Int = 0,
-        var idtipo : Int = 0,
-        var idclicontact : Int = 0,
-        var iddir : Int = 0,
-        var idcliente : Int = 0,
-        var descripcion : String = "",
-        var fecha_cierre : Long = 0L,
-        var hora_ini : Long = 0L,
-        var hora_fin : Long = 0L,
     )
 
     data class clsOrdenfoto (

@@ -64,4 +64,5 @@ dependencies {
     implementation("com.google.firebase:firebase-database")
     implementation("com.google.firebase:firebase-storage")
 
+    implementation 'org.apache.commons:commons-lang3:3.14.0'
 }

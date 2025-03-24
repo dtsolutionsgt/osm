@@ -71,6 +71,41 @@ class BaseDatosScript(private val vcontext: Context) {
                     ");";
             db?.execSQL(sql);
 
+
+            sql = "CREATE TABLE [Ordendet] (" +
+                    "id INTEGER NOT NULL," +
+                    "idOrden INTEGER NOT NULL," +
+                    "idProducto INTEGER NOT NULL," +
+                    "Descripcion TEXT NOT NULL," +
+                    "Realizado INTEGER NOT NULL," +
+                    "Cant REAL NOT NULL," +
+                    "Activo INTEGER NOT NULL," +
+                    "PRIMARY KEY ([id])" +
+                    ");";
+            db?.execSQL(sql);
+
+
+            sql="CREATE TABLE [Ordenenc] ("+
+                    "idOrden INTEGER NOT NULL,"+
+                    "Numero TEXT NOT NULL,"+
+                    "Fecha INTEGER NOT NULL,"+
+                    "idUsuario INTEGER NOT NULL,"+
+                    "idEstado INTEGER NOT NULL,"+
+                    "idTipo INTEGER NOT NULL,"+
+                    "idCliContact INTEGER NOT NULL,"+
+                    "idDir INTEGER NOT NULL,"+
+                    "idCliente INTEGER NOT NULL,"+
+                    "descripcion TEXT NOT NULL,"+
+                    "fecha_cierre INTEGER NOT NULL,"+
+                    "hora_ini INTEGER NOT NULL,"+
+                    "hora_fin INTEGER NOT NULL,"+
+                    "PRIMARY KEY ([idOrden])"+
+                    ");";
+            db?.execSQL(sql);
+
+            sql="CREATE INDEX Ordenenc_idx1 ON Ordenenc(Fecha)";db?.execSQL(sql)
+            sql="CREATE INDEX Ordenenc_idx2 ON Ordenenc(idEstado)";db?.execSQL(sql)
+
             sql="CREATE TABLE [Prodprecio] ("+
                     "CODIGO_PRECIO INTEGER NOT NULL,"+
                     "CODIGO_PRODUCTO INTEGER NOT NULL,"+
@@ -101,6 +136,42 @@ class BaseDatosScript(private val vcontext: Context) {
                     "codigo_ticket_departamento INTEGER NOT NULL,"+
                     "nombre TEXT NOT NULL,"+
                     "PRIMARY KEY ([codigo_tipo_departamento])"+
+                    ");";
+            db?.execSQL(sql);
+
+            sql="CREATE TABLE [T_ordendet] ("+
+                    "CODIGO_ORDEN_SERVICIO_DET INTEGER NOT NULL,"+
+                    "CODIGO_ORDEN_SERVICIO INTEGER NOT NULL,"+
+                    "CODIGO_PRODUCTO INTEGER NOT NULL,"+
+                    "DESCRIPCION TEXT NOT NULL,"+
+                    "PRECIO REAL NOT NULL,"+
+                    "REALIZADO INTEGER NOT NULL,"+
+                    "CANTIDAD REAL NOT NULL,"+
+                    "TOTAL REAL NOT NULL,"+
+                    "ACTIVO INTEGER NOT NULL,"+
+                    "PRIMARY KEY ([CODIGO_ORDEN_SERVICIO_DET])"+
+                    ");";
+            db?.execSQL(sql);
+
+
+            sql="CREATE TABLE [T_ordenenc] ("+
+                    "CODIGO_ORDEN_SERVICIO INTEGER NOT NULL,"+
+                    "NUMERO TEXT NOT NULL,"+
+                    "CODIGO_CLIENTE INTEGER NOT NULL,"+
+                    "CODIGO_SUCURSAL INTEGER NOT NULL,"+
+                    "CODIGO_EMPRESA INTEGER NOT NULL,"+
+                    "CODIGO_TIPO_ORDEN_SERVICIO INTEGER NOT NULL,"+
+                    "CODIGO_ESTADO_ORDEN_SERVICIO INTEGER NOT NULL,"+
+                    "CODIGO_CLIENTE_CONTACTO INTEGER NOT NULL,"+
+                    "CODIGO_DIRECCION INTEGER NOT NULL,"+
+                    "CODIGO_MONEDA INTEGER NOT NULL,"+
+                    "TOTAL REAL NOT NULL,"+
+                    "ANULADA INTEGER NOT NULL,"+
+                    "ACTIVA INTEGER NOT NULL,"+
+                    "CERRADA INTEGER NOT NULL,"+
+                    "DESCRIPCION TEXT NOT NULL,"+
+                    "OBSERVACION TEXT NOT NULL,"+
+                    "PRIMARY KEY ([CODIGO_ORDEN_SERVICIO])"+
                     ");";
             db?.execSQL(sql);
 
@@ -170,19 +241,6 @@ class BaseDatosScript(private val vcontext: Context) {
             db?.execSQL(sql);
 
 
-            sql = "CREATE TABLE [Ordendet] (" +
-                    "id INTEGER NOT NULL," +
-                    "idOrden INTEGER NOT NULL," +
-                    "idProducto INTEGER NOT NULL," +
-                    "Descripcion TEXT NOT NULL," +
-                    "Realizado INTEGER NOT NULL," +
-                    "Cant REAL NOT NULL," +
-                    "Activo INTEGER NOT NULL," +
-                    "PRIMARY KEY ([id])" +
-                    ");";
-            db?.execSQL(sql);
-
-
             sql = "CREATE TABLE [Ordendir] (" +
                     "id INTEGER NOT NULL," +
                     "idcliente INTEGER NOT NULL," +
@@ -193,28 +251,6 @@ class BaseDatosScript(private val vcontext: Context) {
                     "PRIMARY KEY ([id])" +
                     ");";
             db?.execSQL(sql);
-
-
-            sql = "CREATE TABLE [Ordenenc] (" +
-                    "idOrden INTEGER NOT NULL," +
-                    "Numero TEXT NOT NULL," +
-                    "Fecha INTEGER NOT NULL," +
-                    "idUsuario INTEGER NOT NULL," +
-                    "idEstado INTEGER NOT NULL," +
-                    "idTipo INTEGER NOT NULL," +
-                    "idCliContact INTEGER NOT NULL," +
-                    "idDir INTEGER NOT NULL," +
-                    "idCliente INTEGER NOT NULL," +
-                    "descripcion TEXT NOT NULL," +
-                    "fecha_cierre INTEGER NOT NULL," +
-                    "hora_ini INTEGER NOT NULL," +
-                    "hora_fin INTEGER NOT NULL," +
-                    "PRIMARY KEY ([idOrden])" +
-                    ");";
-            db?.execSQL(sql);
-
-            sql = "CREATE INDEX Ordenenc_idx1 ON Ordenenc(Fecha)";db?.execSQL(sql)
-            sql = "CREATE INDEX Ordenenc_idx2 ON Ordenenc(idEstado)";db?.execSQL(sql)
 
 
             sql = "CREATE TABLE [Ordenfoto] (" +

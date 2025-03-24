@@ -16,7 +16,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dts.base.clsClasses
 import com.dts.classes.RecyclerItemClickListener
 import com.dts.classes.clsProdprecioObj
-import com.dts.classes.clsTiposerviciosObj
+import com.dts.classes.clsSaveposObj
+import com.dts.classes.clsTOrdendetObj
+import com.dts.classes.clsTOrdenencObj
 import com.dts.classes.extListDlg
 import com.dts.ladapt.LA_MaterialAdapter
 
@@ -30,6 +32,8 @@ class TareaNueva : PBase() {
     var lbldir: TextView? = null
 
     var ProdprecioObj: clsProdprecioObj? = null
+    var TOrdenencObj: clsTOrdenencObj? = null
+    var TOrdendetObj: clsTOrdendetObj? = null
 
     var adapter: LA_MaterialAdapter? = null
 
@@ -64,6 +68,8 @@ class TareaNueva : PBase() {
             lbldir = findViewById<View>(R.id.textView17) as TextView;lbldir?.visibility=View.GONE
 
             ProdprecioObj = clsProdprecioObj(this, Con!!, db!!)
+            TOrdenencObj = clsTOrdenencObj(this, Con!!, db!!)
+            TOrdendetObj = clsTOrdendetObj(this, Con!!, db!!)
 
             idtipo=gl?.gint!!
             nomtipo=gl?.gstr!!;lbltipo?.text=nomtipo
@@ -149,13 +155,73 @@ class TareaNueva : PBase() {
     }
 
     fun save() {
-        try {
+        var tot=0.0
+        var ttot=0.0
 
+        try {
+            db!!.beginTransaction()
+
+            var corel=TOrdenencObj?.newID("SELECT Max(idorden) FROM T_Ordenenc")
+            var detcorel=TOrdendetObj?.newID("SELECT Max(id) FROM T_Ordendet")
+
+            val SaveposObj = clsSaveposObj(this, Con!!, db!!)
+            SaveposObj.fill("WHERE (id=6)")
+            var idsuc=if (SaveposObj.count>0) SaveposObj?.first()?.valor?.toInt() else 141
+            SaveposObj.fill("WHERE (id=8)")
+            var idmon=if (SaveposObj.count>0) SaveposObj?.first()?.valor?.toInt() else 6
+
+            var ditem:clsClasses.clsT_ordendet
+
+            for (itm in items) {
+                ditem=clsClasses.clsT_ordendet()
+
+                ditem.codigo_orden_servicio_det=detcorel!!
+                ditem.codigo_orden_servicio=corel!!
+                ditem.codigo_producto=itm?.codigo_producto!!
+                ditem.descripcion=itm?.desclarga!!
+                ditem.precio=itm?.precio!!
+                ditem.realizado=0
+                ditem.cantidad=itm?.cant!!
+                ttot=ditem.precio*ditem.cantidad;tot+=ttot
+                ditem.total=ttot
+                ditem.activo=1
+
+                TOrdendetObj?.add(ditem)
+                detcorel++
+
+            }
+
+
+            var item = clsClasses.clsT_ordenenc()
+
+            item.codigo_orden_servicio=corel!!
+            item.numero=""+gl?.iduser+"_"+ mu?.getCorelBase()
+            item.codigo_cliente=idcli
+            item.codigo_sucursal=idsuc!!
+            item.codigo_empresa=gl?.idemp!!
+            item.codigo_tipo_orden_servicio=idtipo
+            item.codigo_estado_orden_servicio=1
+            item.codigo_cliente_contacto=idcont
+            item.codigo_direccion=iddir
+            item.codigo_moneda=idmon!!
+            item.total=tot
+            item.anulada=0
+            item.activa=1
+            item.cerrada=0
+            item.descripcion=gl?.gnota!!
+            item.observacion=""
+
+            TOrdenencObj?.add(item)
+
+            db!!.setTransactionSuccessful()
+            db!!.endTransaction()
 
             finish()
-        } catch (e: Exception) {
-            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        } catch (e: java.lang.Exception) {
+            db!!.endTransaction()
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
         }
+
     }
 
     fun AddItem() {
@@ -375,6 +441,8 @@ class TareaNueva : PBase() {
             gl?.dialogr = Runnable { dialogswitch() }
 
             ProdprecioObj?.reconnect(Con!!, db!!)
+            TOrdenencObj?.reconnect(Con!!, db!!)
+            TOrdendetObj?.reconnect(Con!!, db!!)
 
             if (callback==1) {
                 callback=0

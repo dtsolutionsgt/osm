@@ -169,12 +169,14 @@ class Usuarios : PBase() {
 
                 var idsuc=141
                 var mon="Q"
+                var idmon=6
+
                 when (pais) {
-                    "HN" -> {idsuc=161;mon="L"}
-                    "PA" -> {idsuc=163;mon="$"}
-                    "SV" -> {idsuc=164;mon="$"}
-                    "NI" -> {idsuc=165;mon="C$"}
-                    "CR" -> {idsuc=169;mon="₡"}
+                    "HN" -> { idsuc=161; mon="L";  idmon=12 }
+                    "PA" -> { idsuc=163; mon="$";  idmon=7  }
+                    "SV" -> { idsuc=164; mon="$";  idmon=7  }
+                    "NI" -> { idsuc=165; mon="C$"; idmon=15 }
+                    "CR" -> { idsuc=169; mon="₡";  idmon=26 }
                 }
 
                 item.id=6
