@@ -195,6 +195,7 @@
         android:checkable="false"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
-        app:rippleColor="#241D1D" />
+        app:rippleColor="#241D1D"
+        android:onClick="doFirma"/>
 
 </RelativeLayout>

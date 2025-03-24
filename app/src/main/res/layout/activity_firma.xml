@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/color_light"
+    tools:context=".Firma_Activity">
+
+    <!-- Encabezado -->
+    <RelativeLayout
+        android:id="@+id/reltop"
+        android:layout_width="match_parent"
+        android:layout_height="64dp">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/mposgerhead" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Firma Digital"
+            android:textColor="#FFFFFF"
+            android:textSize="26sp"
+            android:textStyle="bold|italic"/>
+
+        <RelativeLayout
+            android:id="@+id/relbot"
+            android:layout_width="wrap_content"
+            android:layout_height="47dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="1dp"
+            android:background="@drawable/color_medium">
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/btn_regresar"
+            android:layout_width="52dp"
+            android:layout_height="120dp"
+            android:clickable="true"
+            android:onClick="doExit"
+            app:srcCompat="@drawable/arr_back" />
+    </RelativeLayout>
+
+    <!-- Área de Firma con Borde -->
+    <FrameLayout
+        android:id="@+id/signature_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/border_style"
+        android:padding="5dp"
+        app:layout_constraintTop_toBottomOf="@id/reltop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/button_container"
+        app:layout_constraintVertical_bias="0.5">
+
+        <com.dts.classes.SignatureView
+            android:id="@+id/signature_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"/>
+    </FrameLayout>
+
+    <!-- Botones -->
+    <LinearLayout
+        android:id="@+id/button_container"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reltop"
+        app:layout_constraintVertical_bias="1.0">
+
+        <Button
+            android:id="@+id/btn_aplicar"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/button_style"
+            android:padding="10dp"
+            android:text="Limpiar Firma"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btn_guardar"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_style"
+            android:padding="10dp"
+            android:text="Guardar Firma"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Footer con botón de regreso -->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

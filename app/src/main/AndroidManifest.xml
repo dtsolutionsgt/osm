@@ -81,6 +81,12 @@
             android:exported="false"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
+            android:name=".Firma_Activity"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:screenOrientation="landscape" />
+
+        <activity
             android:name=".Productos"
             android:exported="false"
             android:windowSoftInputMode="stateAlwaysHidden" />

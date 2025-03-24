@@ -137,6 +137,13 @@ class Session : PBase() {
         }
     }
 
+    fun doFirma(view: View) {
+        try {
+            startActivity(Intent(this, Firma_Activity::class.java)) // Cambia MainActivity por la clase donde tienes la firma
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
+        }
+    }
 
 
     fun setHandlers() {

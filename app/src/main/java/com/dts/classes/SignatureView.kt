@@ -9,55 +9,71 @@ import android.graphics.Path
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.graphics.*
 
 class SignatureView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
-    var isEmpty=true
+    private var path = Path()
+    private var paint = Paint().apply {
+        color = Color.BLACK
+        style = Paint.Style.STROKE
+        strokeWidth = 8f
+        isAntiAlias = true
+        strokeCap = Paint.Cap.ROUND
+        strokeJoin = Paint.Join.ROUND
+    }
 
-    private var paint: Paint = Paint()
-    private var path: Path = Path()
+    private lateinit var bitmap: Bitmap
+    private lateinit var extraCanvas: Canvas
+
+    private var isSigned = false
 
     init {
-        paint.color = Color.BLACK
-        paint.style = Paint.Style.STROKE
-        paint.strokeWidth = 5f
+        setLayerType(LAYER_TYPE_SOFTWARE, null)
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+        extraCanvas = Canvas(bitmap)
+        extraCanvas.drawColor(Color.WHITE)
     }
 
     override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas!!)
-        canvas?.drawPath(path, paint)
+        super.onDraw(canvas)
+        canvas.drawBitmap(bitmap, 0f, 0f, null)
+        canvas.drawPath(path, paint)
     }
 
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        when (event?.action) {
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        val x = event.x
+        val y = event.y
+
+        when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                path.moveTo(event.x, event.y)
-                return true
+                path.moveTo(x, y)
+                isSigned = true
             }
-            MotionEvent.ACTION_MOVE -> {
-                path.lineTo(event.x, event.y)
-                invalidate()
-                isEmpty=false
+            MotionEvent.ACTION_MOVE, MotionEvent.ACTION_UP -> {
+                path.lineTo(x, y)
+                extraCanvas.drawPath(path, paint)
+                isSigned = true
             }
-            MotionEvent.ACTION_UP -> {
-                // No action needed here for now
-            }
-            else -> return false
         }
+        invalidate()
         return true
     }
 
-    fun clear() {
-        isEmpty=true
+    fun clearCanvas() {
+        extraCanvas.drawColor(Color.WHITE)
         path.reset()
+        isSigned = false
         invalidate()
     }
 
-    fun getSignatureBitmap(): Bitmap {
-        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        draw(canvas)
-        return bitmap
-    }
+    fun getBitmap(): Bitmap = bitmap
 
+    fun isEmpty(): Boolean {
+        return !isSigned
+    }
 }
