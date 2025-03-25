@@ -77,7 +77,7 @@ class Firma_Activity: AppCompatActivity() {
                 outputStreamAndroid.flush()
                 outputStreamAndroid.close()
 
-                Toast.makeText(this@Firma_Activity, "Firma guardada en galería y carpeta interna.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@Firma_Activity, "Firma guardada.", Toast.LENGTH_SHORT).show()
 
             } catch (e: Exception) {
                 Toast.makeText(this@Firma_Activity, "Error al guardar la firma", Toast.LENGTH_SHORT).show()
