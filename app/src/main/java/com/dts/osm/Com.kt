@@ -366,7 +366,7 @@ class Com : PBase() {
         try {
             runOnUiThread {lblstat?.text = "Actualizando estados . . ."}
 
-            http?.url=gl?.urlbase+"api/Users/Get_P_Ticket_Estado"
+            http?.url=gl?.urlbase+"api/Users/GetEstados?pUsuario="+gl?.iduser
 
             val request: Request = Request.Builder()
                 .url(http?.url!!).get()
@@ -401,8 +401,8 @@ class Com : PBase() {
                     jss=gson.fromJson(pls, RType)
                     item= clsClasses.clsEstado()
 
-                    item.codigo_ticket_estado = jss?.CODIGO_TICKET_ESTADO!!
-                    item.nombre = jss?.Nombre!!
+                    item.codigo_ticket_estado = jss?.CODIGO_ESTADO!!
+                    item.nombre = jss?.NOMBRE!!
 
                     try {
                         EstadoObj?.add(item)
@@ -433,7 +433,7 @@ class Com : PBase() {
         try {
             runOnUiThread {lblstat?.text = "Actualizando tipos . . ."}
 
-            http?.url=gl?.urlbase+"api/Users/Get_P_TipoServicioDepartamento"
+            http?.url=gl?.urlbase+"api/Users/GetTipoOrden?pUsuario="+gl?.iduser
 
             val request: Request = Request.Builder()
                 .url(http?.url!!).get()
@@ -468,9 +468,9 @@ class Com : PBase() {
                     jss=gson.fromJson(pls, RType)
                     item= clsClasses.clsTiposervicios()
 
-                    item.codigo_tipo_departamento  = jss?.CODIGO_TIPO_SERVICIO_DEP!!
-                    item.codigo_ticket_departamento  = jss?.CODIGO_TICKET_DEPARTAMENTO!!
-                    item.nombre = jss?.Nombre!!
+                    item.codigo_tipo_departamento  = jss?.CODIGO_TIPO!!
+                    item.codigo_ticket_departamento  = jss?.CODIGO_TIPO!!
+                    item.nombre = jss?.NOMBRE!!
 
                     try {
                         TiposervicioObj?.add(item)
@@ -754,8 +754,8 @@ class Com : PBase() {
             db!!.beginTransaction()
 
             // ----------------------------------------------
-            //db!!.execSQL("DELETE FROM Ordenenc ");
-            //db!!.execSQL("DELETE FROM Ordendet ");
+            db!!.execSQL("DELETE FROM Ordenenc ");
+            db!!.execSQL("DELETE FROM Ordendet ");
 
             for (pls in parsedList!!) {
 

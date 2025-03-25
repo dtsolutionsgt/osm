@@ -40,8 +40,8 @@ class ClassesAPI {
     @Serializable
     data class clsAPIEstado(
         var type : String = "",
-        var CODIGO_TICKET_ESTADO : Int = 0,
-        var Nombre : String = "",
+        var CODIGO_ESTADO : Int = 0,
+        var NOMBRE : String = "",
     )
 
     @Serializable
@@ -95,9 +95,8 @@ class ClassesAPI {
     @Serializable
     data class clsAPITipoServicio(
         var type : String = "",
-        var CODIGO_TIPO_SERVICIO_DEP : Int = 0,
-        var CODIGO_TICKET_DEPARTAMENTO : Int = 0,
-        var Nombre : String = "",
+        var CODIGO_TIPO : Int = 0,
+        var NOMBRE : String = "",
     )
 
     @Serializable

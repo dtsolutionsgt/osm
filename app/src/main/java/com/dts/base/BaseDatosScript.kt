@@ -56,6 +56,14 @@ class BaseDatosScript(private val vcontext: Context) {
             db?.execSQL(sql);
             sql="CREATE INDEX Clientedir_idx1 ON Clientedir(Codigo_Cliente)";db?.execSQL(sql)
 
+
+            sql = "CREATE TABLE [Envioimagen] (" +
+                    "id TEXT NOT NULL," +
+                    "tipo INTEGER NOT NULL," +
+                    "PRIMARY KEY ([id])" +
+                    ");";
+            db?.execSQL(sql);
+
             sql="CREATE TABLE [Estado] ("+
                     "codigo_ticket_estado INTEGER NOT NULL,"+
                     "nombre TEXT NOT NULL,"+
@@ -105,6 +113,19 @@ class BaseDatosScript(private val vcontext: Context) {
 
             sql="CREATE INDEX Ordenenc_idx1 ON Ordenenc(Fecha)";db?.execSQL(sql)
             sql="CREATE INDEX Ordenenc_idx2 ON Ordenenc(idEstado)";db?.execSQL(sql)
+
+            sql = "CREATE TABLE [Ordenfoto] (" +
+                    "id INTEGER NOT NULL," +
+                    "idOrden INTEGER NOT NULL," +
+                    "nombre TEXT NOT NULL," +
+                    "nota TEXT NOT NULL," +
+                    "statcom INTEGER NOT NULL," +
+                    "PRIMARY KEY ([id])" +
+                    ");";
+            db?.execSQL(sql);
+
+            sql = "CREATE INDEX Ordenfoto_idx1 ON Ordenfoto(idOrden)";db?.execSQL(sql)
+            sql = "CREATE INDEX Ordenfoto_idx2 ON Ordenfoto(statcom)";db?.execSQL(sql)
 
             sql="CREATE TABLE [Prodprecio] ("+
                     "CODIGO_PRECIO INTEGER NOT NULL,"+
@@ -184,16 +205,17 @@ class BaseDatosScript(private val vcontext: Context) {
                     ");";
             db?.execSQL(sql);
 
+            sql="CREATE TABLE [Updsave] ("+
+                    "id INTEGER NOT NULL,"+
+                    "cmd TEXT NOT NULL,"+
+                    "PRIMARY KEY ([id])"+
+                    ");";
+            db?.execSQL(sql);
 
 
             /*
 
-            sql = "CREATE TABLE [Envioimagen] (" +
-                    "id TEXT NOT NULL," +
-                    "tipo INTEGER NOT NULL," +
-                    "PRIMARY KEY ([id])" +
-                    ");";
-            db?.execSQL(sql);
+
 
             sql = "CREATE TABLE [Estadoorden] (" +
                     "id INTEGER NOT NULL," +
@@ -253,18 +275,7 @@ class BaseDatosScript(private val vcontext: Context) {
             db?.execSQL(sql);
 
 
-            sql = "CREATE TABLE [Ordenfoto] (" +
-                    "id INTEGER NOT NULL," +
-                    "idOrden INTEGER NOT NULL," +
-                    "nombre TEXT NOT NULL," +
-                    "nota TEXT NOT NULL," +
-                    "statcom INTEGER NOT NULL," +
-                    "PRIMARY KEY ([id])" +
-                    ");";
-            db?.execSQL(sql);
 
-            sql = "CREATE INDEX Ordenfoto_idx1 ON Ordenfoto(idOrden)";db?.execSQL(sql)
-            sql = "CREATE INDEX Ordenfoto_idx2 ON Ordenfoto(statcom)";db?.execSQL(sql)
 
             sql="CREATE TABLE [Syntaxlog] ("+
                     "id INTEGER NOT NULL,"+
@@ -300,12 +311,7 @@ class BaseDatosScript(private val vcontext: Context) {
                     ");";
             db?.execSQL(sql);
 
-            sql="CREATE TABLE [Updsave] ("+
-                    "id INTEGER NOT NULL,"+
-                    "cmd TEXT NOT NULL,"+
-                    "PRIMARY KEY ([id])"+
-                    ");";
-            db?.execSQL(sql);
+
 
 
             sql="CREATE TABLE [Usuario] ("+
@@ -369,6 +375,10 @@ class BaseDatosScript(private val vcontext: Context) {
     fun scriptData(db: SQLiteDatabase) {
         try {
             db.execSQL("INSERT INTO Params VALUES (1,1,'','',0,0,'',0);")
+
+            db.execSQL("INSERT INTO Savepos VALUES (0,'44');")
+            db.execSQL("INSERT INTO Savepos VALUES (2,'DTSolutions');")
+
         } catch (e: SQLiteException) {
             msgbox(e.message)
         }

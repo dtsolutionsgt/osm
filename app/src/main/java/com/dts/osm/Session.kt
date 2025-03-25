@@ -31,6 +31,8 @@ class Session : PBase() {
     var imglogo: ImageView? = null
 
     var UsuarioObj: clsUsuarioObj? = null
+    var SaveposObj: clsSaveposObj? = null
+
 
     var mPref: SharedPreferences? = null
     var mPEdit: SharedPreferences.Editor? = null
@@ -61,6 +63,8 @@ class Session : PBase() {
             mPref = getSharedPreferences("com.dts.osm", MODE_PRIVATE)
             mPEdit = mPref?.edit()
 
+            SaveposObj = clsSaveposObj(this, Con!!, db!!)
+
             UsuarioObj = clsUsuarioObj(this, Con!!, db!!)
             UsuarioObj?.fill()
 
@@ -76,29 +80,13 @@ class Session : PBase() {
     fun doLogin(view: View) {
         try {
             //if (gl?.iduser!!>0) {
-            //if (gl?.iduser!!>0) {
                 //UsuarioObj?.fill("WHERE (id="+gl?.iduser!!+")")
                 //var rol=UsuarioObj?.first()?.rol
                 var rol="TEC";
                 gl?.idrol=rol!!
 
-                /*
-                when (rol) {
-                    1 -> { msgbox("Desarrollo pendiente.") }
-                    2 -> { startActivity(Intent(this,MenuTec::class.java)) }
-                    3 -> { startActivity(Intent(this,MenuSup::class.java)) }
-                    4 -> { startActivity(Intent(this,MenuSup::class.java))}
-                    5 -> { toast("Modalidad para los vendedores no necesita login.")}
-                    6 -> { startActivity(Intent(this,MenuSup::class.java))}
-                    7 -> { startActivity(Intent(this,MenuSup::class.java))}
-                    else -> { msgbox("Rol de usuario desconocido.")}
-                }
-
-                 */
-
-                //if (rol in vmode) gl?.modoapp=1 else gl?.modoapp=0
-                startActivity(Intent(this,Lista::class.java))
-
+                //startActivity(Intent(this,Lista::class.java))
+                startActivity(Intent(this,MenuTec::class.java))
             //} else {
             //    msgbox("Falta seleccionar un usuario.")
             //}
@@ -163,17 +151,16 @@ class Session : PBase() {
         var rol=""
 
         try {
-            gl?.idemp=44
+            gl?.idemp=24
 
             gl?.iduser=0;gl?.nuser="Sin usuario"
 
-            val SaveposObj = clsSaveposObj(this, Con!!, db!!)
 
-            SaveposObj.fill("WHERE (id=2)")
-            if (SaveposObj.count>0) lblemp?.text=""+SaveposObj?.first()?.valor
+            SaveposObj?.fill("WHERE (id=2)")
+            if (SaveposObj?.count!!>0) lblemp?.text=""+SaveposObj?.first()?.valor
 
-            SaveposObj.fill("WHERE (id=1)")
-            if (SaveposObj.count>0) {
+            SaveposObj?.fill("WHERE (id=1)")
+            if (SaveposObj?.count!!>0) {
                 gl?.iduser=Integer.parseInt(SaveposObj?.first()?.valor)
 
                 val UsuarioObj = clsUsuarioObj(this, Con!!, db!!)
@@ -203,7 +190,6 @@ class Session : PBase() {
         }
 
     }
-
 
     //endregion
 
@@ -266,19 +252,19 @@ class Session : PBase() {
         val alias: String
         try {
             dir = storage + ""
-            //alias = gl.userid
-            subject = "Base de datos Servicio móvil "
+            alias = ""+gl?.iduser!!
+            subject = "BD Orden "+gl?.nuser
             body = "Base de datos adjunta"
 
             var uri: Uri? = null
             try {
-                val f1 = File(dir+"/servmov.db")
-                val f2 = File(dir+"/servmov_copia.db")
-                val f3 = File(dir+"/servmov.zip")
+                val f1 = File(dir+"/osm.db")
+                val f2 = File(dir+"/osm_copia.db")
+                val f3 = File(dir+"/osm.zip")
 
                 FileUtils.copyFile(f1, f2)
                 uri = FileProvider.getUriForFile(this, "$packageName.provider", f3)
-                app!!.zip(dir+"/servmov_copia.db",dir+"/servmov.zip")
+                app!!.zip(dir+"/osm_copia.db",dir+"/osm.zip")
 
                 val builder = StrictMode.VmPolicy.Builder()
                 StrictMode.setVmPolicy(builder.build())
@@ -365,11 +351,9 @@ class Session : PBase() {
             listdlg.setTopRightPosition()
 
             listdlg.addData(1,"Sincronizar")
-            listdlg.addData(4,"Actualizar version")
+            //listdlg.addData(4,"Actualizar version")
             listdlg.addData(2,"Soporte >")
-            //listdlg.addData(3,"Registro")
-            //listdlg.addData(5,"Iniciar servicio")
-            //listdlg.addData(6,"Parar servicio")
+            listdlg.addData(3,"Pais")
 
             listdlg.clickListener= Runnable { processMainMenu(listdlg.selcodint) }
 
@@ -412,10 +396,9 @@ class Session : PBase() {
             listdlg.setTopRightPosition()
 
             listdlg.addData(1,"Enviar base de datos")
-            listdlg.addData(2,"Recuperar base de datos")
+            //listdlg.addData(2,"Recuperar base de datos")
             listdlg.addData(3,"Tablas")
-            //listdlg.addData(5,"Captura de ubicacion")
-            //listdlg.addData(4,"Limpiar tablas")
+            listdlg.addData(4,"Empresa")
 
             listdlg.clickListener= Runnable { processSupportMenu(listdlg.selcodint) }
 
@@ -432,19 +415,55 @@ class Session : PBase() {
                 1 -> { sendDatabase() }
                 2 -> { msgask(2,"¿Reescribir la base de datos actual?") }
                 3 -> { startActivity(Intent(this, Tablas::class.java))  }
-                4 -> { claveSoporte(2) }
-                5 -> {
-                    claveSoporte(1)
-                }
+                4 -> { showEmpresaMenu() }
+                5 -> { claveSoporte(1) }
             }
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
     }
 
-    private fun ingresaEmpresa() {
-        //startActivity(Intent(this,Registracion::class.java))
+    fun showEmpresaMenu() {
+        try {
+
+            val listdlg = extListDlg();
+
+            listdlg.buildDialog(this@Session, "Empresa")
+            listdlg.setLines(3);
+            listdlg.setWidth(-1)
+            listdlg.setTopRightPosition()
+
+            listdlg.addData(44,"DTSolutions")
+            listdlg.addData(7,"Preventa")
+            listdlg.addData(24,"Desarrollo")
+
+            listdlg.clickListener= Runnable { processEmpresaMenu(listdlg.selcodint,listdlg.selvalue) }
+
+            listdlg.setOnLeftClick { v: View? -> listdlg.dismiss() }
+            listdlg.show()
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
+        }
     }
+
+    fun processEmpresaMenu(cemp: Int,nemp: String) {
+        try {
+            var item = clsClasses.clsSavepos()
+
+            item.id=0
+            item.valor=""+cemp
+            SaveposObj?.update(item)
+
+            item.id=2
+            item.valor=nemp
+            SaveposObj?.update(item)
+
+            lblemp?.text=nemp
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
+    }
+
 
     private fun claveSoporte(cmodo:Int) {
         val alert: AlertDialog.Builder = AlertDialog.Builder(this)
@@ -567,6 +586,40 @@ class Session : PBase() {
 
         } catch (e: Exception) {}
 
+        try {
+            sql="CREATE TABLE [Updsave] ("+
+                    "id INTEGER NOT NULL,"+
+                    "cmd TEXT NOT NULL,"+
+                    "PRIMARY KEY ([id])"+
+                    ");";
+            db?.execSQL(sql);
+
+        } catch (e: Exception) {}
+
+        try {
+            sql = "CREATE TABLE [Ordenfoto] (" +
+                    "id INTEGER NOT NULL," +
+                    "idOrden INTEGER NOT NULL," +
+                    "nombre TEXT NOT NULL," +
+                    "nota TEXT NOT NULL," +
+                    "statcom INTEGER NOT NULL," +
+                    "PRIMARY KEY ([id])" +
+                    ");";
+            db?.execSQL(sql);
+
+            sql = "CREATE INDEX Ordenfoto_idx1 ON Ordenfoto(idOrden)";db?.execSQL(sql)
+            sql = "CREATE INDEX Ordenfoto_idx2 ON Ordenfoto(statcom)";db?.execSQL(sql)
+        } catch (e: Exception) {}
+
+        try {
+            sql = "CREATE TABLE [Envioimagen] (" +
+                    "id TEXT NOT NULL," +
+                    "tipo INTEGER NOT NULL," +
+                    "PRIMARY KEY ([id])" +
+                    ");";
+            db?.execSQL(sql);
+        } catch (e: Exception) {}
+
 
 
         try {
@@ -588,7 +641,8 @@ class Session : PBase() {
             super.onResume()
             gl?.dialogr = Runnable { dialogswitch() }
 
-            UsuarioObj?.reconnect(Con!!,db!!);
+            UsuarioObj?.reconnect(Con!!,db!!)
+            SaveposObj?.reconnect(Con!!,db!!)
 
             initSession()
         } catch (e: Exception) {
