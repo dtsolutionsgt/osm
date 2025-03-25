@@ -154,23 +154,24 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/rellogin"
-            android:layout_below="@+id/reltop"
-            android:layout_marginTop="100dp"
-            android:layout_marginBottom="100dp">
+    <RelativeLayout
+        android:id="@+id/rellogo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/rellogin"
+        android:layout_below="@+id/reltop"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="100dp">
 
-            <ImageView
-                android:id="@+id/imageView14"
-                android:layout_width="200dp"
-                android:layout_height="150dp"
-                android:layout_centerInParent="true"
-                android:adjustViewBounds="true"
-                app:srcCompat="@drawable/serv2" />
+        <ImageView
+            android:id="@+id/imageView14"
+            android:layout_width="200dp"
+            android:layout_height="150dp"
+            android:layout_centerInParent="true"
+            android:adjustViewBounds="true"
+            app:srcCompat="@drawable/serv2" />
 
-        </RelativeLayout>
+    </RelativeLayout>
 
         <TextView
             android:id="@+id/textView39"
@@ -188,14 +189,15 @@
         android:id="@+id/btn_firma"
         android:layout_width="58dp"
         android:layout_height="51dp"
-        android:layout_marginTop="92dp"
-        android:layout_marginEnd="71dp"
-        android:layout_toStartOf="@+id/textView39"
+        android:layout_above="@id/rellogin"
+        android:layout_alignStart="@+id/rellogin"
+        android:layout_marginStart="0dp"
+        android:layout_marginBottom="22dp"
         android:background="@drawable/btn_sign"
         android:checkable="false"
+        android:onClick="doFirma"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
-        app:rippleColor="#241D1D"
-        android:onClick="doFirma"/>
+        app:rippleColor="#241D1D" />
 
 </RelativeLayout>

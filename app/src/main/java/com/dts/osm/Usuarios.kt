@@ -65,9 +65,12 @@ class Usuarios : PBase() {
 
                         override fun onItemClick(view: View, position: Int) {
                             iduser=items.get(position).id
+                            rol=items.get(position).rol
+                            /*
                             var ss=items.get(position).rol
                             pais=ss.substring(0,2)
                             rol=ss.substring(2)
+                            */
                             ingresoClave(items.get(position).pin)
                         }
 
@@ -171,6 +174,7 @@ class Usuarios : PBase() {
                 var mon="Q"
                 var idmon=6
 
+                /*
                 when (pais) {
                     "HN" -> { idsuc=161; mon="L";  idmon=12 }
                     "PA" -> { idsuc=163; mon="$";  idmon=7  }
@@ -178,6 +182,7 @@ class Usuarios : PBase() {
                     "NI" -> { idsuc=165; mon="C$"; idmon=15 }
                     "CR" -> { idsuc=169; mon="₡";  idmon=26 }
                 }
+                */
 
                 item.id=6
                 item.valor=""+idsuc
@@ -185,6 +190,10 @@ class Usuarios : PBase() {
 
                 item.id=7
                 item.valor=mon
+                SaveposObj.add(item)
+
+                item.id=8
+                item.valor=""+idmon
                 SaveposObj.add(item)
 
             } catch (e: Exception) {

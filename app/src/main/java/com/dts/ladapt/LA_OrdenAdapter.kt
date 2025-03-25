@@ -3,19 +3,21 @@ package com.dts.ladapt
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.dts.base.clsClasses.clsOrdenlist
 import com.dts.osm.R
-import com.dts.base.clsClasses
 
-class LA_UsuarioAdapter(val itemList: ArrayList<clsClasses.clsUsuario>) : RecyclerView.Adapter<LA_UsuarioAdapter.ViewHolder>() {
+class LA_OrdenAdapter(val itemList: ArrayList<clsOrdenlist>) : RecyclerView.Adapter<LA_OrdenAdapter.ViewHolder>() {
 
     var selectedItemPosition: Int = -1
     lateinit var lay: LinearLayout
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LA_UsuarioAdapter.ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.lv_usuarioitem, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LA_OrdenAdapter.ViewHolder {
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.lv_ordenitem, parent, false)
         return ViewHolder(v)
     }
 
@@ -23,7 +25,7 @@ class LA_UsuarioAdapter(val itemList: ArrayList<clsClasses.clsUsuario>) : Recycl
         return itemList.size
     }
 
-    override fun onBindViewHolder(holder: LA_UsuarioAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: LA_OrdenAdapter.ViewHolder, position: Int) {
         val item = itemList[position]
         val isSelected = position == selectedItemPosition
 
@@ -50,13 +52,28 @@ class LA_UsuarioAdapter(val itemList: ArrayList<clsClasses.clsUsuario>) : Recycl
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
-        fun bindItems(mitem: clsClasses.clsUsuario) {
-            val textViewName = itemView.findViewById(R.id.textViewExistencia) as TextView
+        fun bindItems(mitem: clsOrdenlist) {
+            val lbltarea = itemView.findViewById(R.id.textViewUsername) as TextView
+            val lblcli = itemView.findViewById(R.id.textViewUsername2) as TextView
+            val lblfecha = itemView.findViewById(R.id.textViewUsername3) as TextView
+            val lblest = itemView.findViewById(R.id.textViewUsername4) as TextView
             lay = itemView.findViewById(R.id.relitem) as LinearLayout
-            textViewName.text = mitem.nombre
+
+            lbltarea.text = mitem.tarea
+            lblcli.text = mitem.cliente
+            lblfecha.text = mitem.fecha
+            lblest.text = mitem.estado
+
+            var eres=R.drawable.color_gray_grad
+            if (mitem.idestado==4) {
+                eres=R.drawable.color_ocra_grad
+            } else if (mitem.idestado==5) {
+                eres=R.drawable.color_green_grad
+            }
+            lblest.setBackgroundResource(eres)
         }
 
-        fun bind(mitem: clsClasses.clsUsuario, isSelected: Boolean) {
+        fun bind(mitem: clsOrdenlist, isSelected: Boolean) {
             lay.setBackgroundResource(if (isSelected)
                 R.drawable.frame_round_sel else R.drawable.frame_round)
         }
