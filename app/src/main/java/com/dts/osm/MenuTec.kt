@@ -273,6 +273,7 @@ class MenuTec : PBase() {
             imgpend?.isVisible=(cupd!! + cfot!! + cimg!!)>0
             //lblpend?.text="e: "+cupd+" / f: "+cfot+" / i: "+cimg
 
+
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
