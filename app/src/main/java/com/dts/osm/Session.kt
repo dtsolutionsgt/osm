@@ -127,7 +127,7 @@ class Session : PBase() {
 
     fun doFirma(view: View) {
         try {
-            startActivity(Intent(this, Firma_Activity::class.java)) // Cambia MainActivity por la clase donde tienes la firma
+            startActivity(Intent(this, Firma::class.java)) // Cambia MainActivity por la clase donde tienes la firma
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
         }
@@ -372,13 +372,8 @@ class Session : PBase() {
                     startActivity(Intent(this,Com::class.java))
                 }
                 2 -> { showSupportMenu() }
-                3 -> {
-                    //startActivity(Intent(this,Registracion::class.java))
-                }
-                4 -> {
-                    //startActivity(Intent(this,Version::class.java))
-                }
-
+                3 -> { showPaisMenu() }
+                4 -> {  }
             }
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
@@ -423,6 +418,60 @@ class Session : PBase() {
         }
     }
 
+    fun showPaisMenu() {
+        try {
+
+            val listdlg = extListDlg();
+
+            listdlg.buildDialog(this@Session, "Empresa")
+            listdlg.setLines(3);
+            listdlg.setWidth(-1)
+            listdlg.setTopRightPosition()
+
+            listdlg.addData(141,"Guatemala")
+            listdlg.addData(161,"Honduras")
+            listdlg.addData(163,"Panama")
+            listdlg.addData(164,"El Salvador")
+            listdlg.addData(165,"Nicaragua")
+            listdlg.addData(169,"Costa Rica")
+
+            listdlg.clickListener= Runnable { processPaisMenu(listdlg.selcodint) }
+
+            listdlg.setOnLeftClick { v: View? -> listdlg.dismiss() }
+            listdlg.show()
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
+        }
+    }
+
+    fun processPaisMenu(cp: Int) {
+        try {
+            var idsuc=141
+            var mon="Q"
+            var idmon=6
+            var pais="GT"
+
+            when (cp) {
+                  161 -> { idsuc=161; mon="L";  idmon=12; pais="HN" }
+                  163 -> { idsuc=163; mon="$";  idmon= 7; pais="PA" }
+                  164 -> { idsuc=164; mon="$";  idmon= 7; pais="SV" }
+                  165 -> { idsuc=165; mon="C$"; idmon=15; pais="NI" }
+                  169 -> { idsuc=169; mon="₡";  idmon=26; pais="CR" }
+            }
+
+            var item = clsClasses.clsSavepos()
+
+            item.id=5;item.valor=pais;SaveposObj?.update(item)
+            item.id=6;item.valor=""+idsuc;SaveposObj?.update(item)
+            item.id=7;item.valor=""+mon;SaveposObj?.update(item)
+            item.id=8;item.valor=""+idmon;SaveposObj?.update(item)
+
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
+    }
+
+
     fun showEmpresaMenu() {
         try {
 
@@ -464,7 +513,6 @@ class Session : PBase() {
         }
     }
 
-
     private fun claveSoporte(cmodo:Int) {
         val alert: AlertDialog.Builder = AlertDialog.Builder(this)
         alert.setTitle("Ingrese contraseña")
@@ -504,122 +552,24 @@ class Session : PBase() {
     fun scripttables() {
 
         try {
-            sql="CREATE TABLE [Ordenenc] ("+
+            sql="CREATE TABLE [Ordenenccap] ("+
                     "idOrden INTEGER NOT NULL,"+
-                    "Numero TEXT NOT NULL,"+
-                    "Fecha INTEGER NOT NULL,"+
-                    "idUsuario INTEGER NOT NULL,"+
-                    "idEstado INTEGER NOT NULL,"+
-                    "idTipo INTEGER NOT NULL,"+
-                    "idCliContact INTEGER NOT NULL,"+
-                    "idDir INTEGER NOT NULL,"+
-                    "idCliente INTEGER NOT NULL,"+
-                    "descripcion TEXT NOT NULL,"+
-                    "fecha_cierre INTEGER NOT NULL,"+
-                    "hora_ini INTEGER NOT NULL,"+
-                    "hora_fin INTEGER NOT NULL,"+
+                    "Anulada INTEGER NOT NULL,"+
+                    "Activa INTEGER NOT NULL,"+
+                    "Cerrada INTEGER NOT NULL,"+
+                    "FirmaUsuario TEXT NOT NULL,"+
+                    "FirmaCliente TEXT NOT NULL,"+
+                    "Latit REAL NOT NULL,"+
+                    "Longit REAL NOT NULL,"+
+                    "FechaIni INTEGER NOT NULL,"+
+                    "FechaFin INTEGER NOT NULL,"+
+                    "Nota TEXT NOT NULL,"+
+                    "Recibido INTEGER NOT NULL,"+
                     "PRIMARY KEY ([idOrden])"+
                     ");";
             db?.execSQL(sql);
 
-            sql="CREATE INDEX Ordenenc_idx1 ON Ordenenc(Fecha)";db?.execSQL(sql)
-            sql="CREATE INDEX Ordenenc_idx2 ON Ordenenc(idEstado)";db?.execSQL(sql)
         } catch (e: Exception) {}
-
-        try {
-            sql = "CREATE TABLE [Ordendet] (" +
-                    "id INTEGER NOT NULL," +
-                    "idOrden INTEGER NOT NULL," +
-                    "idProducto INTEGER NOT NULL," +
-                    "Descripcion TEXT NOT NULL," +
-                    "Realizado INTEGER NOT NULL," +
-                    "Cant REAL NOT NULL," +
-                    "Activo INTEGER NOT NULL," +
-                    "PRIMARY KEY ([id])" +
-                    ");";
-            db?.execSQL(sql);
-        } catch (e: Exception) {}
-
-
-
-        try {
-
-            sql="CREATE TABLE [T_ordendet] ("+
-                    "CODIGO_ORDEN_SERVICIO_DET INTEGER NOT NULL,"+
-                    "CODIGO_ORDEN_SERVICIO INTEGER NOT NULL,"+
-                    "CODIGO_PRODUCTO INTEGER NOT NULL,"+
-                    "DESCRIPCION TEXT NOT NULL,"+
-                    "PRECIO REAL NOT NULL,"+
-                    "REALIZADO INTEGER NOT NULL,"+
-                    "CANTIDAD REAL NOT NULL,"+
-                    "TOTAL REAL NOT NULL,"+
-                    "ACTIVO INTEGER NOT NULL,"+
-                    "PRIMARY KEY ([CODIGO_ORDEN_SERVICIO_DET])"+
-                    ");";
-            db?.execSQL(sql);
-
-        } catch (e: Exception) {}
-
-        try {
-
-            sql="CREATE TABLE [T_ordenenc] ("+
-                    "CODIGO_ORDEN_SERVICIO INTEGER NOT NULL,"+
-                    "NUMERO TEXT NOT NULL,"+
-                    "CODIGO_CLIENTE INTEGER NOT NULL,"+
-                    "CODIGO_SUCURSAL INTEGER NOT NULL,"+
-                    "CODIGO_EMPRESA INTEGER NOT NULL,"+
-                    "CODIGO_TIPO_ORDEN_SERVICIO INTEGER NOT NULL,"+
-                    "CODIGO_ESTADO_ORDEN_SERVICIO INTEGER NOT NULL,"+
-                    "CODIGO_CLIENTE_CONTACTO INTEGER NOT NULL,"+
-                    "CODIGO_DIRECCION INTEGER NOT NULL,"+
-                    "CODIGO_MONEDA INTEGER NOT NULL,"+
-                    "TOTAL REAL NOT NULL,"+
-                    "ANULADA INTEGER NOT NULL,"+
-                    "ACTIVA INTEGER NOT NULL,"+
-                    "CERRADA INTEGER NOT NULL,"+
-                    "DESCRIPCION TEXT NOT NULL,"+
-                    "OBSERVACION TEXT NOT NULL,"+
-                    "PRIMARY KEY ([CODIGO_ORDEN_SERVICIO])"+
-                    ");";
-            db?.execSQL(sql);
-
-
-        } catch (e: Exception) {}
-
-        try {
-            sql="CREATE TABLE [Updsave] ("+
-                    "id INTEGER NOT NULL,"+
-                    "cmd TEXT NOT NULL,"+
-                    "PRIMARY KEY ([id])"+
-                    ");";
-            db?.execSQL(sql);
-
-        } catch (e: Exception) {}
-
-        try {
-            sql = "CREATE TABLE [Ordenfoto] (" +
-                    "id INTEGER NOT NULL," +
-                    "idOrden INTEGER NOT NULL," +
-                    "nombre TEXT NOT NULL," +
-                    "nota TEXT NOT NULL," +
-                    "statcom INTEGER NOT NULL," +
-                    "PRIMARY KEY ([id])" +
-                    ");";
-            db?.execSQL(sql);
-
-            sql = "CREATE INDEX Ordenfoto_idx1 ON Ordenfoto(idOrden)";db?.execSQL(sql)
-            sql = "CREATE INDEX Ordenfoto_idx2 ON Ordenfoto(statcom)";db?.execSQL(sql)
-        } catch (e: Exception) {}
-
-        try {
-            sql = "CREATE TABLE [Envioimagen] (" +
-                    "id TEXT NOT NULL," +
-                    "tipo INTEGER NOT NULL," +
-                    "PRIMARY KEY ([id])" +
-                    ");";
-            db?.execSQL(sql);
-        } catch (e: Exception) {}
-
 
 
         try {

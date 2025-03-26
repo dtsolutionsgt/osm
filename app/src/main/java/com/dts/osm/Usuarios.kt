@@ -156,49 +156,18 @@ class Usuarios : PBase() {
             }
 
             val SaveposObj = clsSaveposObj(this, Con!!, db!!)
+            item.id=1
+            item.valor=""+iduser
 
             try {
-                item.id=1
-                item.valor=""+iduser
                 SaveposObj.add(item)
-
-                item.id=4
-                item.valor=rol
-                SaveposObj.add(item)
-
-                item.id=5
-                item.valor=pais
-                SaveposObj.add(item)
-
-                var idsuc=141
-                var mon="Q"
-                var idmon=6
-
-                /*
-                when (pais) {
-                    "HN" -> { idsuc=161; mon="L";  idmon=12 }
-                    "PA" -> { idsuc=163; mon="$";  idmon=7  }
-                    "SV" -> { idsuc=164; mon="$";  idmon=7  }
-                    "NI" -> { idsuc=165; mon="C$"; idmon=15 }
-                    "CR" -> { idsuc=169; mon="₡";  idmon=26 }
-                }
-                */
-
-                item.id=6
-                item.valor=""+idsuc
-                SaveposObj.add(item)
-
-                item.id=7
-                item.valor=mon
-                SaveposObj.add(item)
-
-                item.id=8
-                item.valor=""+idmon
-                SaveposObj.add(item)
-
             } catch (e: Exception) {
                 SaveposObj.update(item)
             }
+
+            item.id=4
+            item.valor=rol
+            SaveposObj.update(item)
 
             finish()
         } catch (e: Exception) {

@@ -67,7 +67,7 @@ class LA_MaterialAdapter(val itemList: ArrayList<clsClasses.clsMaterial>) :
         }
 
         fun bind(mitem: clsClasses.clsMaterial, isSelected: Boolean) {
-            lay.setBackgroundResource(if (isSelected) R.drawable.frame_round_flatb_sel else R.drawable.frame_round_flatb)
+            lay.setBackgroundResource(if (isSelected) R.drawable.frame_round_sel else R.drawable.frame_round)
         }
 
 

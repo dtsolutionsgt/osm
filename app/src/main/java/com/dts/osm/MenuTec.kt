@@ -61,7 +61,7 @@ class MenuTec : PBase() {
             menuview?.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
 
             lbluser = findViewById(R.id.textView15);lbluser?.text=gl?.nuser!!+"  "
-            lblreg = findViewById(R.id.textView)
+            lblreg = findViewById(R.id.textView);lblreg?.text=""
             lblpend = findViewById(R.id.textView31);lblpend?.text=""
             imgpend = findViewById(R.id.imageView24);imgpend?.isVisible=false
 
@@ -95,6 +95,14 @@ class MenuTec : PBase() {
         try {
             gl?.com_pend=true
             startActivity(Intent(this,Com::class.java))
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
+    }
+
+    fun doInventario(view: View) {
+        try {
+            startActivity(Intent(this,InvLista::class.java))
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
@@ -166,7 +174,8 @@ class MenuTec : PBase() {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
 
-        lblreg?.text="Registros: "+regs+" , Pendientes: "+pend
+        lblreg?.text="Registros: "+regs
+        lblpend?.text="Pendientes: "+pend
     }
 
     //endregion
@@ -262,7 +271,7 @@ class MenuTec : PBase() {
             var cimg=EnvioimagenObj?.count
 
             imgpend?.isVisible=(cupd!! + cfot!! + cimg!!)>0
-            lblpend?.text="e: "+cupd+" / f: "+cfot+" / i: "+cimg
+            //lblpend?.text="e: "+cupd+" / f: "+cfot+" / i: "+cimg
 
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
