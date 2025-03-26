@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/color_light"
+    tools:context=".Clientes">
+
+    <!-- Encabezado -->
+    <RelativeLayout
+        android:id="@+id/reltop"
+        android:layout_width="match_parent"
+        android:layout_height="64dp">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/mposgerhead" />
+
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Ubicación"
+            android:textColor="#FFFFFF"
+            android:textSize="34sp"
+            android:textStyle="bold|italic" />
+
+    </RelativeLayout>
+
+    <!-- Sección de ubicación centrada -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/reltop"
+        android:layout_marginTop="20dp"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/text_coordinates"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Latitud: --\nLongitud: --"
+            android:textSize="18sp"
+            android:textAlignment="center"
+            android:padding="10dp"/>
+
+        <Button
+            android:id="@+id/button_start_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Obtener Ubicación"
+            android:backgroundTint="@color/colorAccent"
+            android:textColor="@android:color/white"/>
+    </LinearLayout>
+
+    <!-- Pie de página -->
+    <RelativeLayout
+        android:id="@+id/relbot"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/color_medium">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/imageView7"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:onClick="doExit"
+            app:srcCompat="@drawable/arr_back" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

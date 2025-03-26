@@ -127,7 +127,7 @@ class Session : PBase() {
 
     fun doFirma(view: View) {
         try {
-            startActivity(Intent(this, Firma_Activity::class.java)) // Cambia MainActivity por la clase donde tienes la firma
+            startActivity(Intent(this, Location::class.java))
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
         }

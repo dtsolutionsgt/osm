@@ -79,7 +79,14 @@
             android:exported="false"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:screenOrientation="landscape" />
-
+        <activity
+            android:name=".Location"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <service
+            android:name=".LocationService"
+            android:foregroundServiceType="location"
+            android:exported="false" />
         <activity
             android:name=".Productos"
             android:exported="false"
