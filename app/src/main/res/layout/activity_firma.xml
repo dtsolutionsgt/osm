@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/color_light"
-    tools:context=".Firma_Activity">
+    tools:context=".Firma">
 
     <!-- Encabezado -->
     <RelativeLayout

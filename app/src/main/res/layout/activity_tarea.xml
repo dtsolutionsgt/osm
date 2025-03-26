@@ -249,6 +249,7 @@
                         android:layout_marginEnd="4dp"
                         android:clickable="true"
                         android:onClick="doWaze"
+                        android:visibility="invisible"
                         app:srcCompat="@drawable/btn_waze" />
 
                     <TextView
@@ -446,6 +447,7 @@
                     android:layout_height="match_parent"
                     android:layout_below="@id/rell5"
                     android:layout_marginTop="2dp"
+                    android:background="@drawable/frame_rect"
                     android:paddingBottom="5dp">
 
                     <TextView

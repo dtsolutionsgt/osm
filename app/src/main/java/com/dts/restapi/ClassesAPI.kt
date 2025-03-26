@@ -38,6 +38,13 @@ class ClassesAPI {
     )
 
     @Serializable
+    data class clsAPICoord (
+        var type : String = "",
+        var COORX : Double = 0.0,
+        var COORY : Double = 0.0
+    )
+
+    @Serializable
     data class clsAPIEstado(
         var type : String = "",
         var CODIGO_ESTADO : Int = 0,

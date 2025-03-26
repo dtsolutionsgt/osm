@@ -1,13 +1,33 @@
 {
   "project_info": {
-    "project_number": "1033737623115",
-    "project_id": "ordserv-232e6",
-    "storage_bucket": "ordserv-232e6.firebasestorage.app"
+    "project_number": "397751724646",
+    "firebase_url": "https://servicio-5abfe-default-rtdb.firebaseio.com",
+    "project_id": "servicio-5abfe",
+    "storage_bucket": "servicio-5abfe.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1033737623115:android:7539d0db1190bee69b5fce",
+        "mobilesdk_app_id": "1:397751724646:android:83ce7c67d5cf16ece8dba7",
+        "android_client_info": {
+          "package_name": "com.dts.fbcleaner"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4yrQaEjrJ1rGFi6SyBIau_3_vw9YZKZQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397751724646:android:01e4f5852cead2f3e8dba7",
         "android_client_info": {
           "package_name": "com.dts.osm"
         }
@@ -15,7 +35,45 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyD9MULyxPezNnFU8JeuAxAWZV4e0R_vqCk"
+          "current_key": "AIzaSyA4yrQaEjrJ1rGFi6SyBIau_3_vw9YZKZQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397751724646:android:342caccce91b7e1ae8dba7",
+        "android_client_info": {
+          "package_name": "com.dts.sermov"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4yrQaEjrJ1rGFi6SyBIau_3_vw9YZKZQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397751724646:android:2e1aa640d64be32fe8dba7",
+        "android_client_info": {
+          "package_name": "com.example.visionapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4yrQaEjrJ1rGFi6SyBIau_3_vw9YZKZQ"
         }
       ],
       "services": {

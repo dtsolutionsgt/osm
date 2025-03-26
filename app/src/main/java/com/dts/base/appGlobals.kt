@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.view.Gravity
 import android.widget.Toast
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -37,6 +38,10 @@ class appGlobals : Application() {
     var modoapp=0
     var nomdir=""
     var nomcont=""
+    var gpslat=0.0
+    var gpslong=0.0
+    var gpsclong=0.0
+    var gpsclat=0.0
 
     var urlbase=""
     var nuser=""
@@ -49,7 +54,8 @@ class appGlobals : Application() {
     var pePassAdm="";
     var peDiasCoord=7;
 
-    val picdir="/storage/emulated/0/Pictures/"
+    //val picdir="/storage/emulated/0/Pictures/"
+    val picdir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString()
     val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
 
 
