@@ -1,5 +1,6 @@
 package com.dts.osm
 
+import android.content.Context
 import android.content.Intent
 import android.location.Location
 import android.os.Bundle
@@ -39,7 +40,6 @@ class MenuTec : PBase() {
     var ClienteObj: clsClienteObj? = null
 
     var adapter: LA_OrdenAdapter? = null
-
 
     var items = ArrayList<clsClasses.clsOrdenlist>()
 
@@ -117,8 +117,10 @@ class MenuTec : PBase() {
                         override fun onItemClick(view: View, position: Int) {
                             saveselidx=position
                             gl?.idorden=items?.get(position)?.idorden!!
-                            //GPS()
-                            startIntent()
+
+                            val context: Context = view?.getContext()!!
+                            val intent = Intent(context, Tarea ::class.java)
+                            context.startActivity(intent)
                         }
 
                         override fun onItemLongClick(view: View?, position: Int) { }
@@ -148,13 +150,14 @@ class MenuTec : PBase() {
             ClienteObj?.fill()
 
             OrdenencObj?.fill("WHERE (idUsuario="+gl?.iduser!!+") AND (idestado in (3,4,8))  " +
-                    "ORDER BY Fecha,idOrden")
+                    "ORDER BY Numero")
             regs=OrdenencObj?.count!!;pend=0
 
             for (ord in OrdenencObj?.items!!) {
                 item= clsClasses.clsOrdenlist()
 
                 item.idorden = ord.idorden
+                item.numero = ord.numero
                 item.tarea = nombreTipo(ord.idtipo)
                 item.cliente = nombreCliente(ord.idcliente)
                 item.fecha = du?.sfecha(ord.fecha).toString()+" "+du?.shora(ord.hora_ini).toString()
@@ -195,32 +198,6 @@ class MenuTec : PBase() {
     //endregion
 
     //region Aux
-
-    /*
-    fun GPS() {
-        try {
-            location=gps?.getlocation(this)
-            gl?.gpslong=location?.longitude!!
-            gl?.gpslat=location?.latitude!!
-
-            //lbluser?.text=""+location?.latitude+" : "+location?.longitude
-
-            val litem = clsClasses.clsLocItem(
-                gl?.iduser!!, du?.actDateTime!!,
-                location!!.longitude, location!!.latitude, 0
-            )
-            fbl!!.setItem(gl?.gpsroot!!, litem)
-
-        } catch (e: Exception) {
-            //msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
-            toast("No se logro obtener coordenadas.")
-        }
-    }
-     */
-
-    fun startIntent() {
-        startActivity(Intent(this,Tarea::class.java))
-    }
 
     fun nombreEstado(codigo:Int):String {
         try {
@@ -272,7 +249,6 @@ class MenuTec : PBase() {
 
             imgpend?.isVisible=(cupd!! + cfot!! + cimg!!)>0
             //lblpend?.text="e: "+cupd+" / f: "+cfot+" / i: "+cimg
-
 
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)

@@ -53,12 +53,15 @@ class LA_OrdenAdapter(val itemList: ArrayList<clsOrdenlist>) : RecyclerView.Adap
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
         fun bindItems(mitem: clsOrdenlist) {
+
+            val lblnum = itemView.findViewById(R.id.textViewUsername5) as TextView
             val lbltarea = itemView.findViewById(R.id.textViewUsername) as TextView
             val lblcli = itemView.findViewById(R.id.textViewUsername2) as TextView
             val lblfecha = itemView.findViewById(R.id.textViewUsername3) as TextView
             val lblest = itemView.findViewById(R.id.textViewUsername4) as TextView
             lay = itemView.findViewById(R.id.relitem) as LinearLayout
 
+            lblnum.text = mitem.numero+"  "
             lbltarea.text = mitem.tarea
             lblcli.text = mitem.cliente
             lblfecha.text = mitem.fecha

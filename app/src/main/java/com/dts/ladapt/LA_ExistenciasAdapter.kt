@@ -15,10 +15,7 @@ class LA_ExistenciasAdapter(val itemList: ArrayList<clsClasses.clsExistencia>) :
     var selectedItemPosition: Int = -1
     lateinit var lay: LinearLayout
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): LA_ExistenciasAdapter.ViewHolder {
+    override fun onCreateViewHolder( parent: ViewGroup, viewType: Int ): LA_ExistenciasAdapter.ViewHolder {
         val v = LayoutInflater.from(parent.context)
             .inflate(R.layout.lv_existencias, parent, false)
         return ViewHolder(v)
@@ -66,7 +63,8 @@ class LA_ExistenciasAdapter(val itemList: ArrayList<clsClasses.clsExistencia>) :
         }
 
         fun bind(mitem: clsClasses.clsExistencia, isSelected: Boolean) {
-            lay.setBackgroundResource(if (isSelected) R.drawable.frame_round_flatb_sel else R.drawable.frame_round_flatb)
+            lay.setBackgroundResource(if (isSelected)
+                R.drawable.frame_round_sel else R.drawable.frame_round)
         }
 
 

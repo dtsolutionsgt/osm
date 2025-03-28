@@ -7,7 +7,7 @@
         android:background="@drawable/color_light"
         tools:context=".Tarea">
 
-        <RelativeLayout
+    <RelativeLayout
             android:id="@+id/relbot"
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -409,7 +409,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/rell4"
-                    android:layout_marginTop="2dp">
+                    android:layout_marginTop="2dp"
+                    android:paddingBottom="5dp">
 
                     <TextView
                         android:id="@+id/textView26"
@@ -427,18 +428,21 @@
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/textView27"
+                    <RelativeLayout
+                        android:id="@+id/reldet"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/textView26"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:paddingBottom="1dp"
-                        android:text="TextView"
-                        android:textColor="#202020"
-                        android:textSize="16sp" />
+                        android:layout_marginHorizontal="5dp"
+                        android:layout_marginTop="3dp"
+                        android:minHeight="25dp">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recview"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+                    </RelativeLayout>
+
                 </RelativeLayout>
 
                 <RelativeLayout

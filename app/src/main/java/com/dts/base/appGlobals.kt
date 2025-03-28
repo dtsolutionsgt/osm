@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.view.Gravity
 import android.widget.Toast
+import com.google.firebase.database.FirebaseDatabase
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 
 class appGlobals : Application() {
@@ -61,6 +62,10 @@ class appGlobals : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        try {
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+        } catch (e: Exception) { }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel("location", "location",

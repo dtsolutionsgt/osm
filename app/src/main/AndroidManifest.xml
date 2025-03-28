@@ -36,6 +36,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -77,16 +78,18 @@
         <activity
             android:name=".Firma"
             android:exported="false"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".Location"
             android:exported="false"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
         <service
             android:name=".LocationService"
-            android:foregroundServiceType="location"
-            android:exported="false" />
+            android:exported="false"
+            android:foregroundServiceType="location" />
+
         <activity
             android:name=".Productos"
             android:exported="false"
@@ -122,7 +125,28 @@
             android:name=".Tarea"
             android:exported="false"
             android:windowSoftInputMode="stateAlwaysHidden" />
-
+        <activity
+            android:name=".EnvioImagenes"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/TranslucentTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".FotoLista"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".FotoDetalle"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".Foto"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".MenuSup"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysHidden" />
     </application>
 
 </manifest>
