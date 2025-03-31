@@ -127,7 +127,7 @@ class Session : PBase() {
 
     fun doFirma(view: View) {
         try {
-            startActivity(Intent(this, Location::class.java))
+            startActivity(Intent(this, CameraActivity::class.java))
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
         }
