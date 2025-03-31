@@ -79,17 +79,8 @@ class Session : PBase() {
 
     fun doLogin(view: View) {
         try {
-            //if (gl?.iduser!!>0) {
-                //UsuarioObj?.fill("WHERE (id="+gl?.iduser!!+")")
-                //var rol=UsuarioObj?.first()?.rol
-                var rol="TEC";
-                gl?.idrol=rol!!
-
-                //startActivity(Intent(this,Lista::class.java))
-                startActivity(Intent(this,MenuTec::class.java))
-            //} else {
-            //    msgbox("Falta seleccionar un usuario.")
-            //}
+            if (gl?.idrol=="TEC") startActivity(Intent(this,MenuTec::class.java))
+            if (gl?.idrol=="SUPER") startActivity(Intent(this,MenuSup::class.java))
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
@@ -148,13 +139,10 @@ class Session : PBase() {
     //region Main
 
     fun initSession() {
-        var rol=""
 
         try {
             gl?.idemp=24
-
             gl?.iduser=0;gl?.nuser="Sin usuario"
-
 
             SaveposObj?.fill("WHERE (id=2)")
             if (SaveposObj?.count!!>0) lblemp?.text=""+SaveposObj?.first()?.valor
@@ -169,9 +157,8 @@ class Session : PBase() {
                 try {
                     gl?.nuser=UsuarioObj?.first()?.nombre.toString()
                     gl?.idrol=UsuarioObj?.first()?.rol!!
-                    rol=gl?.idrol!!
-                } catch (e: Exception) {
-                    gl?.iduser=0;gl?.nuser="Sin usuario";rol="TEC"
+                 } catch (e: Exception) {
+                    gl?.iduser=0;gl?.nuser="Sin usuario";
                     msgbox("Usuario no existe")
                 }
 

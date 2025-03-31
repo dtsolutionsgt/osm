@@ -1,9 +1,10 @@
 package com.dts.osm
 
-
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -19,7 +20,10 @@ import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.dts.base.clsClasses
+import com.dts.classes.RecyclerItemClickListener
 import com.dts.classes.clsClienteObj
 import com.dts.classes.clsClientecontactoObj
 import com.dts.classes.clsClientedirObj
@@ -31,8 +35,12 @@ import com.dts.classes.clsOrdenenccapObj
 import com.dts.classes.clsOrdenfotoObj
 import com.dts.classes.clsTiposerviciosObj
 import com.dts.classes.clsUpdsaveObj
+import com.dts.fbase.fbServicio
+import com.dts.ladapt.LA_ordendet
 import com.dts.restapi.ClassesAPI
 import com.dts.restapi.HttpClient
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okhttp3.Request
@@ -43,6 +51,7 @@ import java.io.File
 
 class Tarea : PBase() {
 
+    var recview: RecyclerView? = null
     var lbltit: TextView? = null
     var lbl1: TextView? = null
     var lbl2: TextView? = null
@@ -52,7 +61,6 @@ class Tarea : PBase() {
     var lbl6: TextView? = null
     var lbl7: TextView? = null
     var lbl8: TextView? = null
-    var lbl10: TextView? = null
     var lbl11: TextView? = null
     var lbl12: TextView? = null
     var lbl13: TextView? = null
@@ -77,10 +85,22 @@ class Tarea : PBase() {
     var OrdendetObj: clsOrdendetObj? = null
     var UpdsaveObj: clsUpdsaveObj? = null
 
+    var adapter: LA_ordendet? = null
+
     lateinit var cap: clsClasses.clsOrdenenccap
     lateinit var enc: clsClasses.clsOrdenenc
 
+    var fbsa : fbServicio? = null
+    var fbsc : fbServicio? = null
+
+    var fbsItem = clsClasses.clsFbServicio()
+
+    lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    var ditems = ArrayList<clsClasses.clsOrdendet>()
+
     var idorden=0
+    var numord=""
     var idcliente=0
     var iddir=0
     var idcont=0
@@ -88,6 +108,8 @@ class Tarea : PBase() {
     var observ=""
     var sqlsave=""
     var phoneNum=""
+    var saveselidx=-1
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -96,6 +118,8 @@ class Tarea : PBase() {
 
             super.initbase(savedInstanceState)
 
+            recview = findViewById<View>(R.id.recview) as RecyclerView
+            recview?.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
             lbltit = findViewById(R.id.textView15)
             lbl1 = findViewById(R.id.textView12)
             lbl2 = findViewById(R.id.textView13)
@@ -105,7 +129,6 @@ class Tarea : PBase() {
             lbl6 = findViewById(R.id.textView20)
             lbl7 = findViewById(R.id.textView21)
             lbl8 = findViewById(R.id.textView23)
-            lbl10 = findViewById(R.id.textView27)
             lbl11 = findViewById(R.id.textView25)
             lbl12 = findViewById(R.id.textView36)
             lbl13 = findViewById(R.id.textView37)
@@ -131,6 +154,12 @@ class Tarea : PBase() {
 
             idorden=gl?.idorden!!
 
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+            fbsc=fbServicio("osm",du?.actMonth,du?.actDay)
+            fbsa=fbServicio("osm","servicio","orden")
+            fbsa?.load(idorden, { cbServico() })
+
             loadItem()
 
             setHandlers()
@@ -148,7 +177,12 @@ class Tarea : PBase() {
             if (!tieneFirma()) {
                 msgbox("¡Falta la firma!")
             } else {
-                msgask(1,"Completar servicio?")
+                when (validaDetalle()) {
+                    1 -> { msgask(1,"Completar servicio?") }
+                    0 -> { msgask(5,"Continuar si aplicar todo material?") }
+                   -1 -> { return }
+                }
+
             }
         } else {
             msgask(0,"Atender servicio?")
@@ -158,37 +192,21 @@ class Tarea : PBase() {
     fun doPhoto(view: View) {
         if (idestado==8) return
         try {
-            //startActivity(Intent(this,FotoLista::class.java))
+            startActivity(Intent(this,FotoLista::class.java))
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
     }
 
     fun doUbic(view: View) {
-        try {
-            gl?.gpsclong=0.0;gl?.gpsclat=0.0
-
-            if (cap?.latit==0.0 || cap?.longit==0.0) {
-                if (gl?.gpslat==0.0 || gl?.gpslong==0.0) {
-                    msgbox("La ubicación no está disponible ");return
-                } else {
-                    gl?.gpsclong=gl?.gpslong!!;gl?.gpsclat=gl?.gpslat!!
-                }
-            } else {
-                gl?.gpsclong=cap?.longit!!;gl?.gpsclat=cap?.latit!!
-            }
-
-            //startActivity(Intent(this,UbicCliente::class.java))
-        } catch (e: Exception) {
-            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
-        }
+        capturaGPS()
     }
 
     fun doSign(view: View) {
         if (idestado!=4) return
 
         try {
-             OrdenenccapObj?.fill("WHERE (idOrden="+idorden+")")
+            OrdenenccapObj?.fill("WHERE (idOrden="+idorden+")")
             if (OrdenenccapObj?.first()?.firmacliente?.isNotEmpty()!!) {
                 msgask(4,"La firma ya existe.¿Capturar la de nuevo?")
             } else {
@@ -258,6 +276,20 @@ class Tarea : PBase() {
 
     fun setHandlers() {
         try {
+
+            recview?.addOnItemTouchListener(
+                RecyclerItemClickListener(this, recview!!,
+                    object : RecyclerItemClickListener.OnItemClickListener {
+
+                        override fun onItemClick(view: View, position: Int) {
+                            saveselidx=position
+                            actualizaEstadoDetalle(saveselidx)
+                        }
+
+                        override fun onItemLongClick(view: View?, position: Int) { }
+                    })
+            )
+
             txt1?.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
                     txt1?.viewTreeObserver?.addOnGlobalLayoutListener {
@@ -321,6 +353,7 @@ class Tarea : PBase() {
             idestado=enc.idestado!!
             mostrarEstado()
 
+            numord=enc.numero!!
             iddir=enc.iddir!!
             idcont=enc.idclicontact!!
             idcliente=enc.idcliente!!
@@ -333,6 +366,15 @@ class Tarea : PBase() {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
 
+    }
+
+    fun listItems() {
+        try {
+            adapter = LA_ordendet(ditems)
+            recview?.adapter = adapter
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
     }
 
     fun cargaCliente() {
@@ -393,15 +435,19 @@ class Tarea : PBase() {
     }
 
     fun cargaDetalle() {
-        var s=""
         try {
+            ditems.clear()
+
             OrdendetObj?.fill("WHERE (idOrden="+idorden+")")
             if (OrdendetObj?.count!!>0) {
+                recview?.visibility=View.VISIBLE
                 for (itm in OrdendetObj?.items!!) {
-                    s+=""+itm?.cant!!.toInt()+" - " +itm?.descripcion!! + "\n"
+                    ditems.add(itm)
                 }
-            } else s=""
-            lbl10?.text =s
+                listItems()
+            } else {
+                recview?.visibility=View.GONE
+            }
         } catch(e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
@@ -418,20 +464,30 @@ class Tarea : PBase() {
             OrdenenccapObj?.fill("WHERE idorden="+idorden)
             cap=OrdenenccapObj?.first()!!
 
-            if (cap?.latit==0.0 || cap?.longit==0.0) {
-                if (gl?.gpslat!=0.0 && gl?.gpslong!=0.0) {
-                    cap?.latit==gl?.gpslat
-                    cap?.longit==gl?.gpslong
-                    cap.recibido=0
-                    OrdenenccapObj?.update(cap)
-                }
-            }
+            gl?.gpslat=cap?.latit!!
+            gl?.gpslong=cap?.longit!!
 
             txt1?.setText(""+cap.nota.toString()!!)
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
 
+    }
+
+    fun gpsCap() {
+        try {
+            OrdenenccapObj?.fill("WHERE idorden="+idorden)
+            cap=OrdenenccapObj?.first()!!
+
+            cap?.latit=gl?.gpslat!!
+            cap?.longit=gl?.gpslong!!
+
+            OrdenenccapObj?.update(cap)
+
+            msgbox("Coordenadas capturadas.")
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
     }
 
     fun iniciarOrden() {
@@ -463,6 +519,11 @@ class Tarea : PBase() {
             var csql=buildCoordUpdate(cap)
 
             sendUpdate(sql!!,csql,false)
+
+            fbsItem.estado = "En proceso"
+            fbsItem.inicio = du?.actDateTime!!
+            fbsa?.setItem(fbsItem!!)
+
         } catch (e: java.lang.Exception) {
             db!!.endTransaction()
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
@@ -493,6 +554,13 @@ class Tarea : PBase() {
             var fs=du?.univfecha(du?.actDateTime!!)
             sql=app?.buildEncUpdate(cap,enc.idestado,fs!!)!!
             sendUpdate(sql!!,"",true)
+
+            fbsItem.estado = "Completo"
+            fbsItem.fin = du?.actDateTime!!
+
+            fbsa?.delItem(fbsItem.id)
+            fbsc?.setItem(fbsItem!!)
+
         } catch (e: java.lang.Exception) {
             db!!.endTransaction()
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
@@ -545,7 +613,7 @@ class Tarea : PBase() {
             try {
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({
-                    //startActivity(Intent(this, EnvioImagenes::class.java))
+                    startActivity(Intent(this, EnvioImagenes::class.java))
                 }, 200)
             } catch (e: Exception) {
                 msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
@@ -560,6 +628,43 @@ class Tarea : PBase() {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
         }
 
+    }
+
+    fun cbServico() {
+        var exist=false
+
+        try {
+            if (fbsa?.errflag!!) throw Exception(fbsa?.value!!)
+            exist=fbsa?.exist==1
+
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
+
+        if (exist) {
+            fbsItem=fbsa?.litem!!
+        } else {
+            fbsItem.id = idorden
+            fbsItem.numero = numord
+            fbsItem.cliente = lbl1?.text?.toString()!!
+            fbsItem.estado = "Nuevo"
+            fbsItem.fin = 0
+            fbsItem.inicio = 0
+            fbsItem.user = gl?.nuser!!
+        }
+    }
+
+    fun actualizaEstadoDetalle(dpos: Int ) {
+        try {
+            var flag=ditems.get(dpos).realizado
+            if (flag==1) flag=0 else flag=1
+            ditems.get(dpos).realizado=flag
+
+            OrdendetObj?.update(ditems.get(dpos))
+            adapter?.notifyDataSetChanged()
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
     }
 
     //endregion
@@ -685,7 +790,7 @@ class Tarea : PBase() {
             if (EnvioimagenObj?.count!!>0) {
                 val handler = Handler(Looper.getMainLooper())
                 handler.postDelayed({
-                    //startActivity(Intent(this, EnvioImagenes::class.java))
+                    startActivity(Intent(this, EnvioImagenes::class.java))
                 }, 200)
             }
         } catch (e: Exception) {
@@ -705,6 +810,8 @@ class Tarea : PBase() {
                 2 -> { msgask(3,"Está seguro?") }
                 3 -> { anularOrden() }
                 4 -> { startActivity(Intent(this, Firma::class.java)) }
+                5 -> { msgask(6,"Está seguro?") }
+                6 -> { completarOrden() }
             }
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
@@ -918,6 +1025,40 @@ class Tarea : PBase() {
         }
     }
 
+    fun validaDetalle():Int {
+        try {
+            OrdendetObj?.fill("WHERE (idOrden="+idorden+") AND (realizado=0)")
+            if (OrdendetObj?.count==0) return 1 else return 0
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message);return -1
+        }
+
+    }
+
+    @SuppressLint("MissingPermission")
+    fun capturaGPS() {
+
+        try {
+               fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                    try {
+                        location?.let {
+                            gl?.gpslong= it.longitude
+                            gl?.gpslat=it.latitude
+                            gpsCap()
+                        } ?: run {
+                            msgbox("No se pudo obtener ubicación")
+                        }
+                    } catch (e: Exception) {
+                        msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+                    }
+                }.addOnFailureListener { e ->
+                    msgbox("Error al obtener ubicación: ${e.message}")
+                }
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
+    }
+
     //endregion
 
     //region Activity Events
@@ -945,6 +1086,5 @@ class Tarea : PBase() {
     }
 
     //endregion
-
 
 }

@@ -21,11 +21,15 @@ import com.dts.ladapt.LA_ProductoAdapter
 
 class InvLista : PBase() {
 
-    private var recyclerView: RecyclerView? = null
-    private var ExistenciasObj: clsExistenciaObj? = null
-    private var adapter: LA_ExistenciasAdapter? = null
-    private var items = ArrayList<clsClasses.clsExistencia>()
-    private var editText: EditText? = null
+    var recyclerView: RecyclerView? = null
+    var editText: EditText? = null
+
+    var ExistenciasObj: clsExistenciaObj? = null
+
+    var adapter: LA_ExistenciasAdapter? = null
+
+    var items = ArrayList<clsClasses.clsExistencia>()
+
     var selindex=-1
 
 
@@ -45,10 +49,9 @@ class InvLista : PBase() {
             adapter = LA_ExistenciasAdapter(items)
             recyclerView?.adapter = adapter
 
-
             listItems()
-            setHandlers()
 
+            setHandlers()
 
         } catch (e:Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+". "+e.message)
@@ -57,25 +60,8 @@ class InvLista : PBase() {
 
     //region Events
 
-    fun doEgreso(view: View) {
-        try {
-            //startActivity(Intent(this,InvEgreso::class.java))
-        } catch (e: Exception) {
-            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
-        }
-    }
-
-    fun doAjuste(view: View) {
-        try {
-            //startActivity(Intent(this,InvAjuste::class.java))
-        } catch (e: Exception) {
-            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
-        }
-    }
-
     fun doIngreso(view: View) {
         try {
-
             callback=1
             startActivity(Intent(this,Productos::class.java))
         } catch (e: Exception) {
@@ -87,9 +73,6 @@ class InvLista : PBase() {
         finish()
     }
 
-    //endregion
-
-    //region
     private fun setHandlers() {
         try {
             recyclerView?.addOnItemTouchListener(
@@ -98,13 +81,11 @@ class InvLista : PBase() {
                         override fun onItemClick(view: View, position: Int) {
                             selindex = position
                             val existenciaSeleccionada = items[position]
-                            //msgbox("Producto seleccionado: ${productoSeleccionado.desclarga}")()
 
                             gl?.gcant=existenciaSeleccionada.cant
                             gl?.gstr=existenciaSeleccionada.nombre
 
                             showItemMenu()
-
                         }
                         override fun onItemLongClick(view: View?, position: Int) {}
                     })
@@ -126,9 +107,11 @@ class InvLista : PBase() {
 
         }
     }
+
     //endregion
 
-    //region
+    //region Main
+
     private fun listItems() {
         try {
             ExistenciasObj?.fill("ORDER BY nombre")
@@ -146,9 +129,8 @@ class InvLista : PBase() {
         try {
             if (selindex in items.indices) {
                 val existencia = items[selindex]
-                existencia.cant = nc  // Actualizar en la lista
+                existencia.cant = nc
 
-                // Actualizar en la base de datos
                 ExistenciasObj?.update(existencia)
 
                 adapter?.notifyDataSetChanged()
@@ -223,9 +205,7 @@ class InvLista : PBase() {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
     }
-    //endregion
 
-    //region Main
     fun agregar(){
         try {
             var item = clsClasses.clsExistencia()
@@ -334,7 +314,6 @@ class InvLista : PBase() {
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK)
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK)
     }
-
 
     //endregion
 

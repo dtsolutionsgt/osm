@@ -21,6 +21,7 @@ import com.dts.classes.clsProdprecioObj
 import com.dts.classes.clsProductoObj
 import com.dts.classes.clsTiposerviciosObj
 import com.dts.classes.clsUsuarioObj
+import com.dts.fbase.fbServicio
 import com.dts.restapi.ClassesAPI
 import com.dts.restapi.HttpClient
 import com.google.gson.Gson
@@ -49,6 +50,7 @@ class Com : PBase() {
     var OrdenencObj: clsOrdenencObj? = null
     var OrdendetObj: clsOrdendetObj? = null
 
+    var fbsa : fbServicio? = null
 
     var updrem = ArrayList<String>()
     var updloc = ArrayList<String>()
@@ -90,6 +92,8 @@ class Com : PBase() {
 
             http = HttpClient()
 
+            fbsa=fbServicio("osm","servicio","orden")
+
             UsuarioObj = clsUsuarioObj(this, Con!!, db!!)
             ProductoObj = clsProductoObj(this, Con!!, db!!)
             ProdprecioObj = clsProdprecioObj(this, Con!!, db!!)
@@ -115,6 +119,13 @@ class Com : PBase() {
     fun doOrdenes(view: View) {
         if (idle) Ordenes()
     }
+
+    fun doBorrar(view: View) {
+        db!!.execSQL("DELETE FROM Ordenenc");
+        db!!.execSQL("DELETE FROM Ordendet");
+        db!!.execSQL("DELETE FROM Ordenenccap");
+    }
+
 
     fun doExit(view: View) {
         if (idle) finishCom() else toast("Espere, por favor . . . ")
@@ -716,6 +727,7 @@ class Com : PBase() {
 
     fun recOrdenEnc() {
         try {
+
             newid.clear();existid.clear()
             OrdenencObj?.fill()
             for (itm in OrdenencObj?.items!!) {
@@ -752,10 +764,6 @@ class Com : PBase() {
             enccnt=0
 
             db!!.beginTransaction()
-
-            // ----------------------------------------------
-            db!!.execSQL("DELETE FROM Ordenenc ");
-            db!!.execSQL("DELETE FROM Ordendet ");
 
             for (pls in parsedList!!) {
 
@@ -876,6 +884,8 @@ class Com : PBase() {
             //val handler = Handler(Looper.getMainLooper())
             //handler.postDelayed({recOrdenCliente()}, 200)
 
+            actualizaEstdoOrdenes()
+            registraOrdenes()
             finok()
         } catch (e: java.lang.Exception) {
             var es=e.message
@@ -903,6 +913,69 @@ class Com : PBase() {
         }
     }
 
+    fun actualizaEstdoOrdenes() {
+        for (itm in newid!!) {
+            idorden=itm
+
+        }
+    }
+
+    fun registraOrdenes() {
+
+        try {
+            for (itm in newid!!) {
+                idorden=itm
+                OrdenencObj?.fill("WHERE (idorden="+idorden+")")
+                if (OrdenencObj?.count!!>0) {
+
+                    var fitem= clsClasses.clsFbServicio()
+
+                    fitem.id = idorden
+                    fitem.numero = OrdenencObj?.first()?.numero!!
+                    fitem.cliente = getCliente(OrdenencObj?.first()?.idcliente!!)
+                    fitem.estado = getEstado(OrdenencObj?.first()?.idestado!!)
+                    fitem.fin = 0
+                    fitem.inicio = 0
+                    fitem.user = gl?.nuser!!
+                    fitem.tarea = getTipo(OrdenencObj?.first()?.idtipo!!)
+
+                    fbsa?.setItem(fitem)
+                }
+            }
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
+    }
+
+    fun getCliente(cliid: Int) : String {
+        try {
+            ClienteObj?.fill("WHERE (codigo_cliente="+cliid+")")
+            var cn=ClienteObj?.first()?.nombre!!
+            return cn
+        } catch (e: Exception) {
+            return " "
+        }
+    }
+
+    fun getEstado(estid: Int) : String {
+        try {
+            EstadoObj?.fill("WHERE (codigo_ticket_estado="+estid+")")
+            var cn=EstadoObj?.first()?.nombre!!
+            return cn
+        } catch (e: Exception) {
+            return " "
+        }
+    }
+
+    fun getTipo(tipoid: Int) : String {
+        try {
+            TiposervicioObj?.fill("WHERE (codigo_ticket_departamento="+tipoid+")")
+            var cn=TiposervicioObj?.first()?.nombre!!
+            return cn
+        } catch (e: Exception) {
+            return " "
+        }
+    }
 
     //endregion
 

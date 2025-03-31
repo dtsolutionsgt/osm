@@ -60,11 +60,11 @@ class LA_ProductoAdapter(val itemList: ArrayList<clsClasses.clsProducto>) :
             val textViewDesc = itemView.findViewById(R.id.textViewExistencia) as TextView
             lay = itemView.findViewById(R.id.relitem) as LinearLayout
             textViewDesc.text = mitem.desclarga
-
         }
 
         fun bind(mitem: clsClasses.clsProducto, isSelected: Boolean) {
-            lay.setBackgroundResource(if (isSelected) R.drawable.frame_round_flatb_sel else R.drawable.frame_round_flatb)
+            lay.setBackgroundResource(if (isSelected)
+                R.drawable.frame_round_sel else R.drawable.frame_round)
         }
 
 

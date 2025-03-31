@@ -690,6 +690,24 @@ class DateUtils {
             return f
         }
 
+    val actMonth: String
+        get() {
+            val cyear: Int;val cmonth: Int;val cday: Int;val f: Int
+
+            val c = Calendar.getInstance()
+            cyear = c[Calendar.YEAR].toInt()
+            cmonth = (c[Calendar.MONTH] + 1).toInt()
+
+            f = cyear.toInt()*100+ cmonth.toInt()
+            return f.toString()
+        }
+
+    val actDay: String
+        get() {
+            val c = Calendar.getInstance()
+            return c[Calendar.DAY_OF_MONTH].toString()
+        }
+
     val actDateTime: Long
         get() {
             val cyear: Int

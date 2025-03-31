@@ -164,6 +164,8 @@ class AppMethods( private val cont: Context, private val gl: appGlobals,
                 upd!!.add("ANULADA",0)
                 upd!!.add("ACTIVA",1)
                 upd!!.add("CERRADA",1)
+                upd!!.add("COORDENADA_X",cap.longit)
+                upd!!.add("COORDENADA_Y",cap.latit)
                 upd!!.add("HORA_FIN_HH",fs)
             }
         }

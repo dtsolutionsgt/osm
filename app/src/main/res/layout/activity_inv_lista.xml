@@ -36,31 +36,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/reltop"
-        android:layout_margin="8dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="0dp"
+        android:background="@android:drawable/editbox_background"
         android:hint="Buscar producto..."
         android:padding="10dp"
-        android:textSize="16sp"
-        android:background="@android:drawable/editbox_background"/>
-    <EditText
-        android:id="@+id/editTextText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/reltop"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="5dp"
-        android:layout_toStartOf="@+id/textView4"
-        android:ems="10"
-        android:inputType="text" />
+        android:textSize="16sp" />
     <!-- Lista de productos -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_below="@id/editTextText"
         android:layout_above="@id/linbuttons"
-        android:layout_margin="4dp"/>
+        android:layout_below="@+id/editTextText"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp" />
 
     <!-- Botones de acción -->
     <LinearLayout

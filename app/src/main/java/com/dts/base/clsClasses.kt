@@ -217,30 +217,6 @@ class clsClasses {
         var recibido : Int = 0,
     )
 
-    data class clsOrdencliente (
-        var id : Int = 0,
-        var nombre : String = "",
-        var dir : String = "",
-        var tel : String = "",
-    )
-
-    data class clsOrdencont (
-        var id : Int = 0,
-        var idcliente : Int = 0,
-        var nombre : String = "",
-        var dir : String = "",
-        var tel : String = "",
-    )
-
-    data class clsOrdendir (
-        var id : Int = 0,
-        var idcliente : Int = 0,
-        var referencia : String = "",
-        var dir : String = "",
-        var zona : String = "",
-        var tel : String = "",
-    )
-
     data class clsOrdenfoto (
         var id : Int = 0,
         var idorden : Int = 0,
@@ -251,11 +227,14 @@ class clsClasses {
 
     data class clsOrdenlist (
         var idorden : Int = 0,
+        var numero : String = "",
         var tarea : String = "",
         var cliente : String = "",
         var fecha : String = "",
+        var fechafin : String = "",
         var estado : String = "",
         var idestado : Int = 0,
+        var user : String = "",
     )
 
 
@@ -289,19 +268,24 @@ class clsClasses {
         var cmd : String = "",
     )
 
-
-
-    data class clsUsuarioMarker (
-        var id : Int = 0,
-        var nombre : String = "",
-        var longit: Double = 0.0,
-        var latit: Double = 0.0,
-        var chue : Float =0.0F
-    )
-
     data class clsUpdate (
         var SQL : String = ""
     )
+
+    //region fBase
+
+    data class clsFbServicio (
+        var id:Int = 0,
+        var numero : String = "",
+        var cliente : String = "",
+        var estado :String = "",
+        var fin : Long = 0,
+        var inicio : Long = 0,
+        var user : String = "",
+        var tarea : String = "",
+    )
+
+    //endregion
 
     //region AppBase
 
