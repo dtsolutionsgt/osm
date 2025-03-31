@@ -111,7 +111,12 @@ class MenuSup : PBase() {
             fitems.clear()
 
             for (itm in items) {
-                if (itm.idestado==filter) fitems.add(itm)
+                if (filter==0) {
+                    fitems.add(itm)
+                } else {
+                    if (itm.idestado==filter) fitems.add(itm)
+                }
+
                 when (itm.idestado) {
                     3 -> { tpend++ }
                     4 -> { tproc++ }
@@ -188,7 +193,8 @@ class MenuSup : PBase() {
                 items.add(item)
             }
 
-            items.sortBy { it.idorden }
+            items.sortedWith(compareByDescending<clsClasses.clsOrdenlist> { it.idestado }
+                .thenByDescending { it.idorden })
 
             listItems()
             finok()
@@ -216,14 +222,15 @@ class MenuSup : PBase() {
         try {
             val listdlg = extListDlg();
 
-            listdlg.buildDialog(this@MenuSup, "Estados")
-            listdlg.setLines(3)
+            listdlg.buildDialog(this@MenuSup, "Filtro")
+            listdlg.setLines(4)
             listdlg.setWidth(-1)
             listdlg.setTopRightPosition()
 
             listdlg.addData(4,"En proceso")
             listdlg.addData(3,"Asignada")
             listdlg.addData(5,"Completo")
+            listdlg.addData(0,"Todos")
 
             listdlg.clickListener= Runnable { processMainMenu(listdlg.selcodint,listdlg.selvalue) }
 

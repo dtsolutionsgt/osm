@@ -7,82 +7,82 @@
         android:background="@drawable/color_light"
         tools:context=".MenuSup">
 
-        <RelativeLayout
-            android:id="@+id/relbot"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="0dp"
-            android:background="@drawable/color_medium">
+    <RelativeLayout
+        android:id="@+id/relbot"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="48dp"
+        android:background="@drawable/color_medium">
 
-            <TextView
-                android:id="@+id/textView32"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="false"
-                android:layout_centerInParent="true"
-                android:background="@drawable/color_gray_grad_w"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="000"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+        <TextView
+            android:id="@+id/textView32"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="false"
+            android:layout_centerInParent="true"
+            android:background="@drawable/color_gray_grad_w"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="000"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textView33"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="20dp"
-                android:background="@drawable/color_green_grad_w"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="000"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+        <TextView
+            android:id="@+id/textView33"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/color_green_grad_w"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="000"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textView34"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="5dp"
-                android:layout_toEndOf="@+id/imageView26"
-                android:background="@drawable/color_ocra_grad_w"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="000"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+        <TextView
+            android:id="@+id/textView34"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/imageView26"
+            android:background="@drawable/color_ocra_grad_w"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="000"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-            <ImageView
-                android:id="@+id/imageView26"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="5dp"
-                app:srcCompat="@drawable/icon_stat_proc" />
+        <ImageView
+            android:id="@+id/imageView26"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="5dp"
+            app:srcCompat="@drawable/icon_stat_proc" />
 
-            <ImageView
-                android:id="@+id/imageView27"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="5dp"
-                android:layout_toStartOf="@+id/textView33"
-                app:srcCompat="@drawable/icon_stat_comp" />
+        <ImageView
+            android:id="@+id/imageView27"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="5dp"
+            android:layout_toStartOf="@+id/textView33"
+            app:srcCompat="@drawable/icon_stat_comp" />
 
-            <ImageView
-                android:id="@+id/imageView28"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="5dp"
-                android:layout_toStartOf="@+id/textView32"
-                app:srcCompat="@drawable/icon_stat_pend" />
-        </RelativeLayout>
+        <ImageView
+            android:id="@+id/imageView28"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="5dp"
+            android:layout_toStartOf="@+id/textView32"
+            app:srcCompat="@drawable/icon_stat_pend" />
+    </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/reltop"
@@ -172,6 +172,21 @@
             android:text="TextView"
             android:textSize="18sp"
             android:textStyle="bold" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="0dp"
+        android:background="@drawable/color_medium">
+
+        <ImageView
+            android:id="@+id/imageView32"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="3dp"
+            app:srcCompat="@drawable/refersh" />
     </RelativeLayout>
 
 </RelativeLayout>
