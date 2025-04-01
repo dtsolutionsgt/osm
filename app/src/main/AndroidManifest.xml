@@ -36,7 +36,6 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -84,12 +83,6 @@
             android:name=".Location"
             android:exported="false"
             android:windowSoftInputMode="stateAlwaysHidden" />
-
-        <service
-            android:name=".LocationService"
-            android:exported="false"
-            android:foregroundServiceType="location" />
-
         <activity
             android:name=".Productos"
             android:exported="false"
@@ -124,6 +117,7 @@
         <activity
             android:name=".Tarea"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".EnvioImagenes"
@@ -147,6 +141,13 @@
             android:name=".MenuSup"
             android:exported="false"
             android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".Seriales"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/TranslucentTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
     </application>
 
 </manifest>
