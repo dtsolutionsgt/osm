@@ -22,6 +22,9 @@
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
+
 
     <application
         android:name="com.dts.base.appGlobals"
@@ -77,12 +80,16 @@
         <activity
             android:name=".Firma"
             android:exported="false"
-            android:screenOrientation="landscape"
-            android:windowSoftInputMode="stateAlwaysHidden" />
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".Location"
             android:exported="false"
             android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".CameraActivity"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".Productos"
             android:exported="false"
