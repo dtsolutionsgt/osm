@@ -15,6 +15,39 @@
             android:layout_marginBottom="0dp"
             android:background="@drawable/color_medium">
 
+            <TextView
+                android:id="@+id/textView29"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_toStartOf="@+id/imageView22"
+                android:layout_toEndOf="@+id/imageView19"
+                android:clickable="true"
+                android:gravity="center"
+                android:onClick="doObserv"
+                android:text="TextView"
+                android:textColor="#FFFFFF"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:id="@+id/imageView36"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/textView29"
+                android:layout_marginEnd="10dp"
+                android:padding="5dp"
+                app:srcCompat="@drawable/icon_rotate" />
+
+            <ImageView
+                android:id="@+id/imageView37"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="0dp"
+                android:layout_toStartOf="@+id/imageView36"
+                android:padding="5dp"
+                app:srcCompat="@drawable/icon_rect" />
+
             <ImageView
                 android:id="@+id/imageView19"
                 android:layout_width="wrap_content"
@@ -37,20 +70,6 @@
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="8dp"
                 app:srcCompat="@drawable/btn_edit_white" />
-
-            <TextView
-                android:id="@+id/textView29"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:layout_toStartOf="@+id/imageView22"
-                android:layout_toEndOf="@+id/imageView19"
-                android:clickable="true"
-                android:gravity="center"
-                android:onClick="doObserv"
-                android:text="TextView"
-                android:textColor="#FFFFFF" />
 
         </RelativeLayout>
 

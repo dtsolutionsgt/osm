@@ -129,9 +129,10 @@
 
     <ProgressBar
         android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
+        style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
 
     <RelativeLayout
         android:id="@+id/relfilter"
@@ -185,6 +186,8 @@
             android:id="@+id/imageView32"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clickable="true"
+            android:onClick="doRefresh"
             android:paddingVertical="3dp"
             app:srcCompat="@drawable/refersh" />
     </RelativeLayout>

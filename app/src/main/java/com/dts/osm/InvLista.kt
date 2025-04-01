@@ -114,6 +114,8 @@ class InvLista : PBase() {
 
     private fun listItems() {
         try {
+            db?.execSQL("DELETE FROM Existencia WHERE cant=0")
+
             ExistenciasObj?.fill("ORDER BY nombre")
 
             items.clear()
@@ -221,8 +223,6 @@ class InvLista : PBase() {
                 var existant=ExistenciasObj?.first()?.cant!!
                 item.cant=item.cant+existant
                 ExistenciasObj?.update(item)
-
-
             }
 
             sql = "DELETE FROM Existencia WHERE cant=0"

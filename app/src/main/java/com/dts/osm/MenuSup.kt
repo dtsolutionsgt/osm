@@ -7,6 +7,7 @@ import android.os.Looper
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -61,6 +62,8 @@ class MenuSup : PBase() {
             fbsc=fbServicio("osm",du?.actMonth,du?.actDay)
             fbsa=fbServicio("osm","servicio","orden")
 
+            onBackPressedDispatcher.addCallback(this,backPress)
+
             setHandlers()
 
             val handler = Handler(Looper.getMainLooper())
@@ -72,6 +75,10 @@ class MenuSup : PBase() {
     }
 
     //region Events
+
+    fun doRefresh(view: View) {
+       if (idle) actualizaDatos()  else toast("Espere . . .")
+    }
 
     fun doFilter(view: View) {
         showMainMenu()
@@ -138,6 +145,8 @@ class MenuSup : PBase() {
     fun actualizaDatos() {
         try {
             idle=false
+            pbar?.visibility=View.VISIBLE
+
             items.clear()
             fbsc?.listItems( { cbCompletos() } )
         } catch (e: Exception) {
@@ -279,6 +288,16 @@ class MenuSup : PBase() {
 
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
+        }
+    }
+
+    val backPress = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            if (idle) {
+                onBackPressedDispatcher?.onBackPressed()
+            } else {
+                toast("Espere . . . ")
+            }
         }
     }
 

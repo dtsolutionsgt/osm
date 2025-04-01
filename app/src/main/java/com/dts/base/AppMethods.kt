@@ -178,6 +178,19 @@ class AppMethods( private val cont: Context, private val gl: appGlobals,
         return upd!!.sql()
     }
 
+    @Throws(IOException::class)
+    fun buildDetUpdate(item: clsClasses.clsOrdendet ):String {
+        upd!!.init("Ordendet")
+        upd!!.add("Realizado", item.realizado)
+        if (item.realizado==1) {
+            upd!!.add("Cant", item.cant)
+        } else {
+            upd!!.add("Cant", 0)
+        }
+        upd!!.Where("(id=" + item.id + ")")
+        return upd!!.sql()
+    }
+
     //endregion
 
     //region Common

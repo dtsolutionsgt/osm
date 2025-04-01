@@ -29,6 +29,7 @@ import com.dts.classes.clsClientecontactoObj
 import com.dts.classes.clsClientedirObj
 import com.dts.classes.clsEnvioimagenObj
 import com.dts.classes.clsEstadoordenObj
+import com.dts.classes.clsExistenciaObj
 import com.dts.classes.clsOrdendetObj
 import com.dts.classes.clsOrdenencObj
 import com.dts.classes.clsOrdenenccapObj
@@ -84,6 +85,8 @@ class Tarea : PBase() {
     var OrdenenccapObj: clsOrdenenccapObj? = null
     var OrdendetObj: clsOrdendetObj? = null
     var UpdsaveObj: clsUpdsaveObj? = null
+    var ExistenciasObj: clsExistenciaObj? = null
+
 
     var adapter: LA_ordendet? = null
 
@@ -151,6 +154,7 @@ class Tarea : PBase() {
             OrdenenccapObj = clsOrdenenccapObj(this, Con!!, db!!)
             OrdendetObj = clsOrdendetObj(this, Con!!, db!!)
             UpdsaveObj = clsUpdsaveObj(this, Con!!, db!!)
+            ExistenciasObj = clsExistenciaObj(this, Con!!, db!!)
 
             idorden=gl?.idorden!!
 
@@ -325,7 +329,7 @@ class Tarea : PBase() {
             OrdenencObj?.fill("WHERE (idorden="+idorden+")")
             enc=OrdenencObj?.first()!!
 
-            lbltit?.text="Orden #"+enc.numero!!
+            lbltit?.text="Orden #"+enc.numero!!+"  "
             lbl4?.text=du?.sfecha(enc.fecha!!)
 
             ss=du?.shora(enc.hora_ini!!).toString()
@@ -484,7 +488,7 @@ class Tarea : PBase() {
 
             OrdenenccapObj?.update(cap)
 
-            msgbox("Coordenadas capturadas.")
+            toast("Coordenadas capturadas.")
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
@@ -524,6 +528,7 @@ class Tarea : PBase() {
             fbsItem.inicio = du?.actDateTime!!
             fbsa?.setItem(fbsItem!!)
 
+            capturaGPS()
         } catch (e: java.lang.Exception) {
             db!!.endTransaction()
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
@@ -545,6 +550,8 @@ class Tarea : PBase() {
 
             OrdenenccapObj?.update(cap)
 
+            actualizaInventario()
+
             db!!.setTransactionSuccessful()
             db!!.endTransaction()
 
@@ -552,8 +559,16 @@ class Tarea : PBase() {
             mostrarEstado()
 
             var fs=du?.univfecha(du?.actDateTime!!)
-            sql=app?.buildEncUpdate(cap,enc.idestado,fs!!)!!
-            sendUpdate(sql!!,"",true)
+            var sqle=app?.buildEncUpdate(cap,enc.idestado,fs!!)!!
+            var sqld=updateDetaille()
+
+            if (sqld=="#") {
+                sendUpdate(sqle!!,"",true)
+            } else {
+                sql=sqle+";"+sqld
+                var cmd=sql!!.replace("´","'")
+                sendCommit(cmd)
+            }
 
             fbsItem.estado = "Completo"
             fbsItem.fin = du?.actDateTime!!
@@ -564,6 +579,49 @@ class Tarea : PBase() {
         } catch (e: java.lang.Exception) {
             db!!.endTransaction()
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
+        }
+    }
+
+    fun actualizaInventario() {
+        var item : clsClasses.clsExistencia
+
+        OrdendetObj?.fill("WHERE (idOrden="+idorden+")")
+        if (OrdendetObj?.count!!>0) {
+
+            for (itm in OrdendetObj?.items!!) {
+                item = clsClasses.clsExistencia()
+
+                item.codigo =itm?.idproducto!!
+                item.nombre = itm?.descripcion!!
+                item.cant = -itm?.cant!!
+
+                try {
+                    ExistenciasObj?.add(item)
+                } catch (e: Exception){
+                    ExistenciasObj?.fill("WHERE codigo="+item.codigo)
+                    var existant:Double=ExistenciasObj?.first()?.cant!!
+                    item.cant=existant+item.cant
+                    ExistenciasObj?.update(item)
+                }
+
+            }
+
+        }
+    }
+
+    fun updateDetaille():String {
+        var ccmd=""
+        var tcmd=""
+
+        OrdendetObj?.fill("WHERE (idOrden="+idorden+")")
+        if (OrdendetObj?.count!!>0) {
+            for (itm in OrdendetObj?.items!!) {
+                ccmd=app?.buildDetUpdate(itm)!!
+                tcmd+=ccmd+";"
+            }
+            return tcmd
+        } else {
+            return "#"
         }
     }
 
@@ -718,6 +776,42 @@ class Tarea : PBase() {
                 finish()
             }
         }
+    }
+
+    fun sendCommit(usql:String) {
+        try {
+            val jupd=clsClasses.clsUpdate(usql)
+            val pbody = gson.toJson(jupd)
+            val body: RequestBody = pbody.toRequestBody(gl?.mediaType)
+
+            http?.url=gl?.urlbase+"api/Orden/Commit"
+
+            val request: Request = Request.Builder()
+                .url(http?.url!!)
+                .post(body)
+                .addHeader("accept", "*/*")
+                .build()
+
+            http!!.processRequest(request, { cbCommit() })
+        } catch (e: java.lang.Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message);
+        }
+    }
+
+    fun cbCommit() {
+        try {
+            var retcode=http?.retcode!!
+            var retmsg=http?.data.toString()
+            if (retcode>-1) {
+                try {
+                    //if (retcode==0) addToSyntaxLog(selcmd.cmd)
+                    //UpdcmdObj?.delete(selcmd)
+                } catch (e: Exception) { }
+            }
+        } catch (e: java.lang.Exception) {
+            runOnUiThread { toast(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message) }
+        }
+
     }
 
     fun sendUpdateCoord(csql:String,close: Boolean) {
@@ -1045,6 +1139,7 @@ class Tarea : PBase() {
                             gl?.gpslong= it.longitude
                             gl?.gpslat=it.latitude
                             gpsCap()
+
                         } ?: run {
                             msgbox("No se pudo obtener ubicación")
                         }
@@ -1077,6 +1172,8 @@ class Tarea : PBase() {
             OrdenenccapObj!!.reconnect(Con!!, db!!)
             OrdendetObj!!.reconnect(Con!!, db!!)
             UpdsaveObj!!.reconnect(Con!!, db!!)
+            ExistenciasObj!!.reconnect(Con!!, db!!)
+
 
             validaFirma()
 
