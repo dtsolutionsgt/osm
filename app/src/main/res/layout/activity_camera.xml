@@ -1,59 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CameraActivity">
 
-    <!-- PreviewView para la cámara, ocupa toda la pantalla -->
     <androidx.camera.view.PreviewView
         android:id="@+id/previewView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:background="#000000"/>
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/buttonsLayoutVertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-
-    <!-- LinearLayout para los botones, se coloca encima del PreviewView -->
-    <LinearLayout
-        android:layout_width="429dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="16dp">
-
-        <Button
-            android:id="@+id/btnCapture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Capturar" />
-
-        <Button
-            android:id="@+id/btnRotate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Rotar" />
-
-        <Button
-            android:id="@+id/btnDraw"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Dibujar" />
-
-        <Button
-            android:id="@+id/btnSave"
-            android:layout_width="wrap_content"
-            android:layout_height="41dp"
-            android:text="Guardar" />
-    </LinearLayout>
-
-    <!-- ImageView para mostrar la imagen capturada (puede ser visible sobre el PreviewView) -->
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:scaleType="fitCenter"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:visibility="gone"
-        android:background="#CCCCCC"
-        android:layout_gravity="center"/>
+        android:scaleType="fitCenter"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/buttonsLayoutVertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-</FrameLayout>
+    <Button
+        android:id="@+id/btnUndo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@android:drawable/ic_delete"
+        android:text="Deshacer"
+        android:drawableTint="@android:color/white"
+        android:drawablePadding="8dp"
+        android:layout_marginRight="8dp"/>
+
+    <LinearLayout
+        android:id="@+id/buttonsLayoutVertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btnCapture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Capturar"
+                android:drawableTint="@android:color/white"
+                android:drawablePadding="8dp"
+                android:layout_marginRight="8dp"/>
+
+            <Button
+                android:id="@+id/btnRotate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rotar"
+                android:drawableLeft="@drawable/ic_rotate"
+                android:drawableTint="@android:color/white"
+                android:drawablePadding="8dp"
+                android:layout_marginRight="8dp"/>
+
+            <Button
+                android:id="@+id/btnDraw"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dibujar"
+                android:drawableLeft="@drawable/ic_draw"
+                android:drawableTint="@android:color/white"
+                android:drawablePadding="8dp"
+                android:layout_marginRight="8dp"/>
+
+
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Guardar"
+                android:drawableTint="@android:color/white"
+                android:drawablePadding="8dp"
+                android:layout_marginRight="8dp"/>
+
+            <Button
+                android:id="@+id/btnRetry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reintentar"
+                android:drawableTint="@android:color/white"
+                android:drawablePadding="8dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
