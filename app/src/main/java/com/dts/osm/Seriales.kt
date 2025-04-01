@@ -13,7 +13,6 @@ class Seriales : PBase() {
             super.initbase(savedInstanceState)
 
 
-
         } catch (e:Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+". "+e.message)
         }
