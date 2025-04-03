@@ -5,22 +5,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#D0000000"
-        tools:context=".EnvioImagenes">
+        tools:context=".Seriales">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="380dp"
+        android:layout_height="420dp"
         android:layout_centerInParent="true"
         android:layout_marginHorizontal="40dp"
         android:background="@drawable/color_light">
 
+
         <RelativeLayout
             android:id="@+id/relbot"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="48dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="0dp"
-            android:background="@drawable/color_medium" >
+            android:background="@drawable/color_medium">
 
             <ImageView
                 android:id="@+id/imageView33"
@@ -29,6 +30,8 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="0dp"
                 android:adjustViewBounds="true"
+                android:clickable="true"
+                android:onClick="doSave"
                 android:padding="5dp"
                 app:srcCompat="@drawable/icon_stat_comp" />
 
@@ -37,6 +40,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
+                android:clickable="true"
+                android:onClick="doExit"
                 android:paddingStart="5dp"
                 app:srcCompat="@drawable/arr_back" />
         </RelativeLayout>
@@ -58,18 +63,21 @@
 
             <TextView
                 android:id="@+id/textView15"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="false"
                 android:layout_centerInParent="true"
+                android:layout_marginHorizontal="5dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="0dp"
+                android:ellipsize="middle"
+                android:gravity="center_horizontal"
                 android:paddingEnd="5dp"
-                android:text="Actualizando imagenes . . ."
+                android:text="Producto"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
-                android:textStyle="bold|italic" />
+                android:textStyle="bold" />
 
         </RelativeLayout>
 
@@ -88,7 +96,9 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:paddingStart="15dp"
-                android:text="Cantidad" />
+                android:text="Cantidad"
+                android:textColor="#202020"
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/editTextNumber"
@@ -99,7 +109,10 @@
                 android:layout_marginTop="2dp"
                 android:layout_toEndOf="@+id/textView27"
                 android:ems="10"
-                android:inputType="number" />
+                android:inputType="number"
+                android:textColor="#202020"
+                android:textSize="20sp"
+                android:textStyle="bold" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -137,6 +150,22 @@
                 android:onClick="doAdd"
                 android:padding="5dp"
                 app:srcCompat="@drawable/icon_add" />
+
+            <ImageView
+                android:id="@+id/imageView38"
+                android:layout_width="40dp"
+                android:layout_height="32dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="0dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/frame_btn"
+                android:clickable="true"
+                android:onClick="doInput"
+                android:padding="5dp"
+                app:srcCompat="@drawable/btn_edit" />
         </RelativeLayout>
+
+
     </RelativeLayout>
     </RelativeLayout>

@@ -62,7 +62,7 @@ class MenuSup : PBase() {
             fbsc=fbServicio("osm",du?.actMonth,du?.actDay)
             fbsa=fbServicio("osm","servicio","orden")
 
-            onBackPressedDispatcher.addCallback(this,backPress)
+            //onBackPressedDispatcher.addCallback(this,backPress)
 
             setHandlers()
 
@@ -293,10 +293,16 @@ class MenuSup : PBase() {
 
     val backPress = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            if (idle) {
-                onBackPressedDispatcher?.onBackPressed()
-            } else {
-                toast("Espere . . . ")
+            try {
+                if (idle) {
+                    onBackPressedDispatcher?.onBackPressed()
+                    finish()
+                } else {
+                    toast("Espere . . . ")
+                }
+            } catch (e: Exception) {
+                msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+                toastlong(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
             }
         }
     }

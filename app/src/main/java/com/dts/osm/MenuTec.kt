@@ -247,7 +247,7 @@ class MenuTec : PBase() {
             var cfot=OrdenfotoObj?.count
             var cimg=EnvioimagenObj?.count
 
-            imgpend?.isVisible=(cupd!! + cfot!! + cimg!!)>0
+            //imgpend?.isVisible=(cupd!! + cfot!! + cimg!!)>0
             //lblpend?.text="e: "+cupd+" / f: "+cfot+" / i: "+cimg
 
         } catch (e: Exception) {

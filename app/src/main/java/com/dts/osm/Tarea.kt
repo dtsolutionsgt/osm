@@ -36,6 +36,7 @@ import com.dts.classes.clsOrdenenccapObj
 import com.dts.classes.clsOrdenfotoObj
 import com.dts.classes.clsTiposerviciosObj
 import com.dts.classes.clsUpdsaveObj
+import com.dts.classes.extListDlg
 import com.dts.fbase.fbServicio
 import com.dts.ladapt.LA_ordendet
 import com.dts.restapi.ClassesAPI
@@ -112,6 +113,7 @@ class Tarea : PBase() {
     var sqlsave=""
     var phoneNum=""
     var saveselidx=-1
+    var saveid=-1
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -183,7 +185,7 @@ class Tarea : PBase() {
             } else {
                 when (validaDetalle()) {
                     1 -> { msgask(1,"Completar servicio?") }
-                    0 -> { msgask(5,"Continuar si aplicar todo material?") }
+                    0 -> { msgask(5,"Continuar sin aplicar todo material?") }
                    -1 -> { return }
                 }
 
@@ -287,7 +289,7 @@ class Tarea : PBase() {
 
                         override fun onItemClick(view: View, position: Int) {
                             saveselidx=position
-                            actualizaEstadoDetalle(saveselidx)
+                            actualizaDetalle(saveselidx)
                         }
 
                         override fun onItemLongClick(view: View?, position: Int) { }
@@ -558,16 +560,29 @@ class Tarea : PBase() {
             idestado=enc.idestado
             mostrarEstado()
 
+            var commitflag=false
+
             var fs=du?.univfecha(du?.actDateTime!!)
             var sqle=app?.buildEncUpdate(cap,enc.idestado,fs!!)!!
             var sqld=updateDetaille()
+            var sqls=updateSerial()
 
-            if (sqld=="#") {
-                sendUpdate(sqle!!,"",true)
-            } else {
-                sql=sqle+";"+sqld
+            sql=sqle
+            if (sqld!="#") {
+                sql=sql+";"+sqld;commitflag=true
+            }
+            if (sqls!="#") {
+                //sql=sql+";"+sqls;commitflag=true
+            }
+
+            if (commitflag) {
                 var cmd=sql!!.replace("´","'")
                 sendCommit(cmd)
+            } else {
+
+
+
+                sendUpdate(sqle!!,"",true)
             }
 
             fbsItem.estado = "Completo"
@@ -606,22 +621,6 @@ class Tarea : PBase() {
 
             }
 
-        }
-    }
-
-    fun updateDetaille():String {
-        var ccmd=""
-        var tcmd=""
-
-        OrdendetObj?.fill("WHERE (idOrden="+idorden+")")
-        if (OrdendetObj?.count!!>0) {
-            for (itm in OrdendetObj?.items!!) {
-                ccmd=app?.buildDetUpdate(itm)!!
-                tcmd+=ccmd+";"
-            }
-            return tcmd
-        } else {
-            return "#"
         }
     }
 
@@ -712,14 +711,49 @@ class Tarea : PBase() {
         }
     }
 
-    fun actualizaEstadoDetalle(dpos: Int ) {
+    fun actualizaDetalle(dpos: Int ) {
         try {
             var flag=ditems.get(dpos).realizado
-            if (flag==1) flag=0 else flag=1
-            ditems.get(dpos).realizado=flag
 
-            OrdendetObj?.update(ditems.get(dpos))
+            gl?.gstr=ditems.get(dpos).descripcion
+            gl?.gint=ditems.get(dpos).cant.toInt()
+            gl?.gint2=ditems.get(dpos).id
+            gl?.gint3=ditems.get(dpos).idorden
+            gl?.gintval=-1
+
+            if (flag==1) {
+                showItemMenu()
+            } else {
+                callback=1
+                startActivity(Intent(this,Seriales::class.java))
+            }
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
+    }
+
+    fun actualizaEstadoDetalle() {
+        try {
+            if (gl?.gintval!!<=0) return
+
+            ditems.get(saveselidx).realizado=1
+            ditems.get(saveselidx).cant=gl?.gint?.toDouble()!!
+
+            OrdendetObj?.update(ditems.get(saveselidx))
             adapter?.notifyDataSetChanged()
+
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
+    }
+
+    fun resetEstadoDetalle() {
+        try {
+            ditems.get(saveselidx).realizado=0
+            OrdendetObj?.update(ditems.get(saveselidx))
+            adapter?.notifyDataSetChanged()
+
+            db?.execSQL("DELETE FROM Ordenserial WHERE (idordendet="+gl?.gint2+")")
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
@@ -780,9 +814,11 @@ class Tarea : PBase() {
 
     fun sendCommit(usql:String) {
         try {
-            val jupd=clsClasses.clsUpdate(usql)
+            val cmd=usql!!.replace("´","'")
+            val jupd=clsClasses.clsUpdate(cmd)
             val pbody = gson.toJson(jupd)
             val body: RequestBody = pbody.toRequestBody(gl?.mediaType)
+
 
             http?.url=gl?.urlbase+"api/Orden/Commit"
 
@@ -806,12 +842,27 @@ class Tarea : PBase() {
                 try {
                     //if (retcode==0) addToSyntaxLog(selcmd.cmd)
                     //UpdcmdObj?.delete(selcmd)
+
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.postDelayed( { updateEstadoEnvio() }, 200)
+
                 } catch (e: Exception) { }
             }
         } catch (e: java.lang.Exception) {
             runOnUiThread { toast(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message) }
         }
+    }
 
+    fun updateEstadoEnvio() {
+        try {
+            cap.activa = 2
+            OrdenenccapObj?.update(cap)
+
+            actualizaImagenes()
+            finish()
+        } catch (e: java.lang.Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
+        }
     }
 
     fun sendUpdateCoord(csql:String,close: Boolean) {
@@ -892,6 +943,38 @@ class Tarea : PBase() {
         }
     }
 
+    fun updateDetaille():String {
+        var ccmd=""
+        var tcmd=""
+
+        OrdendetObj?.fill("WHERE (idOrden="+idorden+")")
+        if (OrdendetObj?.count!!>0) {
+            for (itm in OrdendetObj?.items!!) {
+                ccmd=app?.buildDetUpdate(itm)!!
+                tcmd+=ccmd+";"
+            }
+            return tcmd
+        } else {
+            return "#"
+        }
+    }
+
+    fun updateSerial():String {
+        var ccmd=""
+        var tcmd=""
+
+        OrdendetObj?.fill("WHERE (idOrden="+idorden+")")
+        if (OrdendetObj?.count!!>0) {
+            for (itm in OrdendetObj?.items!!) {
+                ccmd=app?.buildDetUpdate(itm)!!
+                tcmd+=ccmd+";"
+            }
+            return tcmd
+        } else {
+            return "#"
+        }
+    }
+
     //endregion
 
     //region Dialogs
@@ -906,9 +989,44 @@ class Tarea : PBase() {
                 4 -> { startActivity(Intent(this, Firma::class.java)) }
                 5 -> { msgask(6,"Está seguro?") }
                 6 -> { completarOrden() }
-            }
+           }
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
+        }
+    }
+
+    fun showItemMenu() {
+        try {
+            val listdlg = extListDlg();
+
+            listdlg.buildDialog(this@Tarea, "Opciones")
+            listdlg.setLines(2)
+            listdlg.setWidth(-1)
+            listdlg.setCenterScreenPosition()
+
+            listdlg.addData(1,"Modificar")
+            listdlg.addData(2,"Marcar como no aplicado")
+
+            listdlg.clickListener= Runnable { processItemMenu(listdlg.selcodint) }
+
+            listdlg.setOnLeftClick { v: View? -> listdlg.dismiss() }
+            listdlg.show()
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
+        }
+    }
+
+    fun processItemMenu(menuidx:Int) {
+        try {
+            when (menuidx) {
+                1 -> {
+                    callback=1
+                    startActivity(Intent(this,Seriales::class.java))
+                }
+                2 -> { resetEstadoDetalle() }
+            }
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
     }
 
@@ -1174,8 +1292,13 @@ class Tarea : PBase() {
             UpdsaveObj!!.reconnect(Con!!, db!!)
             ExistenciasObj!!.reconnect(Con!!, db!!)
 
-
             validaFirma()
+
+            if (callback==1) {
+                callback=0
+                actualizaEstadoDetalle()
+                return
+            }
 
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)

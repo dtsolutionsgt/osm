@@ -198,6 +198,7 @@
         android:onClick="doFirma"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
+        android:visibility="invisible"
         app:rippleColor="#241D1D" />
 
 </RelativeLayout>

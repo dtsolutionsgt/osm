@@ -27,6 +27,7 @@ class appGlobals : Application() {
     var gdbl=0.0
     var gbool=false
     var fbkey=""
+    var barcode=""
 
     var gnota=""
 
@@ -97,6 +98,7 @@ class appGlobals : Application() {
             savedInstanceState.putString("nuser", nuser)
             savedInstanceState.putString("idphoto", idfoto)
             savedInstanceState.putString("gnota", gnota)
+            savedInstanceState.putString("barcode", barcode)
 
             savedInstanceState.putBoolean("gbool", gbool)
             savedInstanceState.putBoolean("changed", changed)
@@ -139,6 +141,7 @@ class appGlobals : Application() {
             nuser = savedInstanceState.getString("nuser").toString()
             idfoto = savedInstanceState.getString("idphoto").toString()
             gnota = savedInstanceState.getString("gnota").toString()
+            barcode = savedInstanceState.getString("barcode").toString()
 
             gbool = savedInstanceState.getBoolean("gbool")
             changed = savedInstanceState.getBoolean("changed")

@@ -237,7 +237,11 @@ class clsClasses {
         var user : String = "",
     )
 
-
+    data class clsOrdenserial (
+        var idorden : Int = 0,
+        var idordendet : Int = 0,
+        var serial : String = "",
+    )
 
     data class clsSyntaxlog (
         var id : Int = 0,

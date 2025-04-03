@@ -123,7 +123,8 @@ class Usuarios : PBase() {
         val input = EditText(this)
         alert.setView(input)
 
-        input.inputType = InputType.TYPE_CLASS_NUMBER
+        input.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
+
         input.setText("")
         input.requestFocus()
 

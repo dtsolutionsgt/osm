@@ -145,6 +145,15 @@ class BaseDatosScript(private val vcontext: Context) {
             sql = "CREATE INDEX Ordenfoto_idx1 ON Ordenfoto(idOrden)";db?.execSQL(sql)
             sql = "CREATE INDEX Ordenfoto_idx2 ON Ordenfoto(statcom)";db?.execSQL(sql)
 
+
+            sql="CREATE TABLE [Ordenserial] ("+
+                    "idorden INTEGER NOT NULL,"+
+                    "idordendet INTEGER NOT NULL,"+
+                    "serial TEXT NOT NULL,"+
+                    "PRIMARY KEY ([idorden],[idordendet],[serial])"+
+                    ");";
+            db?.execSQL(sql);
+
             sql="CREATE TABLE [Prodprecio] ("+
                     "CODIGO_PRECIO INTEGER NOT NULL,"+
                     "CODIGO_PRODUCTO INTEGER NOT NULL,"+
