@@ -23,6 +23,7 @@ import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.IOException
 
+
 class Session : PBase() {
 
     var lbluser: TextView? = null
@@ -32,7 +33,6 @@ class Session : PBase() {
 
     var UsuarioObj: clsUsuarioObj? = null
     var SaveposObj: clsSaveposObj? = null
-
 
     var mPref: SharedPreferences? = null
     var mPEdit: SharedPreferences.Editor? = null
@@ -340,7 +340,7 @@ class Session : PBase() {
             listdlg.addData(1,"Sincronizar")
             //listdlg.addData(4,"Actualizar version")
             listdlg.addData(2,"Soporte >")
-            listdlg.addData(3,"Pais")
+            //listdlg.addData(3,"Pais")
 
             listdlg.clickListener= Runnable { processMainMenu(listdlg.selcodint) }
 
@@ -450,7 +450,6 @@ class Session : PBase() {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
     }
-
 
     private fun claveSoporte(cmodo:Int) {
         val alert: AlertDialog.Builder = AlertDialog.Builder(this)
@@ -605,6 +604,18 @@ class Session : PBase() {
                     "PRIMARY KEY ([id])" +
                     ");";
             db?.execSQL(sql);
+        } catch (e: Exception) {}
+
+        try {
+
+            sql="CREATE TABLE [Ordenserial] ("+
+                    "idorden INTEGER NOT NULL,"+
+                    "idordendet INTEGER NOT NULL,"+
+                    "serial TEXT NOT NULL,"+
+                    "PRIMARY KEY ([idorden],[idordendet],[serial])"+
+                    ");";
+            db?.execSQL(sql);
+
         } catch (e: Exception) {}
 
 

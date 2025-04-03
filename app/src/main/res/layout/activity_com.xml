@@ -78,7 +78,8 @@
                 android:layout_marginTop="60dp"
                 android:layout_marginBottom="5dp"
                 android:onClick="doOrdenes"
-                android:text="Ordenes" />
+                android:text="Ordenes"
+                android:visibility="invisible" />
 
             <Button
                 android:id="@+id/button2"
@@ -89,7 +90,8 @@
                 android:layout_marginEnd="29dp"
                 android:layout_marginBottom="4dp"
                 android:onClick="doBorrar"
-                android:text="Borrar" />
+                android:text="Borrar"
+                android:visibility="invisible" />
 
         </RelativeLayout>
 

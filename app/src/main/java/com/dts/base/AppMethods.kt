@@ -180,14 +180,14 @@ class AppMethods( private val cont: Context, private val gl: appGlobals,
 
     @Throws(IOException::class)
     fun buildDetUpdate(item: clsClasses.clsOrdendet ):String {
-        upd!!.init("Ordendet")
-        upd!!.add("Realizado", item.realizado)
+        upd!!.init("D_ORDEN_SERVICIO_DET")
+        upd!!.add("REALIZADO", item.realizado)
         if (item.realizado==1) {
-            upd!!.add("Cant", item.cant)
+            upd!!.add("CANTIDAD", item.cant)
         } else {
-            upd!!.add("Cant", 0)
+            upd!!.add("CANTIDAD", 0)
         }
-        upd!!.Where("(id=" + item.id + ")")
+        upd!!.Where("(CODIGO_ORDEN_SERVICIO_DET=" + item.id + ")")
         return upd!!.sql()
     }
 
