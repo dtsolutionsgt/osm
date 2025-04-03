@@ -1,6 +1,7 @@
 package com.dts.ladapt
 
 import android.graphics.BitmapFactory
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,18 +10,23 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dts.base.clsClasses
+import com.dts.classes.clsOrdenfotoObj
 import com.dts.osm.R
 import java.io.File
+import java.io.FileOutputStream
 
-
-class LA_FotoAdapter(val itemList: ArrayList<clsClasses.clsOrdenfoto>, val picturedir:String) : RecyclerView.Adapter<LA_FotoAdapter.ViewHolder>() {
+class LA_FotoAdapter(
+    val itemList: ArrayList<clsClasses.clsOrdenfoto>,
+    val picturedir: String,
+    val ordenfotoObj: clsOrdenfotoObj
+) : RecyclerView.Adapter<LA_FotoAdapter.ViewHolder>() {
 
     var selectedItemPosition: Int = -1
     lateinit var lay: LinearLayout
 
-    var picdir=picturedir
+    var picdir = picturedir
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LA_FotoAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.lv_fotoitem, parent, false)
         return ViewHolder(v)
     }
@@ -29,12 +35,11 @@ class LA_FotoAdapter(val itemList: ArrayList<clsClasses.clsOrdenfoto>, val pictu
         return itemList.size
     }
 
-    override fun onBindViewHolder(holder: LA_FotoAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = itemList[position]
         val isSelected = position == selectedItemPosition
 
-        holder.bindItems(itemList[position])
-
+        holder.bindItems(item)
         holder.bind(item, isSelected)
 
         holder.itemView.setOnClickListener {
@@ -46,7 +51,7 @@ class LA_FotoAdapter(val itemList: ArrayList<clsClasses.clsOrdenfoto>, val pictu
         }
     }
 
-    fun setSelectedItem(selpos:Int) {
+    fun setSelectedItem(selpos: Int) {
         val previousSelectedPosition = selectedItemPosition
         selectedItemPosition = selpos
 
@@ -64,22 +69,49 @@ class LA_FotoAdapter(val itemList: ArrayList<clsClasses.clsOrdenfoto>, val pictu
             textViewName.text = mitem.nota
 
             try {
-                var fbm= File(picdir,mitem.nombre)
+                val fbm = File(picdir, mitem.nombre)
                 if (fbm.exists()) {
                     val fbmp = BitmapFactory.decodeFile(fbm.absolutePath)
                     img1?.setImageBitmap(fbmp)
-                }
-            } catch (e: Exception) {}
 
+                    val sharedPref = itemView.context.getSharedPreferences("FotoPrefs", android.content.Context.MODE_PRIVATE)
+                    val rotationAngle = sharedPref.getFloat("rotation_${mitem.id}", 0f)
+
+                    img1.rotation = rotationAngle
+                    Log.d("DEBUG_ROTACION", "Rotación aplicada a ${mitem.id}: $rotationAngle")
+                }
+            } catch (e: Exception) {
+                Log.e("LA_FotoAdapter", "Error al cargar imagen: ${e.message}")
+            }
         }
 
         fun bind(mitem: clsClasses.clsOrdenfoto, isSelected: Boolean) {
-            lay.setBackgroundResource(if (isSelected)
-                R.drawable.frame_btn_sel else R.drawable.frame_btn)
+            lay.setBackgroundResource(if (isSelected) R.drawable.frame_btn_sel else R.drawable.frame_btn)
         }
 
         override fun onClick(p0: View?) {}
-
     }
 
+    fun saveImageChanges(position: Int, bitmap: android.graphics.Bitmap) {
+        if (position in 0 until itemList.size) {
+            val item = itemList[position]
+            val file = File(picturedir, item.nombre)
+
+            try {
+                FileOutputStream(file).use { out ->
+                    bitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 100, out)
+                }
+
+                item.statcom = 0
+                ordenfotoObj.update(item)
+
+                itemList[position].nota = item.nota
+                notifyItemChanged(position)
+
+                Log.d("LA_FotoAdapter", "Cambios guardados y actualizados para ${item.nombre}")
+            } catch (e: Exception) {
+                Log.e("LA_FotoAdapter", "Error al guardar cambios: ${e.message}")
+            }
+        }
+    }
 }

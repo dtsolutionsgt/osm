@@ -223,6 +223,7 @@ class clsClasses {
         var nombre : String = "",
         var nota : String = "",
         var statcom : Int = 0,
+        var rotationAngle: Int = 0
     )
 
     data class clsOrdenlist (

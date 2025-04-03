@@ -1,10 +1,11 @@
 package com.dts.osm
 
-
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.BitmapFactory
+import android.graphics.*
+import android.media.MediaScannerConnection
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
@@ -13,9 +14,12 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import com.dts.base.clsClasses
 import com.dts.classes.clsOrdenfotoObj
 import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 class FotoDetalle : PBase() {
 
@@ -23,13 +27,16 @@ class FotoDetalle : PBase() {
     var lbl1: TextView? = null
     var reltop: RelativeLayout? = null
     var relbot: RelativeLayout? = null
-
+    var bitmap: Bitmap? = null
     var OrdenfotoObj: clsOrdenfotoObj? = null
+    var rotationAngle = 0f
 
-    var item= clsClasses.clsOrdenfoto()
+    var item = clsClasses.clsOrdenfoto()
 
-    var idordfoto=0
-    var horiz=false
+    var idordfoto = 0
+    var horiz = false
+
+    val REQUEST_DIBUJO = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
@@ -43,45 +50,69 @@ class FotoDetalle : PBase() {
             reltop = findViewById(R.id.reltop)
             relbot = findViewById(R.id.relbot)
 
-            idordfoto=gl?.idordfoto!!
+            idordfoto = gl?.idordfoto!!
 
             OrdenfotoObj = clsOrdenfotoObj(this, Con!!, db!!)
 
+            val sharedPref = getSharedPreferences("FotoPrefs", Context.MODE_PRIVATE)
+
+            // Obtener el ángulo de rotación guardado en las preferencias
+            rotationAngle = sharedPref.getFloat("rotation_$idordfoto", 0f)
+
+            // Obtener la imagen y aplicar la rotación si es necesario
+            loadItem()
             horiz = when (resources.configuration.orientation) {
                 Configuration.ORIENTATION_LANDSCAPE -> true
                 Configuration.ORIENTATION_PORTRAIT -> false
                 else -> true
             }
             if (horiz) {
-                reltop?.visibility= View.GONE;relbot?.visibility= View.GONE
+                reltop?.visibility = View.GONE; relbot?.visibility = View.GONE
             } else {
-                reltop?.visibility= View.VISIBLE;relbot?.visibility= View.VISIBLE
+                reltop?.visibility = View.VISIBLE; relbot?.visibility = View.VISIBLE
             }
 
             loadItem()
 
         } catch (e: Exception) {
-            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
         }
     }
 
     //region Events
 
-    fun doText(view : View) {
-        showLargeTextInputDialog(this, "Observacion",item.nota) { text ->
-            item.nota=text
-            item.statcom=0
+    fun doText(view: View) {
+        showLargeTextInputDialog(this, "Observacion", item.nota) { text ->
+            item.nota = text
+            item.statcom = 0
             OrdenfotoObj?.update(item)
-            lbl1?.text=text
+            lbl1?.text = text
         }
     }
 
-    fun doObserv(view : View) {
+    fun doObserv(view: View) {
         if (item.nota.isNotBlank()) msgbox(item.nota)
     }
 
-    fun doExit(view : View) {
+    fun doExit(view: View) {
         finish()
+    }
+
+    fun doRotate(view: View) {
+        rotateImage()
+    }
+
+    fun doDraw(view: View) {
+        val intent = Intent(this, DibujoActivity::class.java)
+        val file = File(gl?.picdir, item.nombre)
+        intent.putExtra("imagePath", file.absolutePath)
+        intent.putExtra("rotationAngle", rotationAngle)
+        startActivityForResult(intent,1)
+    }
+
+
+    fun doSave(view: View) {
+        saveImageAndSendToDB()
     }
 
     //endregion
@@ -90,25 +121,89 @@ class FotoDetalle : PBase() {
 
     fun loadItem() {
         try {
-            OrdenfotoObj?.fill("WHERE (id="+idordfoto+")")
-            item=OrdenfotoObj?.first()!!
+            OrdenfotoObj?.fill("WHERE (id=$idordfoto)")
+            item = OrdenfotoObj?.first()!!
 
-            lbl1?.text=item.nota
+            lbl1?.text = item.nota
 
-            try {
-                var fbm= File(gl?.picdir,item.nombre)
-                if (fbm.exists()) {
-                    val fbmp = BitmapFactory.decodeFile(fbm.absolutePath)
-                    img1?.setImageBitmap(fbmp)
+            val fbm = File(gl?.picdir, item.nombre)
+            if (fbm.exists()) {
+                val originalBitmap = BitmapFactory.decodeFile(fbm.absolutePath)
+
+                val sharedPref = getSharedPreferences("FotoPrefs", Context.MODE_PRIVATE)
+                rotationAngle = sharedPref.getFloat("rotation_$idordfoto", 0f)
+
+
+                if (rotationAngle != 0f) {
+                    val matrix = Matrix()
+                    matrix.postRotate(rotationAngle)
+                    bitmap = Bitmap.createBitmap(originalBitmap, 0, 0, originalBitmap.width, originalBitmap.height, matrix, true)
+                } else {
+                    bitmap = originalBitmap
                 }
-            } catch (e: Exception) {}
 
+                img1?.setImageBitmap(bitmap)
+            }
         } catch (e: Exception) {
-            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+            msgbox("loadItem . ${e.message}")
         }
     }
 
-    //endregion
+
+    fun rotateImage() {
+        try {
+            if (bitmap == null) return
+
+
+            rotationAngle = (rotationAngle + 90f) % 360
+
+            val matrix = Matrix()
+            matrix.postRotate(90f)
+            bitmap = Bitmap.createBitmap(bitmap!!, 0, 0, bitmap!!.width, bitmap!!.height, matrix, true)
+
+            img1?.setImageBitmap(bitmap)
+            img1?.invalidate()
+            img1?.requestLayout()
+
+
+            val sharedPref = getSharedPreferences("FotoPrefs", Context.MODE_PRIVATE)
+            sharedPref.edit().putFloat("rotation_$idordfoto", rotationAngle).apply()
+
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
+        }
+    }
+
+
+
+
+
+    private fun saveImageAndSendToDB() {
+        try {
+            if (bitmap == null) {
+                Toast.makeText(this, "No hay imagen para guardar", Toast.LENGTH_SHORT).show()
+                return
+            }
+
+            val finalBitmap = bitmap!!
+            val file = File(gl?.picdir, item.nombre)
+
+            FileOutputStream(file).use { out ->
+                finalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+            }
+
+            item.statcom = 0
+            OrdenfotoObj?.update(item)
+
+            scanMediaFile(file)
+
+            Toast.makeText(this, "Cambios guardados", Toast.LENGTH_SHORT).show()
+            finish()
+
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
+        }
+    }
 
     //region Dialogs
 
@@ -116,6 +211,7 @@ class FotoDetalle : PBase() {
         try {
             when (gl?.dialogid) {
                 0 -> {}
+                else -> msgbox("Diálogo no definido: ${gl?.dialogid}")
             }
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
@@ -155,11 +251,6 @@ class FotoDetalle : PBase() {
 
     //endregion
 
-    //region Aux
-
-
-    //endregion
-
     //region Activity Events
 
     override fun onResume() {
@@ -167,13 +258,39 @@ class FotoDetalle : PBase() {
             super.onResume()
             gl?.dialogr = Runnable { dialogswitch() }
 
-            OrdenfotoObj?.reconnect(Con!!,db!!)
+            OrdenfotoObj?.reconnect(Con!!, db!!)
 
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
         }
     }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            val updatedImagePath = data?.getStringExtra("imagePath")
+            if (updatedImagePath != null) {
+                val file = File(updatedImagePath)
+                if (file.exists()) {
+                    img1?.setImageBitmap(BitmapFactory.decodeFile(file.absolutePath))
+                } else {
+                    Toast.makeText(this, "No se encontró la imagen guardada", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+
+
 
     //endregion
 
+    private fun scanMediaFile(file: File) {
+        MediaScannerConnection.scanFile(
+            this,
+            arrayOf(file.toString()),
+            null,
+            null
+        )
+    }
 }

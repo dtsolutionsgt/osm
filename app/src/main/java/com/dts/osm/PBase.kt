@@ -28,6 +28,7 @@ open class PBase : AppCompatActivity() {
     var DBPath: String? = null
     var DBName: String? = null
     var imgdir = ""
+    public var picdir = ""
 
     var gl: appGlobals? = null
     var mu: MiscUtils? = null
@@ -80,6 +81,7 @@ open class PBase : AppCompatActivity() {
         callback = 0
 
         holdInstance(savedInstanceState)
+        picdir = imgdir
     }
 
     //region Common

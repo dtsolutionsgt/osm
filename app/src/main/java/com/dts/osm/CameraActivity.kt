@@ -54,6 +54,7 @@ class CameraActivity : PBase() {
     private var isDeleting = false
     private val deleteRadius = 50f
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(com.dts.osm.R.layout.activity_camera)
@@ -159,6 +160,26 @@ class CameraActivity : PBase() {
                         try {
                             Log.d("CameraX", "Foto capturada correctamente: ${outputFileResults.savedUri}")
                             val file = File(outputFileResults.savedUri?.path)
+
+                            // Obtener dimensiones de la imagen sin cargarla en memoria
+                            val options = BitmapFactory.Options().apply {
+                                inJustDecodeBounds = true
+                            }
+                            BitmapFactory.decodeFile(file.absolutePath, options)
+
+                            val targetWidth = 1080  // Ancho máximo deseado
+                            val targetHeight = 1920 // Alto máximo deseado
+
+                            // Calcular la escala de reducción
+                            val scaleFactor = maxOf(1, minOf(options.outWidth / targetWidth, options.outHeight / targetHeight))
+
+                            // Ahora cargamos la imagen con el tamaño optimizado
+                            options.inJustDecodeBounds = false
+                            options.inSampleSize = scaleFactor
+
+                            val bitmap = BitmapFactory.decodeFile(file.absolutePath, options)
+
+                            // Ajustar la rotación según los metadatos de la imagen
                             val exifInterface = ExifInterface(file.absolutePath)
                             val orientation = exifInterface.getAttributeInt(
                                 ExifInterface.TAG_ORIENTATION,
@@ -169,18 +190,16 @@ class CameraActivity : PBase() {
                                 ExifInterface.ORIENTATION_ROTATE_90 -> rotation = 90f
                                 ExifInterface.ORIENTATION_ROTATE_180 -> rotation = 180f
                                 ExifInterface.ORIENTATION_ROTATE_270 -> rotation = 270f
-                                ExifInterface.ORIENTATION_NORMAL -> rotation = 0f
-                                else -> rotation = 0f
                             }
 
-                            val bitmap = BitmapFactory.decodeFile(file.absolutePath)
-                            val matrix = Matrix()
-                            matrix.postRotate(rotation)
+                            val matrix = Matrix().apply { postRotate(rotation) }
                             val rotatedBitmap = Bitmap.createBitmap(
                                 bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true
                             )
+
                             capturedBitmap = rotatedBitmap
 
+                            // Mostrar la imagen en el ImageView
                             imageView.setImageBitmap(rotatedBitmap)
                             previewView.visibility = View.INVISIBLE
                             imageView.visibility = View.VISIBLE
@@ -207,6 +226,7 @@ class CameraActivity : PBase() {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
         }
     }
+
 
     private fun prepareDrawingCanvas() {
         try {

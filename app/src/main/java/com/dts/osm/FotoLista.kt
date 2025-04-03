@@ -104,7 +104,10 @@ class FotoLista : PBase() {
                                     selitem = OrdenfotoObj?.items?.get(position)!!
                                     gl?.idordfoto = OrdenfotoObj?.items?.get(position)?.id!!
                                     gl?.gstr = gl?.picdir!!
+                                    val rotationAngle = selitem?.rotationAngle ?: 0
 
+                                    val intent = Intent(this@FotoLista, FotoDetalle::class.java)
+                                    intent.putExtra("rotationAngle", rotationAngle)
                                     callback = 2
                                     startActivity(Intent(this@FotoLista, FotoDetalle::class.java))
                                 }
@@ -138,7 +141,7 @@ class FotoLista : PBase() {
     fun listItems() {
         try {
             OrdenfotoObj?.fill("WHERE (idOrden="+idorden+") AND (nombre NOT LIKE '%FIRMA%') ORDER BY id DESC")
-            adapter = LA_FotoAdapter(OrdenfotoObj?.items!!,gl?.picdir!!)
+            adapter = LA_FotoAdapter(OrdenfotoObj?.items!!,gl?.picdir!!, OrdenfotoObj!!)
             recview?.adapter = adapter
 
             lbl1?.text="Registros: "+OrdenfotoObj?.items?.size

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/color_light"
-    tools:context=".FotoDetalle">
+    tools:context=".DibujoActivity">
 
     <RelativeLayout
         android:id="@+id/relbot"
@@ -15,41 +15,6 @@
         android:layout_marginBottom="0dp"
         android:background="@drawable/color_medium">
 
-        <TextView
-            android:id="@+id/textView29"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_toStartOf="@+id/imageView22"
-            android:layout_toEndOf="@+id/imageView19"
-            android:clickable="true"
-            android:gravity="center"
-            android:onClick="doObserv"
-            android:text="TextView"
-            android:textColor="#FFFFFF"
-            android:visibility="invisible" />
-
-        <ImageView
-            android:id="@+id/imageView36"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/textView29"
-            android:layout_marginEnd="10dp"
-            android:onClick="doRotate"
-            android:padding="5dp"
-            app:srcCompat="@drawable/icon_rotate" />
-
-        <ImageView
-            android:id="@+id/imageView37"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="0dp"
-            android:layout_toStartOf="@+id/imageView36"
-            android:onClick="doDraw"
-            android:padding="5dp"
-            app:srcCompat="@drawable/icon_rect" />
-
         <ImageView
             android:id="@+id/imageView19"
             android:layout_width="wrap_content"
@@ -58,22 +23,31 @@
             android:clickable="true"
             android:onClick="doExit"
             android:paddingHorizontal="5dp"
-            app:srcCompat="@drawable/arr_back" />
+            app:srcCompat="@drawable/arr_back"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"/>
 
         <ImageView
-            android:id="@+id/imageView22"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="2dp"
-            android:adjustViewBounds="true"
+            android:id="@+id/deshacerButton"
+            android:layout_width="152dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="85dp"
+            android:layout_marginEnd="10dp"
+            android:layout_toEndOf="@+id/imageView19"
             android:clickable="true"
-            android:onClick="doText"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="8dp"
-            app:srcCompat="@drawable/btn_edit_white" />
+            android:paddingHorizontal="5dp"
+            app:srcCompat="@drawable/delete" />
 
-
+        <ImageView
+            android:id="@+id/guardarButton"
+            android:layout_width="117dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="-22dp"
+            android:layout_marginEnd="2dp"
+            android:layout_toEndOf="@+id/deshacerButton"
+            android:clickable="true"
+            android:paddingHorizontal="5dp"
+            app:srcCompat="@drawable/icon_stat_comp" />
 
     </RelativeLayout>
 
@@ -102,7 +76,7 @@
             android:layout_marginTop="0dp"
             android:layout_marginEnd="0dp"
             android:paddingEnd="5dp"
-            android:text="  Foto  "
+            android:text="  Dibujo  "
             android:textColor="#FFFFFF"
             android:textSize="24sp"
             android:textStyle="bold|italic" />
@@ -110,7 +84,7 @@
     </RelativeLayout>
 
     <ImageView
-        android:id="@+id/imageView23"
+        android:id="@+id/imageViewDibujo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/relbot"
@@ -121,6 +95,7 @@
         android:layout_marginTop="2dp"
         android:layout_marginEnd="2dp"
         android:layout_marginBottom="2dp"
+        android:scaleType="fitCenter"
         app:srcCompat="@drawable/blank" />
 
 </RelativeLayout>

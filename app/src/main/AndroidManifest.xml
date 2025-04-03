@@ -90,6 +90,8 @@
             android:name=".CameraActivity"
             android:exported="false"
             android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity android:name=".DibujoActivity"
+            android:exported="true"/>
         <activity
             android:name=".Productos"
             android:exported="false"
