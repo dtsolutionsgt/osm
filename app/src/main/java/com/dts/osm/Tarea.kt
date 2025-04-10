@@ -34,6 +34,7 @@ import com.dts.classes.clsOrdendetObj
 import com.dts.classes.clsOrdenencObj
 import com.dts.classes.clsOrdenenccapObj
 import com.dts.classes.clsOrdenfotoObj
+import com.dts.classes.clsOrdenserialObj
 import com.dts.classes.clsTiposerviciosObj
 import com.dts.classes.clsUpdsaveObj
 import com.dts.classes.extListDlg
@@ -87,12 +88,12 @@ class Tarea : PBase() {
     var OrdendetObj: clsOrdendetObj? = null
     var UpdsaveObj: clsUpdsaveObj? = null
     var ExistenciasObj: clsExistenciaObj? = null
-
+    var OrdenserialObj: clsOrdenserialObj? = null
 
     var adapter: LA_ordendet? = null
 
-    lateinit var cap: clsClasses.clsOrdenenccap
-    lateinit var enc: clsClasses.clsOrdenenc
+    var cap = clsClasses.clsOrdenenccap()
+    var enc = clsClasses.clsOrdenenc()
 
     var fbsa : fbServicio? = null
     var fbsc : fbServicio? = null
@@ -157,6 +158,7 @@ class Tarea : PBase() {
             OrdendetObj = clsOrdendetObj(this, Con!!, db!!)
             UpdsaveObj = clsUpdsaveObj(this, Con!!, db!!)
             ExistenciasObj = clsExistenciaObj(this, Con!!, db!!)
+            OrdenserialObj = clsOrdenserialObj(this, Con!!, db!!)
 
             idorden=gl?.idorden!!
 
@@ -563,25 +565,21 @@ class Tarea : PBase() {
             var commitflag=false
 
             var fs=du?.univfecha(du?.actDateTime!!)
-            var sqle=app?.buildEncUpdate(cap,enc.idestado,fs!!)!!
+            var sqle=app?.buildEncUpdate(cap,enc.idestado,fs!!)!!+";"
             var sqld=updateDetaille()
             var sqls=updateSerial()
 
             sql=sqle
             if (sqld!="#") {
-                sql=sql+";"+sqld;commitflag=true
+                sql=sql+sqld;commitflag=true
             }
             if (sqls!="#") {
-                //sql=sql+";"+sqls;commitflag=true
+                sql=sql+sqls;commitflag=true
             }
 
             if (commitflag) {
-                var cmd=sql!!.replace("´","'")
-                sendCommit(cmd)
+                sendCommit(sql!!)
             } else {
-
-
-
                 sendUpdate(sqle!!,"",true)
             }
 
@@ -805,20 +803,17 @@ class Tarea : PBase() {
         if (csql.isNotEmpty()) {
             sendUpdateCoord(csql,close)
         } else {
-            if (close) {
-                actualizaImagenes()
-                finish()
-            }
+            if (close) updateEstadoEnvio()
         }
     }
 
     fun sendCommit(usql:String) {
         try {
-            val cmd=usql!!.replace("´","'")
+            //val cmd=usql!!.replace("´","'")
+            val cmd=usql!!
             val jupd=clsClasses.clsUpdate(cmd)
             val pbody = gson.toJson(jupd)
             val body: RequestBody = pbody.toRequestBody(gl?.mediaType)
-
 
             http?.url=gl?.urlbase+"api/Orden/Commit"
 
@@ -899,10 +894,7 @@ class Tarea : PBase() {
             runOnUiThread { toast(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message) }
         }
 
-        if (close) {
-            actualizaImagenes()
-            finish()
-        }
+        if (close)  updateEstadoEnvio()
     }
 
     fun sendUpdateAnul(usql:String) {
@@ -960,13 +952,13 @@ class Tarea : PBase() {
     }
 
     fun updateSerial():String {
+        var tcmd="DELETE FROM D_ORDEN_SERVICIO_SERIAL WHERE (CODIGO_ORDEN_SERVICIO="+idorden+");"
         var ccmd=""
-        var tcmd=""
 
-        OrdendetObj?.fill("WHERE (idOrden="+idorden+")")
-        if (OrdendetObj?.count!!>0) {
-            for (itm in OrdendetObj?.items!!) {
-                ccmd=app?.buildDetUpdate(itm)!!
+        OrdenserialObj?.fill("WHERE (idOrden="+idorden+")")
+        if (OrdenserialObj?.count!!>0) {
+            for (itm in OrdenserialObj?.items!!) {
+                ccmd=app?.buildSerialUpdate(itm)!!
                 tcmd+=ccmd+";"
             }
             return tcmd
@@ -1291,6 +1283,7 @@ class Tarea : PBase() {
             OrdendetObj!!.reconnect(Con!!, db!!)
             UpdsaveObj!!.reconnect(Con!!, db!!)
             ExistenciasObj!!.reconnect(Con!!, db!!)
+            OrdenserialObj!!.reconnect(Con!!, db!!)
 
             validaFirma()
 

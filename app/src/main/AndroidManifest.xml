@@ -165,6 +165,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/TranslucentTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".DibujoActivity"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysHidden" />
     </application>
 
 </manifest>

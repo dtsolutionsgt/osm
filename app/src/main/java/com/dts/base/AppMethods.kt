@@ -191,6 +191,15 @@ class AppMethods( private val cont: Context, private val gl: appGlobals,
         return upd!!.sql()
     }
 
+    @Throws(IOException::class)
+    fun buildSerialUpdate(item: clsClasses.clsOrdenserial ):String {
+        ins!!.init("D_ORDEN_SERVICIO_SERIAL")
+        ins!!.add("CODIGO_ORDEN_SERVICIO", item.idorden)
+        ins!!.add("CODIGO_ORDEN_SERVICIO_DET", item.idordendet)
+        ins!!.add("SERIAL", item.serial)
+        return ins!!.sql()
+    }
+
     //endregion
 
     //region Common

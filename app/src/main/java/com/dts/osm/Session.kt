@@ -43,7 +43,7 @@ class Session : PBase() {
     val vmode = listOf(5,6,7)
     val fdown = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + "")
 
-    val version="1.0.0.0"
+    val version="1.1.0.0"
 
     override fun onCreate(savedInstanceState: Bundle?) {
 

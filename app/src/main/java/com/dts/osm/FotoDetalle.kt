@@ -16,6 +16,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.dts.base.clsClasses
+import com.dts.classes.clsEnvioimagenObj
 import com.dts.classes.clsOrdenfotoObj
 import java.io.File
 import java.io.FileOutputStream
@@ -27,14 +28,16 @@ class FotoDetalle : PBase() {
     var lbl1: TextView? = null
     var reltop: RelativeLayout? = null
     var relbot: RelativeLayout? = null
-    var bitmap: Bitmap? = null
+
+    var EnvioimagenObj: clsEnvioimagenObj? = null
     var OrdenfotoObj: clsOrdenfotoObj? = null
-    var rotationAngle = 0f
 
     var item = clsClasses.clsOrdenfoto()
 
     var idordfoto = 0
     var horiz = false
+    var bitmap: Bitmap? = null
+    var rotationAngle = 0f
 
     val REQUEST_DIBUJO = 1
 
@@ -53,6 +56,7 @@ class FotoDetalle : PBase() {
             idordfoto = gl?.idordfoto!!
 
             OrdenfotoObj = clsOrdenfotoObj(this, Con!!, db!!)
+            EnvioimagenObj = clsEnvioimagenObj(this, Con!!, db!!)
 
             val sharedPref = getSharedPreferences("FotoPrefs", Context.MODE_PRIVATE)
 
@@ -103,11 +107,15 @@ class FotoDetalle : PBase() {
     }
 
     fun doDraw(view: View) {
-        val intent = Intent(this, DibujoActivity::class.java)
-        val file = File(gl?.picdir, item.nombre)
-        intent.putExtra("imagePath", file.absolutePath)
-        intent.putExtra("rotationAngle", rotationAngle)
-        startActivityForResult(intent,1)
+        try {
+            val intent = Intent(this, DibujoActivity::class.java)
+            val file = File(gl?.picdir, item.nombre)
+            intent.putExtra("imagePath", file.absolutePath)
+            intent.putExtra("rotationAngle", rotationAngle)
+            startActivityForResult(intent,1)
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
     }
 
 
@@ -154,7 +162,6 @@ class FotoDetalle : PBase() {
         try {
             if (bitmap == null) return
 
-
             rotationAngle = (rotationAngle + 90f) % 360
 
             val matrix = Matrix()
@@ -165,6 +172,12 @@ class FotoDetalle : PBase() {
             img1?.invalidate()
             img1?.requestLayout()
 
+            var eiitem = clsClasses.clsEnvioimagen(item?.nombre!!, 0)
+            try {
+                EnvioimagenObj?.add(eiitem)
+            } catch (e: Exception) {
+                EnvioimagenObj?.update(eiitem)
+            }
 
             val sharedPref = getSharedPreferences("FotoPrefs", Context.MODE_PRIVATE)
             sharedPref.edit().putFloat("rotation_$idordfoto", rotationAngle).apply()
@@ -259,11 +272,14 @@ class FotoDetalle : PBase() {
             gl?.dialogr = Runnable { dialogswitch() }
 
             OrdenfotoObj?.reconnect(Con!!, db!!)
+            EnvioimagenObj?.reconnect(Con!!,db!!)
+
 
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
         }
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 

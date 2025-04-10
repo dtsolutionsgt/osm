@@ -1,5 +1,6 @@
 package com.dts.osm
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -18,6 +19,7 @@ import com.dts.classes.clsEnvioimagenObj
 import com.dts.classes.clsEstadoObj
 import com.dts.classes.clsOrdendetObj
 import com.dts.classes.clsOrdenencObj
+import com.dts.classes.clsOrdenenccapObj
 import com.dts.classes.clsProdprecioObj
 import com.dts.classes.clsProductoObj
 import com.dts.classes.clsTiposerviciosObj
@@ -1084,20 +1086,9 @@ class Com : PBase() {
 
     fun finalizaRecepcion() {
         try {
-
             envioConfirmacion()
-
-            if (tienePendientes()) {
-
-            } else {
-                if (tieneImagenes()) {
-
-                }
-            }
-
             if (gl?.idrol=="TEC") toastlong("Ordenes recibidos: "+enccnt)
-
-            finish()
+            finishCom()
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
@@ -1115,46 +1106,47 @@ class Com : PBase() {
     }
 
     fun finishCom() {
-        /*
         try {
-            var EnvioimagenObj = clsEnvioimagenObj(this, Con!!, db!!)
-            EnvioimagenObj?.fill()
 
-            if (EnvioimagenObj?.count!!>0) {
+            if (tienePendientes()) {
                 val handler = Handler(Looper.getMainLooper())
-                handler.postDelayed({
-                    startActivity(Intent(this, EnvioImagenes::class.java))
-                }, 200)
+                handler.postDelayed( { startActivity(Intent(this, EnvioImagenes::class.java)) }, 200)
+
+                //handler.postDelayed( { startActivity(Intent(this, Pendientes::class.java)) }, 200)
+            } else {
+                if (tieneImagenes()) {
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.postDelayed( { startActivity(Intent(this, EnvioImagenes::class.java)) }, 200)
+                }
             }
+
         } catch (e: Exception) {
             toastlong(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
-        */
 
         finish()
     }
 
     fun tienePendientes() : Boolean {
         try {
-
+            val OrdenenccapObj = clsOrdenenccapObj(this, Con!!, db!!)
+            OrdenenccapObj.fill("WHERE (recibido=1)")
+            return OrdenenccapObj.count>0
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+            return true
         }
-
-        return true
     }
 
     fun tieneImagenes() : Boolean {
         try {
-            var EnvioimagenObj = clsEnvioimagenObj(this, Con!!, db!!)
+            val EnvioimagenObj = clsEnvioimagenObj(this, Con!!, db!!)
             EnvioimagenObj?.fill()
-            //return EnvioimagenObj?.count!!>0
-            return true
+            return EnvioimagenObj?.count!!>0
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+            return true
         }
-
-        return true
     }
 
     //endregion

@@ -51,7 +51,9 @@ class EnvioImagenes : PBase() {
 
             if (app?.sinInternet() == true) {
                 val handler = Handler(Looper.getMainLooper())
-                handler.postDelayed({finish()}, 200)
+                handler.postDelayed( {
+                    toast("Sin conexión a internet")
+                    finish()}, 200)
             } else {
                 idle=false
                 processItem()

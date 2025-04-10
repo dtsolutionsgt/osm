@@ -188,12 +188,16 @@ open class PBase : AppCompatActivity() {
         mu!!.msgbox(msg)
     }
 
-    fun msgbox(`val`: Int) {
-        mu!!.msgbox("" + `val`)
+    fun msgbox(value: Int) {
+        mu!!.msgbox("" + value)
     }
 
-    fun msgbox(`val`: Double) {
-        mu!!.msgbox("" + `val`)
+    fun msgbox(value: Int?) {
+        mu!!.msgbox("" + value)
+    }
+
+    fun msgbox(value: Double) {
+        mu!!.msgbox("" + value)
     }
 
     //endregion

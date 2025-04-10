@@ -18,6 +18,7 @@ import com.dts.classes.clsClienteObj
 import com.dts.classes.clsEnvioimagenObj
 import com.dts.classes.clsEstadoordenObj
 import com.dts.classes.clsOrdenencObj
+import com.dts.classes.clsOrdenenccapObj
 import com.dts.classes.clsOrdenfotoObj
 import com.dts.classes.clsTiposerviciosObj
 import com.dts.classes.clsUpdsaveObj
@@ -32,12 +33,11 @@ class MenuTec : PBase() {
     var lblpend: TextView? = null
     var imgpend: ImageView? = null
 
-    //var fbl: fbLocItem? =null
-
     var OrdenencObj: clsOrdenencObj? = null
     var EstadoordenObj: clsEstadoordenObj? = null
     var TiposerviciosObj: clsTiposerviciosObj? = null
     var ClienteObj: clsClienteObj? = null
+    var OrdenenccapObj: clsOrdenenccapObj? = null
 
     var adapter: LA_OrdenAdapter? = null
 
@@ -47,7 +47,6 @@ class MenuTec : PBase() {
     var afecha=0L
     var idle=false
 
-    //var gps: GPSLocation? = null
     var location: Location? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,16 +68,12 @@ class MenuTec : PBase() {
             EstadoordenObj = clsEstadoordenObj(this, Con!!, db!!)
             TiposerviciosObj = clsTiposerviciosObj(this, Con!!, db!!)
             ClienteObj = clsClienteObj(this, Con!!, db!!)
-
-            //gps=GPSLocation()
-
-            //fbl= fbLocItem(gl?.gpsroot)
+            OrdenenccapObj = clsOrdenenccapObj(this, Con!!, db!!)
 
             setHandlers()
 
             val handler = Handler(Looper.getMainLooper())
             handler.postDelayed({
-                //GPS()
                 idle=true
                 listItems()
             }, 20)
@@ -235,20 +230,16 @@ class MenuTec : PBase() {
     fun registrosOffline() {
         try {
 
-            var UpdsaveObj= clsUpdsaveObj(this,Con!!,db!!)
-            var OrdenfotoObj= clsOrdenfotoObj(this,Con!!,db!!)
+            var OrdenenccapObj= clsOrdenenccapObj(this,Con!!,db!!)
             var EnvioimagenObj= clsEnvioimagenObj(this,Con!!,db!!)
 
-            UpdsaveObj.fill()
-            OrdenfotoObj.fill("WHERE (statcom=0)")
+            OrdenenccapObj.fill("WHERE (activa=1)")
             EnvioimagenObj.fill()
 
-            var cupd=UpdsaveObj?.count
-            var cfot=OrdenfotoObj?.count
+            var cord=OrdenenccapObj?.count
             var cimg=EnvioimagenObj?.count
 
-            //imgpend?.isVisible=(cupd!! + cfot!! + cimg!!)>0
-            //lblpend?.text="e: "+cupd+" / f: "+cfot+" / i: "+cimg
+            imgpend?.isVisible=(cord!! + cimg!!)>0
 
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
@@ -269,6 +260,7 @@ class MenuTec : PBase() {
             EstadoordenObj?.reconnect(Con!!,db!!)
             TiposerviciosObj?.reconnect(Con!!,db!!)
             ClienteObj?.reconnect(Con!!,db!!)
+            OrdenenccapObj?.reconnect(Con!!,db!!)
 
             try {
                 adapter?.setSelectedItem(saveselidx)
