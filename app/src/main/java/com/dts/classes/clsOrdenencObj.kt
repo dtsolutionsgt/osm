@@ -7,6 +7,7 @@ import com.dts.base.BaseDatos
 import com.dts.base.clsClasses
 import com.dts.base.clsClasses.clsOrdenenc
 
+
 class clsOrdenencObj {
 
     var count=0
@@ -87,6 +88,7 @@ class clsOrdenencObj {
         ins!!.add("fecha_cierre", item.fecha_cierre.toDouble())
         ins!!.add("hora_ini", item.hora_ini.toDouble())
         ins!!.add("hora_fin", item.hora_fin.toDouble())
+        ins!!.add("prioridad", item.prioridad)
         db!!.execSQL(ins!!.sql())
     }
 
@@ -104,6 +106,7 @@ class clsOrdenencObj {
         upd!!.add("fecha_cierre", item.fecha_cierre.toDouble())
         upd!!.add("hora_ini", item.hora_ini.toDouble())
         upd!!.add("hora_fin", item.hora_fin.toDouble())
+        upd!!.add("prioridad", item.prioridad)
         upd!!.Where("(idOrden=" + item.idorden + ")")
         db!!.execSQL(upd!!.sql())
     }
@@ -140,6 +143,7 @@ class clsOrdenencObj {
             item.fecha_cierre = dt.getLong(10)
             item.hora_ini = dt.getLong(11)
             item.hora_fin = dt.getLong(12)
+            item.prioridad = dt.getInt(13)
             items.add(item)
             dt.moveToNext()
         }
@@ -175,6 +179,7 @@ class clsOrdenencObj {
         ins!!.add("fecha_cierre", item.fecha_cierre.toDouble())
         ins!!.add("hora_ini", item.hora_ini.toDouble())
         ins!!.add("hora_fin", item.hora_fin.toDouble())
+        ins!!.add("prioridad", item.prioridad)
         return ins!!.sql()
     }
 
@@ -192,6 +197,7 @@ class clsOrdenencObj {
         upd!!.add("fecha_cierre", item.fecha_cierre.toDouble())
         upd!!.add("hora_ini", item.hora_ini.toDouble())
         upd!!.add("hora_fin", item.hora_fin.toDouble())
+        upd!!.add("prioridad", item.prioridad)
         upd!!.Where("(idOrden=" + item.idorden + ")")
         return upd!!.sql()
     }

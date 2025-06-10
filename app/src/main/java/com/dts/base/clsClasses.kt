@@ -5,6 +5,11 @@ import kotlinx.serialization.Serializable
 
 class clsClasses {
 
+    data class clsClasificacion (
+        var codigo_clasificacion : Int = 0,
+        var descripcion : String = "",
+        var es_material : Int = 0,
+    )
 
     data class clsCliente (
         var codigo_cliente : Int = 0,
@@ -65,6 +70,24 @@ class clsClasses {
         var codigo_tipo : String = "",
     )
 
+    data class clsRazon_falla (
+        var codigo_razon_falla : Int = 0,
+        var codigo_tipo_orden_servici : Int = 0,
+        var codigo_clasificacion : Int = 0,
+        var descripcion : String = "",
+    )
+
+    data class clsRazon_no_atencion (
+        var codigo_razon_noatencion : Int = 0,
+        var empresa : Int = 0,
+        var descripcion : String = "",
+    )
+
+    data class clsTiposervicio (
+        var codigo_tipo_orden_servicio : Int = 0,
+        var nombre : String = "",
+    )
+
     data class clsUsuario (
         var id : Int = 0,
         var nombre : String = "",
@@ -72,20 +95,24 @@ class clsClasses {
         var rol : String = "",
     )
 
-    data class clsTiposervicios (
-        var codigo_tipo_departamento : Int = 0,
-        var codigo_ticket_departamento : Int = 0,
-        var nombre : String = "",
-    )
+    // ----------------------------------------------------------
+
 
     data class clsOrdendet (
         var id : Int = 0,
         var idorden : Int = 0,
         var idproducto : Int = 0,
         var descripcion : String = "",
-        var realizado : Int = 0,
+        var idrazonfalla : Int = 0,
+        var precio : Double = 0.0,
         var cant : Double = 0.0,
+        var total : Double = 0.0,
         var activo : Int = 0,
+        var realizado : Int = 0,
+        var idnoaten : Int = 0,
+        var horaini : Long = 0L,
+        var horafin : Long = 0L,
+        var serial : String = "",
     )
 
     data class clsOrdenenc (
@@ -102,7 +129,49 @@ class clsClasses {
         var fecha_cierre : Long = 0L,
         var hora_ini : Long = 0L,
         var hora_fin : Long = 0L,
+        var prioridad : Int = 0,
     )
+
+    data class clsOrdenEncSup (
+        var CODIGO_ORDEN_SERVICIO : Int = 0,
+        var NUMERO : String = "",
+        var NOMBRE : String = "",
+        var USUARIO : String = "",
+        var CODIGO_SUCURSAL : Int = 0,
+        var NTIPO : String = "",
+        var NESTADO : String = "",
+        var ESTADO : Int = 0,
+        var FECHAAGR : Long = 0L,
+        var FECHASERV : Long = 0L,
+        var PRIORIDAD : Int = 0,
+
+        var NFECHAAGR : String = "",
+        var NFECHASERV : String = "",
+    )
+
+    data class clsOrdenSupAsig (
+        var CODIGO_ORDEN_SERVICIO : Int = 0,
+        var NUMERO : String = "",
+        var CLIENTE : String = "",
+        var TIPO : String = "",
+        var FECHA : Long = 0L,
+        var SFECHA : String = "",
+    )
+
+    data class clsOrdenSupHora (
+        var CODIGO_ORDEN_SERVICIO : Int = 0,
+        var NUMERO : String = "",
+        var NOMBRE : String = "",
+        var CLIENTE : String = "",
+        var TIPO : String = "",
+        var FECHAINI : Long = 0L,
+        var FECHAFIN : Long = 0L,
+        var HORAINI : Long = 0L,
+        var HORAFIN : Long = 0L,
+        var SFECHAINI : String = "",
+        var SFECHAFIN : String = "",
+    )
+
 
     data class clsT_ordendet (
         var codigo_orden_servicio_det : Int = 0,
@@ -136,6 +205,7 @@ class clsClasses {
     )
 
 
+
     // ----------------------------------------------------------
 
     data class clsLocItem(
@@ -156,16 +226,12 @@ class clsClasses {
     )
 
     // 0-idempresa, 1-idusuario, 2-Nombre Empresa, 3-modo,4-rol,
-    // 5-pais, 6-idsucursal, 7-moneda simb, 8 - moneda id
+    // 5-pais, 6-idsucursal, 7-moneda simb, 8 - moneda id, 9 - svisor sucursal
+
     data class clsSavepos (
         var id : Int = 0,
         var valor : String = "",
     )
-
-
-
-
-
 
     // -----------------------------------
 
@@ -183,8 +249,6 @@ class clsClasses {
         val mid: Int = 0,
         val nombre: String
     )
-
-
 
     data class clsCoordItem(
         var id: Int = 0,

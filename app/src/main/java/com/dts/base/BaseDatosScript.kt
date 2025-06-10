@@ -22,6 +22,17 @@ class BaseDatosScript(private val vcontext: Context) {
 
         try {
 
+            //region Catalogos
+
+
+            sql="CREATE TABLE [Clasificacion] ("+
+                    "CODIGO_CLASIFICACION INTEGER NOT NULL,"+
+                    "DESCRIPCION TEXT NOT NULL,"+
+                    "ES_MATERIAL INTEGER NOT NULL,"+
+                    "PRIMARY KEY ([CODIGO_CLASIFICACION])"+
+                    ");";
+            db?.execSQL(sql);
+
             sql="CREATE TABLE [Cliente] ("+
                     "Codigo_Cliente INTEGER NOT NULL,"+
                     "Nombre TEXT NOT NULL,"+
@@ -80,17 +91,97 @@ class BaseDatosScript(private val vcontext: Context) {
             db?.execSQL(sql);
 
 
-            sql = "CREATE TABLE [Ordendet] (" +
-                    "id INTEGER NOT NULL," +
-                    "idOrden INTEGER NOT NULL," +
-                    "idProducto INTEGER NOT NULL," +
-                    "Descripcion TEXT NOT NULL," +
-                    "Realizado INTEGER NOT NULL," +
-                    "Cant REAL NOT NULL," +
-                    "Activo INTEGER NOT NULL," +
-                    "PRIMARY KEY ([id])" +
+
+            sql="CREATE TABLE [Prodprecio] ("+
+                    "CODIGO_PRECIO INTEGER NOT NULL,"+
+                    "CODIGO_PRODUCTO INTEGER NOT NULL,"+
+                    "NIVEL INTEGER NOT NULL,"+
+                    "PRECIO REAL NOT NULL,"+
+                    "UNIDADMEDIDA TEXT NOT NULL,"+
+                    "PRIMARY KEY ([CODIGO_PRECIO])"+
                     ");";
             db?.execSQL(sql);
+
+            sql="CREATE TABLE [Producto] ("+
+                    "CODIGO_PRODUCTO INTEGER NOT NULL,"+
+                    "DESCLARGA TEXT NOT NULL,"+
+                    "CODIGO_TIPO TEXT NOT NULL,"+
+                    "PRIMARY KEY ([CODIGO_PRODUCTO])"+
+                    ");";
+            db?.execSQL(sql);
+
+            sql="CREATE TABLE [Razon_falla] ("+
+                    "CODIGO_RAZON_FALLA INTEGER NOT NULL,"+
+                    "CODIGO_TIPO_ORDEN_SERVICI INTEGER NOT NULL,"+
+                    "CODIGO_CLASIFICACION INTEGER NOT NULL,"+
+                    "DESCRIPCION TEXT NOT NULL,"+
+                    "PRIMARY KEY ([CODIGO_RAZON_FALLA])"+
+                    ");";
+            db?.execSQL(sql);
+
+
+            sql="CREATE TABLE [Razon_no_atencion] ("+
+                    "CODIGO_RAZON_NOATENCION INTEGER NOT NULL,"+
+                    "EMPRESA INTEGER NOT NULL,"+
+                    "DESCRIPCION TEXT NOT NULL,"+
+                    "PRIMARY KEY ([CODIGO_RAZON_NOATENCION])"+
+                    ");";
+            db?.execSQL(sql);
+
+            sql = "CREATE TABLE [Savepos] (" +
+                    "id INTEGER NOT NULL," +
+                    "valor TEXT NOT NULL," +
+                    "PRIMARY KEY ([id])" +
+                    ");";
+            db.execSQL(sql);
+
+            sql="CREATE TABLE [Tiposervicio] ("+
+                    "CODIGO_TIPO_ORDEN_SERVICIO INTEGER NOT NULL,"+
+                    "NOMBRE TEXT NOT NULL,"+
+                    "PRIMARY KEY ([CODIGO_TIPO_ORDEN_SERVICIO])"+
+                    ");";
+            db?.execSQL(sql);
+
+
+            sql="CREATE TABLE [Usuario] ("+
+                    "id INTEGER NOT NULL,"+
+                    "nombre TEXT NOT NULL,"+
+                    "pin INTEGER NOT NULL,"+
+                    "rol TEXT NOT NULL,"+
+                    "PRIMARY KEY ([id])"+
+                    ");";
+            db?.execSQL(sql);
+
+            sql="CREATE TABLE [Updsave] ("+
+                    "id INTEGER NOT NULL,"+
+                    "cmd TEXT NOT NULL,"+
+                    "PRIMARY KEY ([id])"+
+                    ");";
+            db?.execSQL(sql);
+
+            //endregion
+
+            //region Orden
+
+            sql="CREATE TABLE [Ordendet] ("+
+                    "id INTEGER NOT NULL,"+
+                    "idOrden INTEGER NOT NULL,"+
+                    "idProducto INTEGER NOT NULL,"+
+                    "Descripcion TEXT NOT NULL,"+
+                    "idrazonfalla INTEGER NOT NULL,"+
+                    "Precio REAL NOT NULL,"+
+                    "Cant REAL NOT NULL,"+
+                    "Total REAL NOT NULL,"+
+                    "Activo INTEGER NOT NULL,"+
+                    "Realizado INTEGER NOT NULL,"+
+                    "idnoaten INTEGER NOT NULL,"+
+                    "horaini INTEGER NOT NULL,"+
+                    "horafin INTEGER NOT NULL,"+
+                    "serial TEXT NOT NULL,"+
+                    "PRIMARY KEY ([id])"+
+                    ");";
+            db?.execSQL(sql);
+
 
 
             sql="CREATE TABLE [Ordenenc] ("+
@@ -107,13 +198,13 @@ class BaseDatosScript(private val vcontext: Context) {
                     "fecha_cierre INTEGER NOT NULL,"+
                     "hora_ini INTEGER NOT NULL,"+
                     "hora_fin INTEGER NOT NULL,"+
+                    "prioridad INTEGER NOT NULL,"+
                     "PRIMARY KEY ([idOrden])"+
                     ");";
             db?.execSQL(sql);
 
             sql="CREATE INDEX Ordenenc_idx1 ON Ordenenc(Fecha)";db?.execSQL(sql)
             sql="CREATE INDEX Ordenenc_idx2 ON Ordenenc(idEstado)";db?.execSQL(sql)
-
 
             sql = "CREATE TABLE [Ordenenccap] (" +
                     "idOrden INTEGER NOT NULL," +
@@ -154,38 +245,6 @@ class BaseDatosScript(private val vcontext: Context) {
                     ");";
             db?.execSQL(sql);
 
-            sql="CREATE TABLE [Prodprecio] ("+
-                    "CODIGO_PRECIO INTEGER NOT NULL,"+
-                    "CODIGO_PRODUCTO INTEGER NOT NULL,"+
-                    "NIVEL INTEGER NOT NULL,"+
-                    "PRECIO REAL NOT NULL,"+
-                    "UNIDADMEDIDA TEXT NOT NULL,"+
-                    "PRIMARY KEY ([CODIGO_PRECIO])"+
-                    ");";
-            db?.execSQL(sql);
-
-            sql="CREATE TABLE [Producto] ("+
-                    "CODIGO_PRODUCTO INTEGER NOT NULL,"+
-                    "DESCLARGA TEXT NOT NULL,"+
-                    "CODIGO_TIPO TEXT NOT NULL,"+
-                    "PRIMARY KEY ([CODIGO_PRODUCTO])"+
-                    ");";
-            db?.execSQL(sql);
-
-            sql = "CREATE TABLE [Savepos] (" +
-                    "id INTEGER NOT NULL," +
-                    "valor TEXT NOT NULL," +
-                    "PRIMARY KEY ([id])" +
-                    ");";
-            db.execSQL(sql);
-
-            sql="CREATE TABLE [Tiposervicios] ("+
-                    "codigo_tipo_departamento INTEGER NOT NULL,"+
-                    "codigo_ticket_departamento INTEGER NOT NULL,"+
-                    "nombre TEXT NOT NULL,"+
-                    "PRIMARY KEY ([codigo_tipo_departamento])"+
-                    ");";
-            db?.execSQL(sql);
 
             sql="CREATE TABLE [T_ordendet] ("+
                     "CODIGO_ORDEN_SERVICIO_DET INTEGER NOT NULL,"+
@@ -223,24 +282,9 @@ class BaseDatosScript(private val vcontext: Context) {
                     ");";
             db?.execSQL(sql);
 
-            sql="CREATE TABLE [Usuario] ("+
-                    "id INTEGER NOT NULL,"+
-                    "nombre TEXT NOT NULL,"+
-                    "pin INTEGER NOT NULL,"+
-                    "rol TEXT NOT NULL,"+
-                    "PRIMARY KEY ([id])"+
-                    ");";
-            db?.execSQL(sql);
+            //endregion
 
-            sql="CREATE TABLE [Updsave] ("+
-                    "id INTEGER NOT NULL,"+
-                    "cmd TEXT NOT NULL,"+
-                    "PRIMARY KEY ([id])"+
-                    ");";
-            db?.execSQL(sql);
-
-
-            //-------------------------------------------
+            //region App
 
             sql = "CREATE TABLE [Params] (" +
                     "ID integer NOT NULL," +
@@ -269,118 +313,12 @@ class BaseDatosScript(private val vcontext: Context) {
                     "PRIMARY KEY ([ID])" + ");"
             db.execSQL(sql)
 
+            //endregion
+
         } catch (e: SQLiteException) {
             msgbox(e.message)
 
         }
-
-        /*
-
-
-
-     sql = "CREATE TABLE [Estadoorden] (" +
-             "id INTEGER NOT NULL," +
-             "nombre TEXT NOT NULL," +
-             "PRIMARY KEY ([id])" +
-             ");";
-     db?.execSQL(sql);
-
-
-
-     sql = "CREATE TABLE [Ordencliente] (" +
-             "id INTEGER NOT NULL," +
-             "nombre TEXT NOT NULL," +
-             "dir TEXT NOT NULL," +
-             "tel TEXT NOT NULL," +
-             "PRIMARY KEY ([id])" +
-             ");";
-     db?.execSQL(sql);
-
-
-     sql = "CREATE TABLE [Ordencont] (" +
-             "id INTEGER NOT NULL," +
-             "idcliente INTEGER NOT NULL," +
-             "nombre TEXT NOT NULL," +
-             "dir TEXT NOT NULL," +
-             "tel TEXT NOT NULL," +
-             "PRIMARY KEY ([id])" +
-             ");";
-     db?.execSQL(sql);
-
-
-     sql = "CREATE TABLE [Ordendir] (" +
-             "id INTEGER NOT NULL," +
-             "idcliente INTEGER NOT NULL," +
-             "referencia TEXT NOT NULL," +
-             "dir TEXT NOT NULL," +
-             "zona TEXT NOT NULL," +
-             "tel TEXT NOT NULL," +
-             "PRIMARY KEY ([id])" +
-             ");";
-     db?.execSQL(sql);
-
-
-
-
-     sql="CREATE TABLE [Syntaxlog] ("+
-             "id INTEGER NOT NULL,"+
-             "fecha INTEGER NOT NULL,"+
-             "cmd TEXT NOT NULL,"+
-             "PRIMARY KEY ([id])"+
-             ");";
-     db?.execSQL(sql);
-
-     sql="CREATE INDEX Syntaxlog_idx1 ON Syntaxlog(fecha)";db?.execSQL(sql)
-
-
-     sql="CREATE TABLE [Tipoorden] ("+
-             "id INTEGER NOT NULL,"+
-             "nombre TEXT NOT NULL,"+
-             "PRIMARY KEY ([id])"+
-             ");";
-     db?.execSQL(sql);
-
-
-     sql="CREATE TABLE [Tiposervicio] ("+
-             "id INTEGER NOT NULL,"+
-             "idticket INTEGER NOT NULL,"+
-             "nombre TEXT NOT NULL,"+
-             "PRIMARY KEY ([id])"+
-             ");";
-     db?.execSQL(sql);
-
-     sql="CREATE TABLE [Updcmd] ("+
-             "id INTEGER NOT NULL,"+
-             "cmd TEXT NOT NULL,"+
-             "PRIMARY KEY ([id])"+
-             ");";
-     db?.execSQL(sql);
-
-
-
-
-     sql="CREATE TABLE [Usuario] ("+
-             "id INTEGER NOT NULL,"+
-             "nombre TEXT NOT NULL,"+
-             "clave TEXT NOT NULL,"+
-             "activo INTEGER NOT NULL,"+
-             "rol INTEGER NOT NULL,"+
-             "PRIMARY KEY ([id])"+
-             ");";
-     db.execSQL(sql);
-
-     sql="CREATE TABLE [Param] ("+
-             "codigo INTEGER NOT NULL,"+
-             "empresa INTEGER NOT NULL,"+
-             "id INTEGER NOT NULL,"+
-             "userid INTEGER NOT NULL,"+
-             "nombre TEXT NOT NULL,"+
-             "valor TEXT NOT NULL,"+
-             "PRIMARY KEY ([codigo])"+
-             ");";
-     db?.execSQL(sql);
-
-      */
 
     }
 

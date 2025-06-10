@@ -5,6 +5,14 @@ import kotlinx.serialization.Serializable
 class ClassesAPI {
 
     @Serializable
+    data class clsAPIClasificacion (
+        var type : String = "",
+        var CODIGO_CLASIFICACION : Int = 0,
+        var DESCRIPCION : String = "",
+        var ES_MATERIAL : Int = 0,
+    )
+
+    @Serializable
     data class clsAPICliente (
         var type : String = "",
         var Codigo_Cliente : Int = 0,
@@ -82,6 +90,22 @@ class ClassesAPI {
     )
 
     @Serializable
+    data class clsAPIOrdenEncSup (
+        var type : String = "",
+        var CODIGO_ORDEN_SERVICIO : Int = 0,
+        var NUMERO : String = "",
+        var NOMBRE : String = "",
+        var USUARIO : String = "",
+        var CODIGO_SUCURSAL : Int = 0,
+        var NTIPO : String = "",
+        var NESTADO : String = "",
+        var ESTADO : Int = 0,
+        var FECHAAGR : Long = 0L,
+        var FECHASERV : Long = 0L,
+        var PRIORIDAD : Int = 0,
+    )
+
+    @Serializable
     data class clsAPIProdprecio (
         var type : String = "",
         var CODIGO_PRECIO : Int = 0,
@@ -97,6 +121,31 @@ class ClassesAPI {
         var CODIGO_PRODUCTO : Int = 0,
         var DESCLARGA : String = "",
         var CODIGO_TIPO : String = "",
+    )
+
+    @Serializable
+    data class clsAPIRazonFalla (
+        var type : String = "",
+        var CODIGO_RAZON_FALLA : Int = 0,
+        var CODIGO_TIPO_ORDEN_SERVICIO : Int = 0,
+        var CODIGO_CLASIFICACION : Int = 0,
+        var DESCRIPCION : String = "",
+    )
+
+    @Serializable
+    data class clsAPIRazonNoAtencion (
+        var type : String = "",
+        var CODIGO_RAZON_NOATENCION : Int = 0,
+        var DESCRIPCION : String = "",
+    )
+
+    @Serializable
+    data class clsAPISucursal (
+        var type : String = "",
+        var CODIGO_SUCURSAL : Int = 0,
+        var DESCRIPCION : String = "",
+        var DIRECCION : String = "",
+        var FEL_FECHA_VENCE_CONTRATO : String = "",
     )
 
     @Serializable

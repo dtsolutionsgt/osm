@@ -30,11 +30,11 @@
         android:id="@+id/btnUndo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/color_dark"
         android:drawableLeft="@android:drawable/ic_delete"
-        android:text="Deshacer"
-        android:drawableTint="@android:color/white"
         android:drawablePadding="8dp"
-        android:layout_marginRight="8dp"/>
+        android:drawableTint="@android:color/white"
+        android:text="Deshacer" />
 
     <LinearLayout
         android:id="@+id/buttonsLayoutVertical"

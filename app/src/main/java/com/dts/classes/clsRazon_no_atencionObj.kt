@@ -5,10 +5,10 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.dts.base.BaseDatos
 import com.dts.base.clsClasses
-import com.dts.base.clsClasses.clsTiposervicios
+import com.dts.base.clsClasses.clsRazon_no_atencion
 
 
-class clsTiposerviciosObj {
+class clsRazon_no_atencionObj {
 
     var count=0
 
@@ -19,9 +19,9 @@ class clsTiposerviciosObj {
     var upd: BaseDatos.Update? = null
     val clsCls = clsClasses()
 
-    val sel ="SELECT * FROM Tiposervicios"
+    val sel ="SELECT * FROM Razon_no_atencion"
     var sql: String? = null
-    var items = ArrayList<clsClasses.clsTiposervicios>()
+    var items = ArrayList<clsRazon_no_atencion>()
 
     constructor(context: Context, dbconnection: BaseDatos, dbase: SQLiteDatabase) {
         cont = context
@@ -39,15 +39,15 @@ class clsTiposerviciosObj {
         db = dbase
     }
 
-    fun add(item: clsTiposervicios?) {
+    fun add(item: clsRazon_no_atencion?) {
         addItem(item!!)
     }
 
-    fun update(item: clsTiposervicios?) {
+    fun update(item: clsRazon_no_atencion?) {
         updateItem(item!!)
     }
 
-    fun delete(item: clsTiposervicios?) {
+    fun delete(item: clsRazon_no_atencion?) {
         deleteItem(item!!)
     }
 
@@ -67,52 +67,52 @@ class clsTiposerviciosObj {
         fillItems(sq)
     }
 
-    fun first(): clsTiposervicios?  {
+    fun first(): clsRazon_no_atencion?  {
         return items[0]
     }
 
 
     //region Private
 
-    private fun addItem(item: clsTiposervicios) {
-        ins!!.init("Tiposervicios")
-        ins!!.add("codigo_tipo_departamento", item.codigo_tipo_departamento)
-        ins!!.add("codigo_ticket_departamento", item.codigo_ticket_departamento)
-        ins!!.add("nombre", item.nombre)
+    private fun addItem(item: clsRazon_no_atencion) {
+        ins!!.init("Razon_no_atencion")
+        ins!!.add("CODIGO_RAZON_NOATENCION", item.codigo_razon_noatencion)
+        ins!!.add("EMPRESA", item.empresa)
+        ins!!.add("DESCRIPCION", item.descripcion)
         db!!.execSQL(ins!!.sql())
     }
 
-    private fun updateItem(item: clsTiposervicios) {
-        upd!!.init("Tiposervicios")
-        upd!!.add("codigo_tipo_departamento", item.codigo_tipo_departamento)
-        upd!!.add("nombre", item.nombre)
-        upd!!.Where("(codigo_ticket_departamento=" + item.codigo_ticket_departamento + ")")
+    private fun updateItem(item: clsRazon_no_atencion) {
+        upd!!.init("Razon_no_atencion")
+        upd!!.add("EMPRESA", item.empresa)
+        upd!!.add("DESCRIPCION", item.descripcion)
+        upd!!.Where("(CODIGO_RAZON_NOATENCION=" + item.codigo_razon_noatencion + ")")
         db!!.execSQL(upd!!.sql())
     }
 
-    private fun deleteItem(item: clsTiposervicios) {
+    private fun deleteItem(item: clsRazon_no_atencion) {
         sql =
-            "DELETE FROM Tiposervicios WHERE (codigo_ticket_departamento=" + item.codigo_ticket_departamento + ")"
+            "DELETE FROM Razon_no_atencion WHERE (CODIGO_RAZON_NOATENCION=" + item.codigo_razon_noatencion + ")"
         db!!.execSQL(sql)
     }
 
     private fun deleteItem(id: Int) {
-        sql = "DELETE FROM Tiposervicios WHERE id=$id"
+        sql = "DELETE FROM Razon_no_atencion WHERE id=$id"
         db!!.execSQL(sql)
     }
 
     private fun fillItems(sq: String) {
         val dt: Cursor
-        var item: clsTiposervicios
+        var item: clsRazon_no_atencion
         items.clear()
         dt = Con!!.OpenDT(sq)
         count = dt.count
         if (dt.count > 0) dt.moveToFirst()
         while (!dt.isAfterLast) {
-            item = clsTiposervicios()
-            item.codigo_tipo_departamento = dt.getInt(0)
-            item.codigo_ticket_departamento = dt.getInt(1)
-            item.nombre = dt.getString(2)
+            item = clsRazon_no_atencion()
+            item.codigo_razon_noatencion = dt.getInt(0)
+            item.empresa = dt.getInt(1)
+            item.descripcion = dt.getString(2)
             items.add(item)
             dt.moveToNext()
         }
@@ -133,23 +133,22 @@ class clsTiposerviciosObj {
         return nid
     }
 
-    fun addItemSql(item: clsTiposervicios): String? {
-        ins!!.init("Tiposervicios")
-        ins!!.add("codigo_tipo_departamento", item.codigo_tipo_departamento)
-        ins!!.add("codigo_ticket_departamento", item.codigo_ticket_departamento)
-        ins!!.add("nombre", item.nombre)
+    fun addItemSql(item: clsRazon_no_atencion): String? {
+        ins!!.init("Razon_no_atencion")
+        ins!!.add("CODIGO_RAZON_NOATENCION", item.codigo_razon_noatencion)
+        ins!!.add("EMPRESA", item.empresa)
+        ins!!.add("DESCRIPCION", item.descripcion)
         return ins!!.sql()
     }
 
-    fun updateItemSql(item: clsTiposervicios): String? {
-        upd!!.init("Tiposervicios")
-        upd!!.add("codigo_tipo_departamento", item.codigo_tipo_departamento)
-        upd!!.add("nombre", item.nombre)
-        upd!!.Where("(codigo_ticket_departamento=" + item.codigo_ticket_departamento + ")")
+    fun updateItemSql(item: clsRazon_no_atencion): String? {
+        upd!!.init("Razon_no_atencion")
+        upd!!.add("EMPRESA", item.empresa)
+        upd!!.add("DESCRIPCION", item.descripcion)
+        upd!!.Where("(CODIGO_RAZON_NOATENCION=" + item.codigo_razon_noatencion + ")")
         return upd!!.sql()
     }
 
     //endregion
-
 
 }

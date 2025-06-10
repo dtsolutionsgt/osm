@@ -1,8 +1,10 @@
 package com.dts.osm
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.location.Location
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -19,9 +21,7 @@ import com.dts.classes.clsEnvioimagenObj
 import com.dts.classes.clsEstadoordenObj
 import com.dts.classes.clsOrdenencObj
 import com.dts.classes.clsOrdenenccapObj
-import com.dts.classes.clsOrdenfotoObj
-import com.dts.classes.clsTiposerviciosObj
-import com.dts.classes.clsUpdsaveObj
+import com.dts.classes.clsTiposervicioObj
 import com.dts.ladapt.LA_OrdenAdapter
 
 
@@ -32,10 +32,13 @@ class MenuTec : PBase() {
     var lblreg: TextView? = null
     var lblpend: TextView? = null
     var imgpend: ImageView? = null
+    var lblbtnpend: TextView? = null
+    var lblbtact: TextView? = null
+    var lblbtncomp: TextView? = null
 
     var OrdenencObj: clsOrdenencObj? = null
     var EstadoordenObj: clsEstadoordenObj? = null
-    var TiposerviciosObj: clsTiposerviciosObj? = null
+    var TiposervicioObj: clsTiposervicioObj? = null
     var ClienteObj: clsClienteObj? = null
     var OrdenenccapObj: clsOrdenenccapObj? = null
 
@@ -46,6 +49,9 @@ class MenuTec : PBase() {
     var saveselidx=-1
     var afecha=0L
     var idle=false
+    var listmode=0
+    var tproc=0;var tpend=0;var tcomp=0
+
 
     var location: Location? = null
 
@@ -63,10 +69,13 @@ class MenuTec : PBase() {
             lblreg = findViewById(R.id.textView);lblreg?.text=""
             lblpend = findViewById(R.id.textView31);lblpend?.text=""
             imgpend = findViewById(R.id.imageView24);imgpend?.isVisible=false
+            lblbtnpend = findViewById(R.id.textView43)
+            lblbtact = findViewById(R.id.textView42)
+            lblbtncomp = findViewById(R.id.textView38)
 
             OrdenencObj = clsOrdenencObj(this, Con!!, db!!)
             EstadoordenObj = clsEstadoordenObj(this, Con!!, db!!)
-            TiposerviciosObj = clsTiposerviciosObj(this, Con!!, db!!)
+            TiposervicioObj = clsTiposervicioObj(this, Con!!, db!!)
             ClienteObj = clsClienteObj(this, Con!!, db!!)
             OrdenenccapObj = clsOrdenenccapObj(this, Con!!, db!!)
 
@@ -95,9 +104,41 @@ class MenuTec : PBase() {
         }
     }
 
+    fun doNueva(view: View) {
+        try {
+            startActivity(Intent(this,TipoServicio::class.java))
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
+    }
+
     fun doInventario(view: View) {
         try {
             startActivity(Intent(this,InvLista::class.java))
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
+    }
+
+    fun doPendClick(view: View) {
+        try {
+            marcaBoton(0)
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
+    }
+
+    fun doActClick(view: View) {
+        try {
+            marcaBoton(1)
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
+    }
+
+    fun doCompClick(view: View) {
+        try {
+            marcaBoton(2)
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
@@ -114,7 +155,7 @@ class MenuTec : PBase() {
                             gl?.idorden=items?.get(position)?.idorden!!
 
                             val context: Context = view?.getContext()!!
-                            val intent = Intent(context, Tarea ::class.java)
+                            val intent = Intent(context, Orden ::class.java)
                             context.startActivity(intent)
                         }
 
@@ -139,12 +180,13 @@ class MenuTec : PBase() {
 
         try {
             items.clear()
+            tproc=0;tpend=0;tcomp=0
 
             EstadoordenObj?.fill()
-            TiposerviciosObj?.fill()
+            TiposervicioObj?.fill()
             ClienteObj?.fill()
 
-            OrdenencObj?.fill("WHERE (idUsuario="+gl?.iduser!!+") AND (idestado in (3,4,8))  " +
+            OrdenencObj?.fill("WHERE (idUsuario="+gl?.iduser!!+") AND (idestado in (2,3,4,8))  " +
                     "ORDER BY Numero")
             regs=OrdenencObj?.count!!;pend=0
 
@@ -164,6 +206,12 @@ class MenuTec : PBase() {
                 }
 
                 items.add(item)
+
+                when (item.idestado) {
+                    3 -> { tpend++ }
+                    4 -> { tproc++ }
+                    5 -> { tcomp++ }
+                }
             }
 
             adapter = LA_OrdenAdapter(items)
@@ -172,8 +220,8 @@ class MenuTec : PBase() {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
 
-        lblreg?.text="Registros: "+regs
-        lblpend?.text="Pendientes: "+pend
+        lblreg?.text="Faltan: "+pend
+        lblpend?.text="Completos: "+tcomp
     }
 
     //endregion
@@ -197,7 +245,9 @@ class MenuTec : PBase() {
     fun nombreEstado(codigo:Int):String {
         try {
             for (itm in EstadoordenObj?.items!!) {
-                if (itm.id==codigo) return itm.nombre
+                if (itm.id==codigo) {
+                    if (codigo==3) return "Pendiente" else return itm.nombre
+                }
             }
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
@@ -207,8 +257,8 @@ class MenuTec : PBase() {
 
     fun nombreTipo(codigo:Int):String {
         try {
-            for (itm in TiposerviciosObj?.items!!) {
-                if (itm.codigo_tipo_departamento==codigo) return itm.nombre
+            for (itm in TiposervicioObj?.items!!) {
+                if (itm.codigo_tipo_orden_servicio==codigo) return itm.nombre
             }
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
@@ -247,6 +297,36 @@ class MenuTec : PBase() {
 
     }
 
+    fun marcaBoton(bpos:Int) {
+        try {
+
+            when (bpos) {
+                0 -> {
+                    lblbtnpend?.setBackgroundResource(R.drawable.frame_key_select)
+                    lblbtact?.setBackgroundResource(R.drawable.frame_btn)
+                    lblbtncomp?.setBackgroundResource(R.drawable.frame_btn)
+                    listmode=0
+                }
+                1 -> {
+                    lblbtnpend?.setBackgroundResource(R.drawable.frame_btn)
+                    lblbtact?.setBackgroundResource(R.drawable.frame_key_select)
+                    lblbtncomp?.setBackgroundResource(R.drawable.frame_btn)
+                    listmode=1
+                }
+                2 -> {
+                    lblbtnpend?.setBackgroundResource(R.drawable.frame_btn)
+                    lblbtact?.setBackgroundResource(R.drawable.frame_btn)
+                    lblbtncomp?.setBackgroundResource(R.drawable.frame_key_select)
+                    listmode=2
+                }
+            }
+
+            listItems()
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
+    }
+
     //endregion
 
     //region Activity Events
@@ -258,7 +338,7 @@ class MenuTec : PBase() {
 
             OrdenencObj?.reconnect(Con!!,db!!)
             EstadoordenObj?.reconnect(Con!!,db!!)
-            TiposerviciosObj?.reconnect(Con!!,db!!)
+            TiposervicioObj?.reconnect(Con!!,db!!)
             ClienteObj?.reconnect(Con!!,db!!)
             OrdenenccapObj?.reconnect(Con!!,db!!)
 

@@ -35,9 +35,7 @@ class Material : PBase() {
 
             recview = findViewById<View>(R.id.recview) as RecyclerView
             recview?.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
-
             txtflt = findViewById<View>(R.id.editTextText) as EditText
-
 
             productoObj = clsProductoObj(this, Con!!, db!!)
 

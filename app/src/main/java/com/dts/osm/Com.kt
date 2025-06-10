@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import com.dts.base.clsClasses
+import com.dts.classes.clsClasificacionObj
 import com.dts.classes.clsClienteObj
 import com.dts.classes.clsClientecontactoObj
 import com.dts.classes.clsClientedirObj
@@ -22,17 +23,23 @@ import com.dts.classes.clsOrdenencObj
 import com.dts.classes.clsOrdenenccapObj
 import com.dts.classes.clsProdprecioObj
 import com.dts.classes.clsProductoObj
-import com.dts.classes.clsTiposerviciosObj
+import com.dts.classes.clsRazon_fallaObj
+import com.dts.classes.clsRazon_no_atencionObj
+import com.dts.classes.clsTiposervicioObj
 import com.dts.classes.clsUsuarioObj
 import com.dts.fbase.fbServicio
 import com.dts.restapi.ClassesAPI
 import com.dts.restapi.HttpClient
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-
 
 class Com : PBase() {
 
@@ -48,18 +55,29 @@ class Com : PBase() {
     var ProductoObj: clsProductoObj? = null
     var ProdprecioObj: clsProdprecioObj? = null
     var EstadoObj: clsEstadoObj? = null
-    var TiposervicioObj: clsTiposerviciosObj? = null
+    var TiposervicioObj: clsTiposervicioObj? = null
     var ClienteObj: clsClienteObj? = null
     var ClientecontactoObj: clsClientecontactoObj? = null
     var ClientedirObj: clsClientedirObj? = null
     var OrdenencObj: clsOrdenencObj? = null
     var OrdendetObj: clsOrdendetObj? = null
+    var ClasificacionObj: clsClasificacionObj? = null
+    var Razon_fallaObj: clsRazon_fallaObj? = null
+    var Razon_no_atencionObj: clsRazon_no_atencionObj? = null
 
     var fbsa : fbServicio? = null
+
+    var ordlist = ArrayList<Int>()
+    var ordexistlist = ArrayList<Int>()
+    var ordenc = clsClasses.clsOrdenenc()
+    var orddet = clsClasses.clsOrdendet()
+    var orddetitems = ArrayList<clsClasses.clsOrdendet>()
 
     var updrem = ArrayList<String>()
     var newid = ArrayList<Int>()
     var existid = ArrayList<Int>()
+    var orderr = ArrayList<String>()
+
 
     var updpos=0
     var updsize=0
@@ -76,7 +94,11 @@ class Com : PBase() {
     var enccnt=0
     var flim=0L
     var rol=0
-    var cantord=0
+
+    var ordcant=0
+    var ordpos=0
+    var ordcomp=0
+    var ordid=0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,12 +124,15 @@ class Com : PBase() {
             ProductoObj = clsProductoObj(this, Con!!, db!!)
             ProdprecioObj = clsProdprecioObj(this, Con!!, db!!)
             EstadoObj = clsEstadoObj(this, Con!!, db!!)
-            TiposervicioObj = clsTiposerviciosObj(this, Con!!, db!!)
+            TiposervicioObj = clsTiposervicioObj(this, Con!!, db!!)
             ClienteObj = clsClienteObj(this, Con!!, db!!)
             ClientecontactoObj = clsClientecontactoObj(this, Con!!, db!!)
             ClientedirObj = clsClientedirObj(this, Con!!, db!!)
             OrdenencObj = clsOrdenencObj(this, Con!!, db!!)
             OrdendetObj = clsOrdendetObj(this, Con!!, db!!)
+            ClasificacionObj = clsClasificacionObj(this, Con!!, db!!)
+            Razon_fallaObj = clsRazon_fallaObj(this, Con!!, db!!)
+            Razon_no_atencionObj = clsRazon_no_atencionObj(this, Con!!, db!!)
 
         } catch (e:Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+". "+e.message)
@@ -121,7 +146,7 @@ class Com : PBase() {
     }
 
     fun doOrdenes(view: View) {
-        if (idle) Ordenes()
+        Ordenes()
     }
 
     fun doBorrar(view: View) {
@@ -129,11 +154,13 @@ class Com : PBase() {
         db!!.execSQL("DELETE FROM Ordendet");
         db!!.execSQL("DELETE FROM Ordenenccap");
         db!!.execSQL("DELETE FROM Ordenserial")
+        toast("OK")
     }
 
     fun doExit(view: View) {
         if (idle) finishCom() else toast("Espere, por favor . . . ")
     }
+
     //endregion
 
     //region Main
@@ -155,14 +182,24 @@ class Com : PBase() {
 
     fun Ordenes() {
         try {
+            runOnUiThread {lblstat?.text = "Recibiendo ordenes . . ."}
+
             idle=false
             pbar?.visibility=View.VISIBLE
             relcom?.isVisible=false
 
             upderrs=0;upderr=""
-            updrem.clear();
+            updrem.clear()
 
-            recOrdenEnc()
+            ordexistlist.clear()
+            orderr.clear()
+
+            OrdenencObj?.fill()
+            for (itm in OrdenencObj?.items!!) {
+                ordexistlist.add(itm?.idorden!!)
+            }
+
+            listaOrdenes(58)
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
@@ -176,7 +213,7 @@ class Com : PBase() {
         try {
             runOnUiThread {lblstat?.text = "Actualizando usuarios . . ."}
 
-            http?.url=gl?.urlbase+"api/Users/GetUsuarioApp?Id_app=OSM"
+            http?.url=gl?.urlbase+"api/Users/GetUsuarioApp?Id_app=OSM&empresa="+gl?.idemp!!
 
             val request: Request = Request.Builder()
                 .url(http?.url!!).get()
@@ -185,6 +222,8 @@ class Com : PBase() {
 
             http!!.processRequest(request, { cbUsuarios() })
         } catch (e: java.lang.Exception) {
+            var se=e.message!!
+            se=se+" "
             finerr(object : Any() {}.javaClass.enclosingMethod.name ,e.message!!);
         }
     }
@@ -298,7 +337,10 @@ class Com : PBase() {
             }
 
             val handler = Handler(Looper.getMainLooper())
-            handler.postDelayed({recPrecios()}, 200)
+            handler.postDelayed({
+                //recPrecios()
+                recEstados() }, 200)
+
 
         } catch (e: java.lang.Exception) {
             var es=e.message
@@ -463,7 +505,7 @@ class Com : PBase() {
 
     fun cbTipoServicio() {
         var jss: ClassesAPI.clsAPITipoServicio? = null
-        var item: clsClasses.clsTiposervicios
+        var item: clsClasses.clsTiposervicio
 
         try {
             try {
@@ -476,15 +518,14 @@ class Com : PBase() {
 
                 db!!.beginTransaction()
 
-                db!!.execSQL("DELETE FROM Tiposervicios");
+                db!!.execSQL("DELETE FROM Tiposervicio");
 
                 for (pls in parsedList!!) {
 
                     jss=gson.fromJson(pls, RType)
-                    item= clsClasses.clsTiposervicios()
+                    item= clsClasses.clsTiposervicio()
 
-                    item.codigo_tipo_departamento  = jss?.CODIGO_TIPO!!
-                    item.codigo_ticket_departamento  = jss?.CODIGO_TIPO!!
+                    item.codigo_tipo_orden_servicio  = jss?.CODIGO_TIPO!!
                     item.nombre = jss?.NOMBRE!!
 
                     try {
@@ -714,12 +755,8 @@ class Com : PBase() {
                 return
             }
 
-            if (gl?.idrol=="TEC") {
-                val handler = Handler(Looper.getMainLooper())
-                handler.postDelayed({ Ordenes() }, 200)
-            } else {
-                finok()
-            }
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed({recClasificacion()}, 200)
 
         } catch (e: java.lang.Exception) {
             var es=e.message
@@ -728,9 +765,437 @@ class Com : PBase() {
 
     }
 
+    fun recClasificacion() {
+        try {
+            runOnUiThread {lblstat?.text = "Actualizando clasificaciones . . ."}
+
+            http?.url=gl?.urlbase+"api/Users/GetClasificacion?idempresa="+gl?.idemp!!
+
+            val request: Request = Request.Builder()
+                .url(http?.url!!).get()
+                .addHeader("accept", "*/*")
+                .build()
+
+            http!!.processRequest(request, { cbClasificacion() })
+        } catch (e: java.lang.Exception) {
+            finerr(object : Any() {}.javaClass.enclosingMethod.name , e.message!!);
+        }
+    }
+
+    fun cbClasificacion() {
+        var jss: ClassesAPI.clsAPIClasificacion? = null
+        var item: clsClasses.clsClasificacion
+
+        try {
+            try {
+                if (http!!.retcode!=1) {
+                    stoperr("Error: "+http!!.data);return
+                }
+
+                val parsedList =http?.splitJsonArray()
+                val RType = object : TypeToken<ClassesAPI.clsAPIClasificacion>() {}.type
+
+                db!!.beginTransaction()
+
+                db!!.execSQL("DELETE FROM Clasificacion");
+
+                for (pls in parsedList!!) {
+
+                    jss=gson.fromJson(pls, RType)
+                    item= clsClasses.clsClasificacion()
+
+                    item.codigo_clasificacion = jss?.CODIGO_CLASIFICACION!!
+                    item.descripcion = jss?.DESCRIPCION!!
+                    item.es_material = jss?.ES_MATERIAL!!
+
+                    try {
+                        ClasificacionObj?.add(item)
+                    } catch (e: Exception) {
+                        throw Exception("  "+e.message+"\n"+ClasificacionObj?.addItemSql(item))
+                    }
+                }
+
+                db!!.setTransactionSuccessful()
+                db!!.endTransaction()
+            } catch (e: java.lang.Exception) {
+                db!!.endTransaction()
+                throw Exception( e.message)
+                return
+            }
+
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed({recRazonFalla()}, 200)
+
+        } catch (e: java.lang.Exception) {
+            var es=e.message
+            finerr(object : Any() {}.javaClass.enclosingMethod.name , e.message!!);
+        }
+
+    }
+
+    fun recRazonFalla() {
+        try {
+            runOnUiThread {lblstat?.text = "Actualizando razónes de fallas . . ."}
+
+            http?.url=gl?.urlbase+"api/Users/GetRazonFalla?idempresa="+gl?.idemp!!
+
+            val request: Request = Request.Builder()
+                .url(http?.url!!).get()
+                .addHeader("accept", "*/*")
+                .build()
+
+            http!!.processRequest(request, { cbRazonFalla() })
+        } catch (e: java.lang.Exception) {
+            finerr(object : Any() {}.javaClass.enclosingMethod.name , e.message!!);
+        }
+    }
+
+    fun cbRazonFalla() {
+        var jss: ClassesAPI.clsAPIRazonFalla? = null
+        var item: clsClasses.clsRazon_falla
+
+        try {
+            try {
+                if (http!!.retcode!=1) {
+                    stoperr("Error: "+http!!.data);return
+                }
+
+                val parsedList =http?.splitJsonArray()
+                val RType = object : TypeToken<ClassesAPI.clsAPIRazonFalla>() {}.type
+
+                db!!.beginTransaction()
+
+                db!!.execSQL("DELETE FROM Razon_falla");
+
+                for (pls in parsedList!!) {
+
+                    jss=gson.fromJson(pls, RType)
+                    item= clsClasses.clsRazon_falla()
+
+                    item.codigo_razon_falla = jss?.CODIGO_RAZON_FALLA!!
+                    item.codigo_tipo_orden_servici = jss?.CODIGO_TIPO_ORDEN_SERVICIO!!
+                    item.codigo_clasificacion = jss?.CODIGO_CLASIFICACION!!
+                    item.descripcion = jss?.DESCRIPCION!!
+
+                    try {
+                        Razon_fallaObj?.add(item)
+                    } catch (e: Exception) {
+                        throw Exception("  "+e.message+"\n"+Razon_fallaObj?.addItemSql(item))
+                    }
+                }
+
+                db!!.setTransactionSuccessful()
+                db!!.endTransaction()
+            } catch (e: java.lang.Exception) {
+                db!!.endTransaction()
+                throw Exception( e.message)
+                return
+            }
+
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed({recRazonNoatencion()}, 200)
+
+        } catch (e: java.lang.Exception) {
+            var es=e.message
+            finerr(object : Any() {}.javaClass.enclosingMethod.name , e.message!!);
+        }
+
+    }
+
+    fun recRazonNoatencion() {
+        try {
+            runOnUiThread {lblstat?.text = "Actualizando razónes de no atención . . ."}
+
+            http?.url=gl?.urlbase+"api/Users/GetRazonNoAtencion?idempresa="+gl?.idemp!!
+
+            val request: Request = Request.Builder()
+                .url(http?.url!!).get()
+                .addHeader("accept", "*/*")
+                .build()
+
+            http!!.processRequest(request, { cbRazonNoatencion() })
+        } catch (e: java.lang.Exception) {
+            finerr(object : Any() {}.javaClass.enclosingMethod.name , e.message!!);
+        }
+    }
+
+    fun cbRazonNoatencion() {
+        var jss: ClassesAPI.clsAPIRazonNoAtencion? = null
+        var item: clsClasses.clsRazon_no_atencion
+
+        try {
+            try {
+                if (http!!.retcode!=1) {
+                    stoperr("Error: "+http!!.data);return
+                }
+
+                val parsedList =http?.splitJsonArray()
+                val RType = object : TypeToken<ClassesAPI.clsAPIRazonNoAtencion>() {}.type
+
+                db!!.beginTransaction()
+
+                db!!.execSQL("DELETE FROM Razon_no_atencion");
+
+                for (pls in parsedList!!) {
+
+                    jss=gson.fromJson(pls, RType)
+                    item= clsClasses.clsRazon_no_atencion()
+
+
+                    item.codigo_razon_noatencion = jss?.CODIGO_RAZON_NOATENCION!!
+                    item.descripcion = jss?.DESCRIPCION!!
+
+                    try {
+                        Razon_no_atencionObj?.add(item)
+                    } catch (e: Exception) {
+                        throw Exception("  "+e.message+"\n"+Razon_no_atencionObj?.addItemSql(item))
+                    }
+                }
+
+                db!!.setTransactionSuccessful()
+                db!!.endTransaction()
+            } catch (e: java.lang.Exception) {
+                db!!.endTransaction()
+                throw Exception( e.message)
+                return
+            }
+
+            if (gl?.idrol=="TEC") {
+                val handler = Handler(Looper.getMainLooper())
+                handler.postDelayed( { Ordenes() }, 200)
+                //finok()
+            } else {
+                finok()
+            }
+
+        } catch (e: java.lang.Exception) {
+            var es=e.message
+            es=es+""
+            finerr(object : Any() {}.javaClass.enclosingMethod.name , e.message!!);
+        }
+
+    }
+
     //endregion
 
     //region Ordenes
+
+    fun listaOrdenes(idusuario: Int) {
+
+        try {
+            //Looper.prepare()
+
+            http?.url=gl?.urlbase+"api/Orden/GetListaOrdenes?pUsuario="+idusuario
+
+            val request: Request = Request.Builder()
+                .url(http?.url!!).get()
+                .addHeader("accept", "*/*")
+                .build()
+
+            http!!.processRequest(request, { cblistaOrdenes() })
+        } catch (e: java.lang.Exception) {
+            var se=e.message!!
+            se=se+" "
+            finerr(object : Any() {}.javaClass.enclosingMethod.name ,e.message!!);
+        }
+    }
+
+    fun cblistaOrdenes() {
+        try {
+            var jss : Int
+
+            ordlist.clear()
+
+            if (http!!.retcode!=1) {
+                stoperr("Error: "+http!!.data);return
+            }
+
+            val parsedList =http?.splitJsonArray()
+            val RType = object : TypeToken<Int>() {}.type
+
+            for (itm in parsedList!!) {
+                jss=gson.fromJson(itm, RType)
+                if (jss!=0) ordlist.add(jss)
+            }
+
+            ordcant=ordlist?.size!!
+
+            if (ordcant>0) {
+                ordpos=0;ordcomp=0
+
+                val handler = Handler(Looper.getMainLooper())
+                handler.postDelayed( { procesaOrden() }, 200)
+            } else {
+                finok()
+            }
+
+        } catch (e: Exception) {
+            finerr(object : Any() {}.javaClass.enclosingMethod.name ,e.message!!)
+        }
+    }
+
+    fun procesaOrden() {
+        try {
+            if (ordpos<ordcant) {
+                ordid=ordlist?.get(ordpos)!!
+                ordpos++
+
+                val handler = Handler(Looper.getMainLooper())
+                handler.postDelayed( { Orden(ordid) }, 200)
+            } else {
+                finok()
+            }
+
+        } catch (e: Exception) {
+            finerr(object : Any() {}.javaClass.enclosingMethod.name ,e.message!!)
+        }
+    }
+
+    fun Orden(idorden: Int) {
+        try {
+            upderrs=0;upderr=""
+
+            http?.url=gl?.urlbase+"api/Users/GetOrdenServicio?idorden="+idorden
+
+            val request: Request = Request.Builder()
+                .url(http?.url!!).get()
+                .addHeader("accept", "*/*")
+                .build()
+
+            http!!.processRequest(request, { cbOrden() })
+        } catch (e: java.lang.Exception) {
+            var se=e.message!!
+            se=se+" "
+            finerr(object : Any() {}.javaClass.enclosingMethod.name ,e.message!!);
+        }
+    }
+
+    fun cbOrden() {
+        var exist=true
+
+        try {
+            //Looper.prepare()
+
+            if (http!!.retcode!=1) {
+                stoperr("Error: "+http!!.data);return
+            }
+
+            var jsondata =http?.data!!
+            val jsonElement = Json.parseToJsonElement(jsondata)
+
+            //flag=jsonElement is JsonObject
+            //if (!flag) return
+
+            val jsonObject = jsonElement.jsonObject
+            val jshead = jsonObject["Header"]?.jsonObject
+            val jsdet = jsonObject["Detalle"]?.jsonArray
+            val jsmat = jsonObject["Material"]?.jsonArray
+
+            ordenc = clsClasses.clsOrdenenc()
+            orddet = clsClasses.clsOrdendet()
+            orddetitems.clear()
+
+            ordenc = parseOrdenEnc(jshead)
+
+            for (element in jsdet!!) {
+                val itm = element as JsonObject
+                orddet = parseOrdenDet(itm)
+                orddetitems.add(orddet)
+            }
+
+            exist=ordexistlist.contains(ordid)
+            if (!exist) {
+
+                try {
+                    db!!.beginTransaction()
+
+                    ordenc.idestado=3
+                    OrdenencObj?.add(ordenc)
+
+                    for (itm in orddetitems!!) {
+                        OrdendetObj?.add(itm)
+                    }
+
+                    db!!.setTransactionSuccessful()
+                    db!!.endTransaction()
+
+                    ordcomp++
+                    enviaConfirmacion()
+                } catch (e: java.lang.Exception) {
+                    db!!.endTransaction()
+                    orderr.add("id: "+ordid+": "+e.message!!)
+                }
+
+            } else {
+                ordcomp++
+                enviaConfirmacion()
+            }
+
+        } catch (e: java.lang.Exception) {
+            var es=e.message
+            orderr.add("id: "+ordid+": "+e.message!!)
+        }
+
+        try {
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed( { procesaOrden() }, 200)
+        } catch (e: Exception) {
+            finerr(object : Any() {}.javaClass.enclosingMethod.name ,e.message!!)
+        }
+
+    }
+
+    fun enviaConfirmacion() {
+
+    }
+
+    fun parseOrdenEnc(jshead : JsonObject?) : clsClasses.clsOrdenenc {
+
+        var eitem=clsClasses.clsOrdenenc()
+
+        eitem.idorden=jshead?.get("CODIGO_ORDEN_SERVICIO")?.jsonPrimitive?.content?.toInt()!!
+        eitem.numero=jshead?.get("NUMERO")?.jsonPrimitive?.content?.toString()!!
+        eitem.fecha=jshead?.get("FECHA")?.jsonPrimitive?.content?.toLong()!!
+        eitem.idusuario=jshead?.get("CODIGO_USUARIO_ASIGNADO")?.jsonPrimitive?.content?.toInt()!!
+        eitem.idestado=jshead?.get("CODIGO_ESTADO_ORDEN_SERVICIO")?.jsonPrimitive?.content?.toInt()!!
+        eitem.idtipo=jshead?.get("CODIGO_TIPO_ORDEN_SERVICIO")?.jsonPrimitive?.content?.toInt()!!
+        eitem.idclicontact=jshead?.get("CODIGO_CLIENTE_CONTACTO")?.jsonPrimitive?.content?.toInt()!!
+        eitem.iddir=jshead?.get("CODIGO_DIRECCION")?.jsonPrimitive?.content?.toInt()!!
+        eitem.idcliente=jshead?.get("CODIGO_CLIENTE")?.jsonPrimitive?.content?.toInt()!!
+        eitem.descripcion=jshead?.get("DESCRIPCION")?.jsonPrimitive?.content?.toString()!!
+        eitem.fecha_cierre=jshead?.get("FECHA_CIERRE")?.jsonPrimitive?.content?.toLong()!!
+        eitem.hora_ini=jshead?.get("HORA_SERVICIO_INI")?.jsonPrimitive?.content?.toLong()!!
+        eitem.hora_fin=jshead?.get("HORA_SERVICIO_FIN")?.jsonPrimitive?.content?.toLong()!!
+        eitem.prioridad=jshead?.get("PRIORIDAD")?.jsonPrimitive?.content?.toInt()!!
+
+        return eitem
+    }
+
+    fun parseOrdenDet(jsdet : JsonObject?) : clsClasses.clsOrdendet {
+
+        var ditem = clsClasses.clsOrdendet()
+
+        ditem.id=jsdet?.get("CODIGO_ORDEN_SERVICIO_DET")?.jsonPrimitive?.content?.toInt()!!
+        ditem.idorden=jsdet?.get("CODIGO_ORDEN_SERVICIO")?.jsonPrimitive?.content?.toInt()!!
+        ditem.idproducto=jsdet?.get("CODIGO_PRODUCTO")?.jsonPrimitive?.content?.toInt()!!
+        ditem.descripcion=jsdet?.get("DESCRIPCION")?.jsonPrimitive?.content?.toString()!!
+        ditem.idrazonfalla=jsdet?.get("CODIGO_RAZON_FALLA")?.jsonPrimitive?.content?.toInt()!!
+        ditem.precio=jsdet?.get("PRECIO")?.jsonPrimitive?.content?.toDouble()!!
+        ditem.cant=jsdet?.get("CANTIDAD")?.jsonPrimitive?.content?.toDouble()!!
+        ditem.total=jsdet?.get("TOTAL")?.jsonPrimitive?.content?.toDouble()!!
+        ditem.activo=1
+        ditem.realizado=0
+        ditem.idnoaten=0
+        ditem.horaini=0
+        ditem.horafin=0
+        ditem.serial=jsdet?.get("SERIAL")?.jsonPrimitive?.content?.toString()!!
+
+        return ditem
+    }
+
+
+
+
 
     fun recOrdenEnc() {
         try {
@@ -993,6 +1458,8 @@ class Com : PBase() {
             }
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+            var se=e.message
+            se=se+""
             if (updcerrar) finishCom()
         }
     }
@@ -1076,18 +1543,24 @@ class Com : PBase() {
     }
 
     fun finok() {
-        idle=true
-        lblstat?.text="Sincronización completa."
-        pbar?.visibility=View.INVISIBLE
+        try {
+            idle=true
 
-        val handler = Handler(Looper.getMainLooper())
-        handler.postDelayed( { finalizaRecepcion() }, 1500)
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed( {
+                lblstat?.text="Sincronización completa."
+                pbar?.visibility=View.INVISIBLE
+                finalizaRecepcion()
+            }, 1500)
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
     }
 
     fun finalizaRecepcion() {
         try {
             envioConfirmacion()
-            if (gl?.idrol=="TEC") toastlong("Ordenes recibidos: "+enccnt)
+            if (ordcant>0) toastlong("Ordenes recibidos: "+ordcant) else toastlong("SIN nuevos ordenes")
             finishCom()
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
@@ -1100,6 +1573,14 @@ class Com : PBase() {
         runOnUiThread { lblstat?.text = ss }
         pbar?.visibility=View.INVISIBLE
 
+        if (orderr?.size!!>0) {
+            var es="";
+
+            for (itm in orderr!!) es=es+itm+"\n"
+
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed( { msgbox(es) }, 100)
+        }
 
         //app?.params()
         //envioConfirmacion(false)
@@ -1167,6 +1648,10 @@ class Com : PBase() {
             ClientecontactoObj!!.reconnect(Con!!, db!!)
             ClientedirObj!!.reconnect(Con!!, db!!)
             OrdenencObj!!.reconnect(Con!!, db!!)
+            ClasificacionObj!!.reconnect(Con!!, db!!)
+            Razon_fallaObj!!.reconnect(Con!!, db!!)
+            Razon_no_atencionObj!!.reconnect(Con!!, db!!)
+
 
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)

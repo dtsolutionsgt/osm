@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:id="@+id/relitem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="3dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="1.00dp">
+
+            <TextView
+                android:id="@+id/textViewUsername6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textViewUsername7"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:ellipsize="end"
+                android:paddingStart="5dp"
+                android:paddingTop="1dp"
+                android:paddingBottom="2dp"
+                android:text="Tecnico"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                android:textColor="#202020"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textViewUsername5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="5dp"
+                android:paddingStart="5dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="2dp"
+                android:text="Numero"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                android:textColor="#202020"
+                android:textSize="12sp"
+                android:textStyle="normal|italic" />
+
+            <TextView
+                android:id="@+id/textViewUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textViewUsername2"
+                android:layout_alignStart="@+id/textViewUsername2"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="5dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingStart="5dp"
+                android:paddingTop="1dp"
+                android:paddingBottom="2dp"
+                android:text="Tarea"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                android:textColor="#202020"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/textViewUsername2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="5dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingStart="5dp"
+                android:paddingTop="1dp"
+                android:paddingBottom="2dp"
+                android:text="Cliente"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                android:textColor="#202020"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textViewUsername3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/textViewUsername2"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp"
+                android:paddingStart="5dp"
+                android:paddingTop="1dp"
+                android:paddingBottom="2dp"
+                android:text="Inicio"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                android:textColor="#202020"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textViewUsername7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textViewUsername"
+                android:layout_alignStart="@+id/textViewUsername2"
+                android:layout_marginStart="0dp"
+                android:paddingStart="5dp"
+                android:paddingTop="1dp"
+                android:paddingBottom="2dp"
+                android:text="Fin"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                android:textColor="#202020"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/textViewUsername4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/textViewUsername7"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="false"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="right"
+                android:minWidth="100dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="2dp"
+                android:text="Estado"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

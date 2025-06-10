@@ -506,6 +506,24 @@ class DateUtils {
         return dn
     }
 
+    fun dayweeksp(f: Long): String {
+        val dw=dayofweek(f)
+        var dn=""
+
+        when (dw) {
+            1 -> { dn="Lun" }
+            2 -> { dn="Mar" }
+            3 -> { dn="Mie" }
+            4 -> { dn="Jue" }
+            5 -> { dn="Vie" }
+            6 -> { dn="Sab" }
+            7 -> { dn="Dom" }
+        }
+
+
+        return dn
+    }
+
     fun dayofweek(f: Long): Int {
         var y: Int
         var m: Int

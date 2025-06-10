@@ -60,6 +60,8 @@ class appGlobals : Application() {
     val picdir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString()
     val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
 
+    val wsurl = "http://52.41.114.122/MPosWS_QA/Mposws.asmx"
+    val timeout = 6000
 
     override fun onCreate() {
         super.onCreate()

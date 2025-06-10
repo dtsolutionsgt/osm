@@ -3,7 +3,6 @@ package com.dts.osm
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
-import android.os.Environment
 import android.view.Gravity
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -136,14 +135,6 @@ open class PBase : AppCompatActivity() {
         } catch (e: Exception) {
         }
         return dt
-    }
-
-    //endregion
-
-    //region Web service callback
-    @Throws(Exception::class)
-    fun wsCallBack(callmode: Int, throwing: Boolean, errmsg: String?) {
-        if (throwing) throw Exception(errmsg)
     }
 
     //endregion

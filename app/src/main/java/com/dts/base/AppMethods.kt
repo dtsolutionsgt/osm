@@ -12,6 +12,7 @@ import android.view.Gravity
 import android.widget.Toast
 import com.dts.base.BaseDatos.Update
 import com.dts.classes.clsParamObj
+import com.dts.classes.clsSaveposObj
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.File
@@ -28,6 +29,8 @@ import java.util.zip.ZipOutputStream
 
 class AppMethods( private val cont: Context, private val gl: appGlobals,
                   private var Con: BaseDatos, private var db: SQLiteDatabase) {
+
+
     var flicsup: Long = 0
     var flicbck: Long = 0
     private var ins: BaseDatos.Insert
@@ -199,6 +202,35 @@ class AppMethods( private val cont: Context, private val gl: appGlobals,
         ins!!.add("SERIAL", item.serial)
         return ins!!.sql()
     }
+
+    fun savepos(id : Int, value : Int) {
+        var SaveposObj = clsSaveposObj(cont, Con, db)
+        var item = clsClasses.clsSavepos()
+
+        try {
+            item.id=id
+            item.valor=""+value
+
+            SaveposObj?.add(item)
+        } catch (e: Exception) {
+            SaveposObj?.update(item)
+        }
+
+    }
+
+    fun loadpos(id : Int ) : Int? {
+        var SaveposObj = clsSaveposObj(cont, Con, db)
+
+        try {
+            SaveposObj?.fill("WHERE (id="+id+")")
+            val item = SaveposObj?.first()
+
+            return item?.valor?.toInt()
+        } catch (e: Exception) {
+            return -1
+        }
+    }
+
 
     //endregion
 

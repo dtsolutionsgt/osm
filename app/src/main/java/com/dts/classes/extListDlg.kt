@@ -87,7 +87,6 @@ class extListDlg {
             object : RecyclerItemClickListener.OnItemClickListener {
 
                 override fun onItemClick(view: View, position: Int) {
-                    selidx=position
 
                     try {
                         selidx= position
@@ -113,9 +112,7 @@ class extListDlg {
                         selvalue=""
                     }
 
-
                     runClickListener()
-
                 }
 
                 override fun onItemLongClick(view: View?, position: Int) {

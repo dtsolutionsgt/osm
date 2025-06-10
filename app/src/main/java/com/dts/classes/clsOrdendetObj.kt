@@ -7,6 +7,7 @@ import com.dts.base.BaseDatos
 import com.dts.base.clsClasses
 import com.dts.base.clsClasses.clsOrdendet
 
+
 class clsOrdendetObj {
 
     var count=0
@@ -79,9 +80,16 @@ class clsOrdendetObj {
         ins!!.add("idOrden", item.idorden)
         ins!!.add("idProducto", item.idproducto)
         ins!!.add("Descripcion", item.descripcion)
-        ins!!.add("Realizado", item.realizado)
+        ins!!.add("idrazonfalla", item.idrazonfalla)
+        ins!!.add("Precio", item.precio)
         ins!!.add("Cant", item.cant)
+        ins!!.add("Total", item.total)
         ins!!.add("Activo", item.activo)
+        ins!!.add("Realizado", item.realizado)
+        ins!!.add("idnoaten", item.idnoaten)
+        ins!!.add("horaini", item.horaini.toDouble())
+        ins!!.add("horafin", item.horafin.toDouble())
+        ins!!.add("serial", item.serial)
         db!!.execSQL(ins!!.sql())
     }
 
@@ -90,9 +98,16 @@ class clsOrdendetObj {
         upd!!.add("idOrden", item.idorden)
         upd!!.add("idProducto", item.idproducto)
         upd!!.add("Descripcion", item.descripcion)
-        upd!!.add("Realizado", item.realizado)
+        upd!!.add("idrazonfalla", item.idrazonfalla)
+        upd!!.add("Precio", item.precio)
         upd!!.add("Cant", item.cant)
+        upd!!.add("Total", item.total)
         upd!!.add("Activo", item.activo)
+        upd!!.add("Realizado", item.realizado)
+        upd!!.add("idnoaten", item.idnoaten)
+        upd!!.add("horaini", item.horaini.toDouble())
+        upd!!.add("horafin", item.horafin.toDouble())
+        upd!!.add("serial", item.serial)
         upd!!.Where("(id=" + item.id + ")")
         db!!.execSQL(upd!!.sql())
     }
@@ -120,9 +135,16 @@ class clsOrdendetObj {
             item.idorden = dt.getInt(1)
             item.idproducto = dt.getInt(2)
             item.descripcion = dt.getString(3)
-            item.realizado = dt.getInt(4)
-            item.cant = dt.getDouble(5)
-            item.activo = dt.getInt(6)
+            item.idrazonfalla = dt.getInt(4)
+            item.precio = dt.getDouble(5)
+            item.cant = dt.getDouble(6)
+            item.total = dt.getDouble(7)
+            item.activo = dt.getInt(8)
+            item.realizado = dt.getInt(9)
+            item.idnoaten = dt.getInt(10)
+            item.horaini = dt.getLong(11)
+            item.horafin = dt.getLong(12)
+            item.serial = dt.getString(13)
             items.add(item)
             dt.moveToNext()
         }
@@ -149,9 +171,16 @@ class clsOrdendetObj {
         ins!!.add("idOrden", item.idorden)
         ins!!.add("idProducto", item.idproducto)
         ins!!.add("Descripcion", item.descripcion)
-        ins!!.add("Realizado", item.realizado)
+        ins!!.add("idrazonfalla", item.idrazonfalla)
+        ins!!.add("Precio", item.precio)
         ins!!.add("Cant", item.cant)
+        ins!!.add("Total", item.total)
         ins!!.add("Activo", item.activo)
+        ins!!.add("Realizado", item.realizado)
+        ins!!.add("idnoaten", item.idnoaten)
+        ins!!.add("horaini", item.horaini.toDouble())
+        ins!!.add("horafin", item.horafin.toDouble())
+        ins!!.add("serial", item.serial)
         return ins!!.sql()
     }
 
@@ -160,9 +189,16 @@ class clsOrdendetObj {
         upd!!.add("idOrden", item.idorden)
         upd!!.add("idProducto", item.idproducto)
         upd!!.add("Descripcion", item.descripcion)
-        upd!!.add("Realizado", item.realizado)
+        upd!!.add("idrazonfalla", item.idrazonfalla)
+        upd!!.add("Precio", item.precio)
         upd!!.add("Cant", item.cant)
+        upd!!.add("Total", item.total)
         upd!!.add("Activo", item.activo)
+        upd!!.add("Realizado", item.realizado)
+        upd!!.add("idnoaten", item.idnoaten)
+        upd!!.add("horaini", item.horaini.toDouble())
+        upd!!.add("horafin", item.horafin.toDouble())
+        upd!!.add("serial", item.serial)
         upd!!.Where("(id=" + item.id + ")")
         return upd!!.sql()
     }

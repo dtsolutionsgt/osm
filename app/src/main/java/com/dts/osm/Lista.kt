@@ -3,14 +3,14 @@ package com.dts.osm
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import com.dts.classes.clsTiposerviciosObj
+import com.dts.classes.clsTiposervicioObj
 import com.dts.classes.extListDlg
 
 class Lista : PBase() {
 
 
 
-    var TiposervicioObj: clsTiposerviciosObj? = null
+    var TiposervicioObj: clsTiposervicioObj? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,7 +20,7 @@ class Lista : PBase() {
 
             super.initbase(savedInstanceState)
 
-            TiposervicioObj = clsTiposerviciosObj(this, Con!!, db!!)
+            TiposervicioObj = clsTiposervicioObj(this, Con!!, db!!)
 
 
         } catch (e:Exception) {
@@ -98,7 +98,7 @@ class Lista : PBase() {
             listdlg.setWidth(10000)
 
             for (itm in TiposervicioObj?.items!!) {
-                listdlg.addData(itm.codigo_tipo_departamento,itm.nombre)
+                listdlg.addData(itm.codigo_tipo_orden_servicio,itm.nombre)
             }
 
             listdlg.clickListener= Runnable { processDirMenu(listdlg.selcodint,listdlg.selvalue) }

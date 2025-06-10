@@ -177,19 +177,49 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="46dp"
+        android:layout_height="48dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="0dp"
         android:background="@drawable/color_medium">
 
         <ImageView
-            android:id="@+id/imageView32"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:id="@+id/imageView41"
+            android:layout_width="64dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginBottom="1dp"
+            android:adjustViewBounds="true"
             android:clickable="true"
             android:onClick="doRefresh"
-            android:paddingVertical="3dp"
-            app:srcCompat="@drawable/refersh" />
+            android:padding="5dp"
+            app:srcCompat="@drawable/icon_undo" />
+
+        <ImageView
+            android:id="@+id/imageView32"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginBottom="1dp"
+            android:adjustViewBounds="true"
+            android:clickable="true"
+            android:onClick="doMenu"
+            android:padding="8dp"
+            app:srcCompat="@drawable/btn_det" />
+
+        <ImageView
+            android:id="@+id/imageView43"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:clickable="true"
+            android:onClick="doSearch"
+            android:padding="3dp"
+            app:srcCompat="@drawable/buscar" />
     </RelativeLayout>
 
 </RelativeLayout>

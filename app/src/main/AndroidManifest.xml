@@ -32,14 +32,13 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/serv2"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/serv2"
+        android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.OSM"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -124,7 +123,7 @@
             android:exported="false"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".Tarea"
+            android:name=".Orden"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
@@ -169,6 +168,30 @@
             android:name=".DibujoActivity"
             android:exported="false"
             android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".Vacia"
+            android:exported="false" />
+        <activity
+            android:name=".Tarea"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".SupAsignarOrden"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".SupBuscarOrden"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".TipoServicio"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".SuperAsignarFecha"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
     </application>
 
 </manifest>

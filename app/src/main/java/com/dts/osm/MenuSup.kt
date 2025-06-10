@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dts.base.clsClasses
 import com.dts.classes.RecyclerItemClickListener
-import com.dts.classes.clsUsuarioObj
 import com.dts.classes.extListDlg
 import com.dts.fbase.fbServicio
 import com.dts.ladapt.LA_OrdenSupAdapter
@@ -76,12 +75,20 @@ class MenuSup : PBase() {
 
     //region Events
 
+    fun doMenu(view: View) {
+        showMainMenu()
+    }
+
+    fun doSearch(view: View) {
+        startActivity(Intent(this,SupBuscarOrden::class.java))
+    }
+
     fun doRefresh(view: View) {
-       if (idle) actualizaDatos()  else toast("Espere . . .")
+        if (idle) actualizaDatos()  else toast("Espere . . .")
     }
 
     fun doFilter(view: View) {
-        showMainMenu()
+        showOrderMenu()
     }
 
     fun setHandlers() {
@@ -107,7 +114,7 @@ class MenuSup : PBase() {
 
     //region Main
 
-    private fun listItems() {
+    fun listItems() {
         var tproc=0
         var tpend=0
         var tcomp=0
@@ -231,6 +238,37 @@ class MenuSup : PBase() {
         try {
             val listdlg = extListDlg();
 
+            listdlg.buildDialog(this@MenuSup, "Opciónes")
+            //listdlg.setLines(4)
+            listdlg.setWidth(-1)
+            listdlg.setBottomRightPosition()
+
+            listdlg.addData(1,"Asignar orden")
+
+            listdlg.clickListener= Runnable { processMainMenu(listdlg.selcodint) }
+
+            listdlg.setOnLeftClick { v: View? -> listdlg.dismiss() }
+            listdlg.show()
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
+        }
+    }
+
+    fun processMainMenu(menucod:Int) {
+        try {
+            when (menucod) {
+                1 -> { startActivity(Intent(this,SupAsignarOrden::class.java)) }
+                2 -> {}
+            }
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
+    }
+
+    fun showOrderMenu() {
+        try {
+            val listdlg = extListDlg();
+
             listdlg.buildDialog(this@MenuSup, "Filtro")
             listdlg.setLines(4)
             listdlg.setWidth(-1)
@@ -241,7 +279,7 @@ class MenuSup : PBase() {
             listdlg.addData(5,"Completo")
             listdlg.addData(0,"Todos")
 
-            listdlg.clickListener= Runnable { processMainMenu(listdlg.selcodint,listdlg.selvalue) }
+            listdlg.clickListener= Runnable { processOrderMenu(listdlg.selcodint,listdlg.selvalue) }
 
             listdlg.setOnLeftClick { v: View? -> listdlg.dismiss() }
             listdlg.show()
@@ -250,7 +288,7 @@ class MenuSup : PBase() {
         }
     }
 
-    fun processMainMenu(menucod:Int,menutext: String) {
+    fun processOrderMenu(menucod:Int, menutext: String) {
         try {
            filter=menucod
            lblfilter?.text=menutext
