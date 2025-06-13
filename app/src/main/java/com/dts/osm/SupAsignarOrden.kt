@@ -9,9 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dts.base.clsClasses
 import com.dts.classes.RecyclerItemClickListener
-import com.dts.classes.wsOpenDT
+import com.dts.webservice.wsOpenDT
 import com.dts.ladapt.LA_OrdenAsigAdapter
-import com.dts.ladapt.LA_ProductoAdapter
 
 class SupAsignarOrden : PBase() {
 
@@ -63,6 +62,9 @@ class SupAsignarOrden : PBase() {
                         override fun onItemClick(view: View, position: Int) {
                             item = items[position]
 
+                            gl?.idorden=item?.CODIGO_ORDEN_SERVICIO!!
+                            gl?.gstr=item?.CLIENTE+"\n"+item?.TIPO
+
                             val context: Context = view?.getContext()!!
                             val intent = Intent(context, SuperAsignarFecha::class.java)
                             context.startActivity(intent)
@@ -90,7 +92,6 @@ class SupAsignarOrden : PBase() {
         }
     }
 
-
     private fun listaOrdenes() {
         try {
             items.clear()
@@ -106,7 +107,7 @@ class SupAsignarOrden : PBase() {
                     "AND (dbo.D_ORDEN_SERVICIO_ENC.ANULADA = 0) " +
                     "GROUP BY dbo.D_ORDEN_SERVICIO_ENC.CODIGO_ORDEN_SERVICIO, dbo.D_ORDEN_SERVICIO_ENC.NUMERO, dbo.AndrDate(dbo.D_ORDEN_SERVICIO_ENC.FECHA_AGR), " +
                     "dbo.P_CLIENTE.NOMBRE,  dbo.P_TIPO_ORDEN_SERVICIO.NOMBRE " +
-                    "HAVING  (COUNT(dbo.D_ORDEN_SERVICIO_USUARIO.CODIGO_ORDEN_SERVICIO) = 0) " +
+                    //"HAVING  (COUNT(dbo.D_ORDEN_SERVICIO_USUARIO.CODIGO_ORDEN_SERVICIO) = 0) " +
                     "ORDER BY Fecha, CLIENTE"
 
             wso!!.execute(sql) { cbListaOrdenes() }
@@ -188,6 +189,11 @@ class SupAsignarOrden : PBase() {
         try {
             super.onResume()
             gl?.dialogr = Runnable { dialogswitch() }
+
+            if (gl?.close_assign!!) {
+                gl?.close_assign=false
+                finish()
+            }
 
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)

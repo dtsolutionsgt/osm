@@ -1,4 +1,4 @@
-package com.dts.classes
+package com.dts.webservice
 
 import android.os.AsyncTask
 import android.os.Handler

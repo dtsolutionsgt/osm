@@ -297,6 +297,31 @@ class DateUtils {
         return s
     }
 
+    fun univfechash(f: Long): String {
+        var f = f
+        val vy: Long
+        val vm: Long
+        val vd: Long
+        val m: Long
+        val h: Long
+        var s: String
+
+        //yyyyMMdd hh:mm:ss
+        vy = (f / 100000000).toLong()
+        f = f % 100000000
+        vm = (f / 1000000).toLong()
+        f = f % 1000000
+        vd = (f / 10000).toLong()
+        f = f % 10000
+        h = (f.toInt() / 100).toLong()
+        m = f % 100
+        s = "20"
+        s = if (vy > 9) s + vy else s + "0" + vy
+        s = if (vm > 9) s + vm else s + "0" + vm
+        s = if (vd > 9) s + vd else s + "0" + vd
+        return s
+    }
+
     fun univfechaext(f: Int): String {
         var f = f
         val vy: Int

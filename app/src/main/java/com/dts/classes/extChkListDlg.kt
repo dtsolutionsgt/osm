@@ -18,17 +18,15 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.dts.base.appGlobals
-import com.dts.base.clsClasses
+import com.dts.classes.RecyclerItemClickListener
 import com.dts.osm.R
 
 
-class extListDlg {
+class extChkListDlg(Lang:Int) {
 
     var selidx=-1
-    var selcod=""
-    var selcodint=0
-    var selvalue=""
+    var text="";var stext=""
+    var lang=Lang
 
     private var mList: RecyclerView? = null
 
@@ -42,11 +40,13 @@ class extListDlg {
     private var mRelBot: RelativeLayout? = null
     private var mbuttons: LinearLayout? = null
 
+    private var adapter: Adapter? = null
+
     private var dialog: Dialog? = null
     private var cont: Context? = null
 
     private var items = ArrayList<clsListDialogItem>()
-    private var data = ArrayList<clsClasses.exListDlgItem>()
+    public var data = ArrayList<clsListDialogItem>()
 
     private var buttonCount = 0
     private var bwidth = 420
@@ -62,15 +62,13 @@ class extListDlg {
 
     //region Public methods
 
-    fun buildDialogbase( activity: Activity, titletext: String, butleft: String,
-        butmid: String,butright: String )
-    {
+    fun buildDialogbase( activity: Activity, titletext: String, butleft: String, butmid: String,butright: String ) {
         dialog = Dialog(activity)
         cont = dialog!!.context
 
         dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog!!.setCancelable(false)
-        dialog!!.setContentView(R.layout.extlistdlg)
+        dialog!!.setContentView(R.layout.extchklistdlg)
 
         dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.WHITE))
 
@@ -82,36 +80,22 @@ class extListDlg {
         mList = dialog!!.findViewById(R.id.recview1) as RecyclerView
         mList?.layoutManager = LinearLayoutManager(cont, LinearLayoutManager.VERTICAL,false)
 
-        mList?.addOnItemTouchListener(RecyclerItemClickListener(
+        mList?.addOnItemTouchListener(
+            RecyclerItemClickListener(
             cont!!, mList!!,
             object : RecyclerItemClickListener.OnItemClickListener {
 
                 override fun onItemClick(view: View, position: Int) {
 
-                    try {
-                        selidx= position
-                    } catch (e: Exception) {
-                        selidx=-1
+                    selidx=position
+
+                    if (data[position].checked) {
+                        data[position].checked = false
+                    } else {
+                        data[position].checked = true
                     }
 
-                    try {
-                        selcod= data.get(position).codigo
-                    } catch (e: Exception) {
-                        selcod=""
-                    }
-
-                    try {
-                        selcodint=data.get(position).codigo.toInt()
-                    } catch (e: Exception) {
-                        selcodint=-1
-                    }
-
-                    try {
-                        selvalue=data.get(position).text
-                    } catch (e: Exception) {
-                        selvalue=""
-                    }
-
+                    adapter?.notifyDataSetChanged()
                     runClickListener()
                 }
 
@@ -123,13 +107,16 @@ class extListDlg {
 
 
         mTitleLabel = dialog!!.findViewById(R.id.lbltitulo);mTitleLabel?.setText(titletext)
+
         mBtnLeft = dialog!!.findViewById(R.id.btnexit);mBtnLeft?.setText(butleft);
         mBtnLeft?.setOnClickListener(View.OnClickListener { });
-        mBtnMid = dialog!!.findViewById(R.id.btndel)
-        mBtnMid?.setText(butmid);mBtnMid?.setOnClickListener(View.OnClickListener { })
-        mBtnRight = dialog!!.findViewById(R.id.btnadd);mBtnRight?.setText(butright)
 
+        mBtnMid = dialog!!.findViewById(R.id.btndel);mBtnMid?.setText(butmid);
+        mBtnMid?.setOnClickListener(View.OnClickListener { })
+
+        mBtnRight = dialog!!.findViewById(R.id.btnadd);mBtnRight?.setText(butright)
         mBtnRight?.setOnClickListener(View.OnClickListener { })
+
         when (buttonCount) {
             1 -> {
                 mBtnMid?.setVisibility(View.GONE)
@@ -144,13 +131,18 @@ class extListDlg {
 
             3 -> mbuttons?.setWeightSum(3f)
         }
+
+        if (butleft=="")  {
+            mBtnLeft?.setVisibility(View.GONE);mbuttons?.setWeightSum(2f)
+        }
+
         mwidth = 0;mheight = 0;mlines = 0
         items.clear()
     }
 
     fun buildDialog(activity: Activity, titletext: String) {
         buttonCount = 1
-        buildDialogbase(activity, titletext, "Salir", "", "")
+        buildDialogbase(activity, titletext, if (lang==0) "Back" else "Salir", "", "")
     }
 
     fun buildDialog(activity: Activity, titletext: String, butleft: String) {
@@ -219,68 +211,6 @@ class extListDlg {
 
     fun setOnRightClick(l: View.OnClickListener?) {
         mBtnRight!!.setOnClickListener(l)
-    }
-
-    fun setOnItemClickListener(l: View.OnClickListener?) {
-        mList!!.setOnClickListener(l)
-    }
-
-    fun add(codigo: Int, text: String?) {
-        val item = clsListDialogItem()
-        item.idresource = 0
-        item.codigo = codigo.toString() + ""
-        item.text = text
-        item.text2 = ""
-        items.add(item)
-    }
-
-    fun add(text: String?) {
-        add(0, text)
-    }
-
-    fun add(idresource: Int, text: String?, text2: String?) {
-        val item = clsListDialogItem()
-        item.idresource = idresource
-        item.codigo = ""
-        item.text = text
-        item.text2 = text2
-        items.add(item)
-    }
-
-    fun add(codigo: String?, text: String?) {
-        val item = clsListDialogItem()
-        item.idresource = 0
-        item.codigo = codigo
-        item.text = text
-        item.text2 = ""
-        items.add(item)
-    }
-
-    fun add(codigo: Int, text: String?, idresource: Int) {
-        val item = clsListDialogItem()
-        item.idresource = idresource
-        item.codigo = codigo.toString() + ""
-        item.text = text
-        item.text2 = ""
-        items.add(item)
-    }
-
-    fun add(codigo: String?, text: String?, text2: String?) {
-        val item = clsListDialogItem()
-        item.idresource = 0
-        item.codigo = codigo
-        item.text = text
-        item.text2 = text2
-        items.add(item)
-    }
-
-    fun addicon(idresource: Int, text: String?) {
-        val item = clsListDialogItem()
-        item.idresource = idresource
-        item.codigo = ""
-        item.text = text
-        item.text2 = ""
-        items.add(item)
     }
 
     fun clear() {
@@ -363,7 +293,7 @@ class extListDlg {
 
     fun getCodigo(index: Int): String? {
         return try {
-            items[index].codigo
+            data[index].codigo
         } catch (e: Exception) {
             ""
         }
@@ -371,26 +301,30 @@ class extListDlg {
 
     fun getCodigoInt(index: Int): Int {
         return try {
-            items[index].codigo!!.toInt()
+            data[index].codigo!!.toInt()
         } catch (e: Exception) {
             -1
         }
     }
 
-    fun getResource(index: Int): Int {
+    fun getChecked(index: Int): Boolean {
         return try {
-            items[index].idresource
+            data[index].checked
         } catch (e: Exception) {
-            0
+            false
         }
     }
 
-    fun addData(ss: String) {
-        data.add(clsClasses.exListDlgItem(0, "", ss, ""))
+    fun addData(ss: String, checked: Boolean) {
+        data.add(clsListDialogItem(0, "", ss,checked))
     }
 
-    fun addData(id:Int,ss: String) {
-        data.add(clsClasses.exListDlgItem(0, "" + id, ss, ""))
+    fun addData(id:Int,ss: String, checked: Boolean) {
+        data.add(clsListDialogItem(0, ""+id, ss, checked))
+    }
+
+    fun addData(id:String,ss: String, checked: Boolean) {
+        data.add(clsListDialogItem(0, ""+id, ss,checked))
     }
 
     fun show() {
@@ -399,7 +333,7 @@ class extListDlg {
 
         fwidth = bwidth;fheight = bheight
 
-        val adapter = Adapter(data)
+        adapter = Adapter(data)
         mList?.adapter = adapter
 
         icount = data!!.size
@@ -418,20 +352,12 @@ class extListDlg {
              fheight = mheight
         } else {
             try {
-                //val adap = mList!!.adapter
-                //val ad: Adapter= mList!!.adapter as Adapter
-
-                //val listItem = mList!!.adapter..getView(0, null, mList)
-                //listItem.measure(0, 0)
-                //itemHeight = listItem.measuredHeight + 1
                 itemHeight = dpToPx(itHeight)
-
                 headerHeight = mRelTop!!.layoutParams.height + 15
                 footerHeight = mRelBot!!.layoutParams.height + 15
                 fheight = icount * itemHeight + headerHeight + footerHeight
             } catch (e: Exception) {
-                //fwidth=bwidth;
-                fheight = bheight
+                 fheight = bheight
             }
         }
 
@@ -476,15 +402,9 @@ class extListDlg {
     //region Private
 
     private fun runClickListener() {
-        if (clickListener == null) {
-            if (mcloseafterclick) dismiss()
-            return
-        } else {
+        if (clickListener != null) {
             val cbhandler = Handler()
-            cbhandler.postDelayed( {
-                clickListener!!.run()
-                if (mcloseafterclick) dismiss()
-            }, 50)
+            cbhandler.postDelayed( { clickListener!!.run() }, 50)
         }
     }
 
@@ -493,21 +413,21 @@ class extListDlg {
         return (dp * scale!! + 0.5f).toInt()
     }
 
-    inner class clsListDialogItem {
-        var idresource = 0
-        var codigo: String? = null
-        var text: String? = null
-        var text2: String? = null
-    }
+    data class clsListDialogItem (
+        var idresource: Int = 0,
+        var codigo: String? = null,
+        var text: String? = null,
+        var checked: Boolean = false,
+    )
 
-    class Adapter(val itemList: ArrayList<clsClasses.exListDlgItem>)
+    class Adapter(val itemList: ArrayList<clsListDialogItem>)
                      : RecyclerView.Adapter<Adapter.ViewHolder>() {
 
         var selectedItemPosition: Int = -1
         lateinit var lay: RelativeLayout
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Adapter.ViewHolder {
-            val v = LayoutInflater.from(parent.context).inflate(R.layout.extlistdlgitem, parent, false)
+            val v = LayoutInflater.from(parent.context).inflate(R.layout.extchklistdlgitem, parent, false)
             return ViewHolder(v)
         }
 
@@ -541,7 +461,7 @@ class extListDlg {
                 itemView.setOnClickListener(this)
             }
 
-            fun bindItems(mitem: clsClasses.exListDlgItem) {
+            fun bindItems(mitem: clsListDialogItem) {
                 lay=itemView.findViewById(R.id.relldmm) as RelativeLayout
 
                 val textViewName = itemView.findViewById(R.id.lbltext) as TextView
@@ -549,24 +469,17 @@ class extListDlg {
                 val icon = itemView.findViewById(R.id.imgicon) as ImageView
 
                 textViewName.text = mitem?.text
-                textViewName2.text = mitem?.text2
+                textViewName2!!.visibility = View.GONE
 
-                if (mitem?.text2?.isEmpty() == true) {
-                    textViewName2!!.visibility = View.GONE
+                if (mitem?.checked!!) {
+                    icon.setImageResource(R.drawable.btn_save_blue)
                 } else {
-                    textViewName2!!.visibility = View.VISIBLE
-                }
-
-                if (mitem?.idresource==0) {
-                    icon!!.visibility = View.GONE
-                } else {
-                    icon!!.visibility = View.VISIBLE
-                    icon!!.setImageResource(mitem.idresource)
+                    icon.setImageResource(R.drawable.blank)
                 }
 
             }
 
-            fun bind(mitem: clsClasses.exListDlgItem, isSelected: Boolean) {
+            fun bind(mitem: clsListDialogItem, isSelected: Boolean) {
                 lay.setBackgroundColor(if (isSelected)
                     Color.parseColor("#9CD0F4") else Color.TRANSPARENT)
             }

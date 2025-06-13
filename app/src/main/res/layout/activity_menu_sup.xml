@@ -193,7 +193,7 @@
             android:adjustViewBounds="true"
             android:clickable="true"
             android:onClick="doRefresh"
-            android:padding="5dp"
+            android:padding="10dp"
             app:srcCompat="@drawable/icon_undo" />
 
         <ImageView
@@ -218,7 +218,7 @@
             android:layout_centerHorizontal="true"
             android:clickable="true"
             android:onClick="doSearch"
-            android:padding="3dp"
+            android:padding="5dp"
             app:srcCompat="@drawable/buscar" />
     </RelativeLayout>
 

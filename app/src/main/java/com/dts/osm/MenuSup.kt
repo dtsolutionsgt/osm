@@ -257,7 +257,10 @@ class MenuSup : PBase() {
     fun processMainMenu(menucod:Int) {
         try {
             when (menucod) {
-                1 -> { startActivity(Intent(this,SupAsignarOrden::class.java)) }
+                1 -> {
+                    gl?.close_assign=false
+                    startActivity(Intent(this,SupAsignarOrden::class.java))
+                }
                 2 -> {}
             }
         } catch (e: Exception) {

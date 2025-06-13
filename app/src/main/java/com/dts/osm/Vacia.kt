@@ -27,13 +27,11 @@ class Vacia : PBase() {
 
             super.initbase(savedInstanceState)
 
-            recview = findViewById<View>(R.id.recview) as RecyclerView
+            recview = findViewById(R.id.recview)
             recview?.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
 
-            setHandlers()
-
             listItems()
-
+            setHandlers()
         } catch (e:Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+". "+e.message)
         }

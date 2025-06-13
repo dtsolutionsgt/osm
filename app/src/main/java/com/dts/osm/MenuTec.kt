@@ -84,7 +84,8 @@ class MenuTec : PBase() {
             val handler = Handler(Looper.getMainLooper())
             handler.postDelayed({
                 idle=true
-                listItems()
+                marcaBoton(1)
+                //listItems()
             }, 20)
 
         } catch (e:Exception) {
@@ -202,10 +203,12 @@ class MenuTec : PBase() {
                 item.idestado = ord.idestado
 
                 if (ord.idestado>0) {
-                    if (ord.idestado!=5) pend++
+                    //if (ord.idestado!=5) pend++
                 }
 
-                items.add(item)
+                if (item.idestado==listmode) {
+                    items.add(item)
+                }
 
                 when (item.idestado) {
                     3 -> { tpend++ }
@@ -305,19 +308,19 @@ class MenuTec : PBase() {
                     lblbtnpend?.setBackgroundResource(R.drawable.frame_key_select)
                     lblbtact?.setBackgroundResource(R.drawable.frame_btn)
                     lblbtncomp?.setBackgroundResource(R.drawable.frame_btn)
-                    listmode=0
+                    listmode=2
                 }
                 1 -> {
                     lblbtnpend?.setBackgroundResource(R.drawable.frame_btn)
                     lblbtact?.setBackgroundResource(R.drawable.frame_key_select)
                     lblbtncomp?.setBackgroundResource(R.drawable.frame_btn)
-                    listmode=1
+                    listmode=3
                 }
                 2 -> {
                     lblbtnpend?.setBackgroundResource(R.drawable.frame_btn)
                     lblbtact?.setBackgroundResource(R.drawable.frame_btn)
                     lblbtncomp?.setBackgroundResource(R.drawable.frame_key_select)
-                    listmode=2
+                    listmode=5
                 }
             }
 

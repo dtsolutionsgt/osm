@@ -49,6 +49,7 @@ class appGlobals : Application() {
     var nuser=""
     var changed=false
     var com_pend=false
+    var close_assign=false
 
     //Params
     var pegps=false;var peHini=-1;var peHfin=-1;

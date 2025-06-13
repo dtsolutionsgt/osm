@@ -161,9 +161,11 @@ class clsClasses {
     data class clsOrdenSupHora (
         var CODIGO_ORDEN_SERVICIO : Int = 0,
         var NUMERO : String = "",
+        var USUARIO : Int = 0,
         var NOMBRE : String = "",
         var CLIENTE : String = "",
         var TIPO : String = "",
+        var FECHA : Long = 0L,
         var FECHAINI : Long = 0L,
         var FECHAFIN : Long = 0L,
         var HORAINI : Long = 0L,
@@ -171,7 +173,6 @@ class clsClasses {
         var SFECHAINI : String = "",
         var SFECHAFIN : String = "",
     )
-
 
     data class clsT_ordendet (
         var codigo_orden_servicio_det : Int = 0,
@@ -361,6 +362,12 @@ class clsClasses {
     data class clsMenu (
         var id:Int = 0,
         var nombre: String? = null
+    )
+
+    data class clsCheckDlg (
+        var id:Int = 0,
+        var nombre: String? = null,
+        var check:Int =0
     )
 
     data class exListDlgItem(

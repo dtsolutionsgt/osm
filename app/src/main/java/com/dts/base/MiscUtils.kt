@@ -146,6 +146,21 @@ class MiscUtils {
         dialog.show()
     }
 
+    fun msgbox(msg: String?,title : String?) {
+        if (msg == null || msg.isEmpty()) {
+            return
+        }
+        val dialog = AlertDialog.Builder(cont)
+        dialog.setTitle(title)
+        dialog.setMessage(msg)
+        //dialog.setIcon(R.drawable.info48);
+        dialog.setNeutralButton("OK") { dialog, which ->
+            //Toast.makeText(getApplicationContext(), "Yes button pressed",Toast.LENGTH_SHORT).show();
+        }
+        dialog.show()
+    }
+
+
     fun msgbox(v: Int) {
         val dialog = AlertDialog.Builder(cont)
         dialog.setTitle(R.string.app_name)

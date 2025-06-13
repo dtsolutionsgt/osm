@@ -179,6 +179,10 @@ open class PBase : AppCompatActivity() {
         mu!!.msgbox(msg)
     }
 
+    fun msgbox(msg: String?,title : String?) {
+        mu!!.msgbox(msg,title)
+    }
+
     fun msgbox(value: Int) {
         mu!!.msgbox("" + value)
     }
