@@ -60,9 +60,12 @@ class LA_ordendet(val itemList: ArrayList<clsClasses.clsOrdendet>) : RecyclerVie
                 val lbl2 = itemView.findViewById(R.id.lblV2) as TextView
                 val img1 = itemView.findViewById(R.id.imageView19) as ImageView
                 lay = itemView.findViewById(R.id.relitem) as RelativeLayout
+
                 lbl1.text = mitem.descripcion
-                lbl2.text =""+ mitem.cant
-                img1.isVisible=mitem.realizado==1
+                lbl2.text =getStatName(mitem)
+                lbl2.setBackgroundResource(getStatRes(mitem))
+                img1.isVisible=mitem.idnoaten>0
+
             } catch (e: Exception) { }
 
         }
@@ -77,6 +80,37 @@ class LA_ordendet(val itemList: ArrayList<clsClasses.clsOrdendet>) : RecyclerVie
 
         override fun onClick(p0: View?) {}
 
+        private fun getStatName(item: clsClasses.clsOrdendet) : String {
+            var ename="Pendiente"
+
+            if (item.idnoaten>0) return "ANULADO"
+
+            if (item?.activo==1) {
+                if (item?.realizado==1) {
+                    ename="Completo"
+                } else {
+                    ename="En progreso"
+                }
+            }
+
+            return ename
+        }
+
+        private fun getStatRes(item: clsClasses.clsOrdendet) : Int {
+            var eres=R.drawable.color_gray_grad
+
+            if (item.idnoaten>0) return R.drawable.blank
+
+            if (item?.activo==1) {
+                if (item?.realizado==1) {
+                    eres=R.drawable.color_green_grad
+                } else {
+                    eres=R.drawable.color_ocra_grad
+                }
+            }
+
+            return eres
+        }
     }
 
 }

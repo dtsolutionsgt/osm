@@ -170,6 +170,10 @@ open class PBase : AppCompatActivity() {
         mu!!.msgask(dialogid, msg)
     }
 
+    fun msgask(dialogidyes: Int,dialogidno: Int, msg: String?) {
+        mu!!.msgask(dialogidyes,dialogidno, msg)
+    }
+
     fun msgask(dialogid: Int, msg: String?, tit: String?) {
         gl!!.dialogid = dialogid
         mu!!.msgask(dialogid, msg, tit)

@@ -85,7 +85,7 @@ class MenuTec : PBase() {
             handler.postDelayed({
                 idle=true
                 marcaBoton(1)
-                //listItems()
+                if (items?.size==0) marcaBoton(0)
             }, 20)
 
         } catch (e:Exception) {
@@ -145,7 +145,7 @@ class MenuTec : PBase() {
         }
     }
 
-    private fun setHandlers() {
+    fun setHandlers() {
         try {
             menuview?.addOnItemTouchListener(
                 RecyclerItemClickListener(this, menuview!!,
@@ -155,9 +155,7 @@ class MenuTec : PBase() {
                             saveselidx=position
                             gl?.idorden=items?.get(position)?.idorden!!
 
-                            val context: Context = view?.getContext()!!
-                            val intent = Intent(context, Orden ::class.java)
-                            context.startActivity(intent)
+                            abrirOrden()
                         }
 
                         override fun onItemLongClick(view: View?, position: Int) { }
@@ -173,9 +171,9 @@ class MenuTec : PBase() {
 
     //region Main
 
-    private fun listItems() {
+    fun listItems() {
         var item: clsClasses.clsOrdenlist
-        var regs=0;var pend=0
+        var pend=0
 
         if (!idle) return
 
@@ -187,9 +185,10 @@ class MenuTec : PBase() {
             TiposervicioObj?.fill()
             ClienteObj?.fill()
 
-            OrdenencObj?.fill("WHERE (idUsuario="+gl?.iduser!!+") AND (idestado in (2,3,4,8))  " +
-                    "ORDER BY Numero")
-            regs=OrdenencObj?.count!!;pend=0
+            OrdenencObj?.fill("WHERE (idestado in (2,3,4,8))  ORDER BY Numero")
+            //OrdenencObj?.fill("WHERE (idUsuario="+gl?.iduser!!+") AND (idestado in (2,3,4,8)) ORDER BY Numero")
+
+            pend=0
 
             for (ord in OrdenencObj?.items!!) {
                 item= clsClasses.clsOrdenlist()
@@ -227,6 +226,41 @@ class MenuTec : PBase() {
         lblpend?.text="Completos: "+tcomp
     }
 
+    fun abrirOrden() {
+        try {
+            when (listmode) {
+                3 -> { msgask(0,1,"¿Iniciar servicio?") }
+                4 -> { startActivity(Intent(this,Orden::class.java)) }
+                5 -> { startActivity(Intent(this,Orden::class.java)) }
+            }
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
+    }
+
+    fun iniciarOrden() {
+        try {
+            OrdenencObj?.fill("WHERE (idorden="+gl?.idorden+")")
+            OrdenenccapObj?.fill("WHERE (idorden="+gl?.idorden+")")
+
+            var encitem=OrdenencObj?.first()
+            encitem?.idestado=4
+            OrdenencObj?.update(encitem)
+
+            var capitem=OrdenenccapObj?.first()
+
+            capitem?.fechaini=du?.actDateTime!!
+
+            OrdenenccapObj?.update(capitem)
+
+            listItems()
+
+            startActivity(Intent(this,Orden::class.java))
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
+    }
+
     //endregion
 
     //region Dialogs
@@ -234,7 +268,8 @@ class MenuTec : PBase() {
     fun dialogswitch() {
         try {
             when (gl?.dialogid) {
-                0 -> {  }
+                0 -> { iniciarOrden() }
+                1 -> { startActivity(Intent(this,Orden::class.java)) }
             }
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
@@ -249,7 +284,7 @@ class MenuTec : PBase() {
         try {
             for (itm in EstadoordenObj?.items!!) {
                 if (itm.id==codigo) {
-                    if (codigo==3) return "Pendiente" else return itm.nombre
+                    if (codigo<4) return "Pendiente" else return itm.nombre
                 }
             }
         } catch (e: Exception) {
@@ -308,13 +343,13 @@ class MenuTec : PBase() {
                     lblbtnpend?.setBackgroundResource(R.drawable.frame_key_select)
                     lblbtact?.setBackgroundResource(R.drawable.frame_btn)
                     lblbtncomp?.setBackgroundResource(R.drawable.frame_btn)
-                    listmode=2
+                    listmode=3
                 }
                 1 -> {
                     lblbtnpend?.setBackgroundResource(R.drawable.frame_btn)
                     lblbtact?.setBackgroundResource(R.drawable.frame_key_select)
                     lblbtncomp?.setBackgroundResource(R.drawable.frame_btn)
-                    listmode=3
+                    listmode=4
                 }
                 2 -> {
                     lblbtnpend?.setBackgroundResource(R.drawable.frame_btn)

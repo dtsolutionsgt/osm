@@ -226,8 +226,8 @@ class Orden : PBase() {
         }
     }
 
-    fun doVoid(view: View) {
-        msgask(2,"Anular orden?")
+    fun doDelete(view: View) {
+        msgask(2,"Borrar servicio?")
     }
 
     fun doWaze(view: View) {
@@ -629,6 +629,44 @@ class Orden : PBase() {
         }
     }
 
+    fun borrarOrden() {
+        var fotos = ArrayList<String>()
+
+        try {
+
+            db!!.beginTransaction()
+
+            var OrdenfotoObj= clsOrdenfotoObj(this,Con!!,db!!)
+            OrdenfotoObj?.fill("WHERE (idOrden="+idorden+") ")
+            for (itm in OrdenfotoObj?.items!!) {
+                fotos.add(itm.nombre)
+            }
+
+            db?.execSQL("DELETE FROM Ordenenc WHERE (idorden="+idorden+")");
+            db?.execSQL("DELETE FROM Ordendet WHERE (idorden="+idorden+")");
+            db?.execSQL("DELETE FROM Ordenenccap WHERE (idorden="+idorden+")");
+            db?.execSQL("DELETE FROM Ordenfoto WHERE (idorden="+idorden+")");
+
+            db!!.setTransactionSuccessful()
+            db!!.endTransaction()
+
+            for (itm in fotos) {
+                var ffile = File(gl?.picdir.toString()+itm.toString())
+                try {
+                    ffile.delete()
+                } catch (e: Exception) {}
+            }
+
+            toastlong("Servicio borrado.")
+
+            finish()
+        } catch (e: java.lang.Exception) {
+            db!!.endTransaction()
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
+        }
+
+    }
+
     fun anularOrden() {
         var fotos = ArrayList<String>()
 
@@ -718,20 +756,30 @@ class Orden : PBase() {
 
     fun actualizaDetalle(dpos: Int ) {
         try {
-            var flag=ditems.get(dpos).realizado
+            var completo=ditems.get(dpos).realizado
+            var activo=ditems.get(dpos).activo
+            var anulado=ditems.get(dpos).idnoaten
 
-            gl?.gstr=ditems.get(dpos).descripcion
-            gl?.gint=ditems.get(dpos).cant.toInt()
+            gl?.gstr =lbltit?.text?.toString()!!
             gl?.gint2=ditems.get(dpos).id
             gl?.gint3=ditems.get(dpos).idorden
-            gl?.gintval=-1
 
-            if (flag==1) {
-                showItemMenu()
+            if (anulado==0) {
+                if (completo==0) {
+                    if (activo==1) {
+                        callback=1
+                        startActivity(Intent(this,OrdenDet::class.java))
+                    } else {
+                        msgask(7,"¿Iniciar tarea?")
+                    }
+                } else {
+                    callback=1
+                    startActivity(Intent(this,OrdenDet::class.java))
+                }
             } else {
-                callback=1
-                startActivity(Intent(this,Seriales::class.java))
+                msgask(7,"¿Iniciar tarea?")
             }
+
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
@@ -747,6 +795,29 @@ class Orden : PBase() {
             OrdendetObj?.update(ditems.get(saveselidx))
             adapter?.notifyDataSetChanged()
 
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
+    }
+
+    fun iniciaEstadoDetalle() {
+        try {
+
+            if (idestado<4) {
+                idestado=4
+                iniciarOrden()
+            }
+
+            ditems.get(saveselidx).activo=1
+            ditems.get(saveselidx).realizado=0
+            ditems.get(saveselidx).horaini=du?.actDateTime!!
+            ditems.get(saveselidx).horafin=0
+            ditems.get(saveselidx).idnoaten=0
+
+            OrdendetObj?.update(ditems.get(saveselidx))
+
+            callback=1
+            startActivity(Intent(this,OrdenDet::class.java))
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
@@ -984,11 +1055,12 @@ class Orden : PBase() {
                 0 -> { iniciarOrden() }
                 1 -> { completarOrden() }
                 2 -> { msgask(3,"Está seguro?") }
-                3 -> { anularOrden() }
+                3 -> { borrarOrden() }
                 4 -> { startActivity(Intent(this, Firma::class.java)) }
                 5 -> { msgask(6,"Está seguro?") }
                 6 -> { completarOrden() }
-           }
+                7 -> { iniciaEstadoDetalle() }
+            }
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
         }
@@ -1089,6 +1161,7 @@ class Orden : PBase() {
 
     fun nombreEstado(codigo:Int):String {
         try {
+            if (codigo==3) return "Pendiente"
             for (itm in EstadoordenObj?.items!!) {
                 if (itm.id==codigo) return itm.nombre
             }
@@ -1312,11 +1385,13 @@ class Orden : PBase() {
             ExistenciasObj!!.reconnect(Con!!, db!!)
             OrdenserialObj!!.reconnect(Con!!, db!!)
 
+            cargaDetalle()
+
             validaFirma()
 
             if (callback==1) {
                 callback=0
-                actualizaEstadoDetalle()
+                //actualizaEstadoDetalle()
                 return
             }
 

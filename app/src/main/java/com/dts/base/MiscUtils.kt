@@ -184,6 +184,23 @@ class MiscUtils {
         dialog.show()
     }
 
+    fun msgask(dialogidyes: Int,dialogidno: Int, msg: String?) {
+        if (msg == null || msg.isEmpty()) return
+
+        val dialog = AlertDialog.Builder(cont)
+        dialog.setTitle(R.string.app_name)
+        dialog.setMessage(msg)
+        dialog.setPositiveButton("Si") { dialog, which ->
+            gl!!.dialogid = dialogidyes
+            if (gl!!.dialogr != null) gl!!.dialogr!!.run()
+        }
+        dialog.setNegativeButton("No") { dialog, which ->
+            gl!!.dialogid = dialogidno
+            if (gl!!.dialogr != null) gl!!.dialogr!!.run()
+        }
+        dialog.show()
+    }
+
     fun msgask(dialogid: Int, msg: String?, tit:String?) {
         if (msg == null || msg.isEmpty()) return
         gl!!.dialogid = dialogid

@@ -5,9 +5,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/color_light"
-        tools:context=".Orden">
+        tools:context=".OrdenDet">
 
-    <RelativeLayout
+        <RelativeLayout
             android:id="@+id/relbot"
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -38,6 +38,7 @@
                     android:clickable="true"
                     android:onClick="doPhoto"
                     android:padding="10dp"
+                    android:visibility="invisible"
                     app:srcCompat="@drawable/btn_photo" />
 
                 <ImageView
@@ -48,7 +49,7 @@
                     android:clickable="true"
                     android:onClick="doUbic"
                     android:padding="8dp"
-                    app:srcCompat="@drawable/btn_pin" />
+                    app:srcCompat="@drawable/btn_photo" />
 
                 <ImageView
                     android:id="@+id/imageView18"
@@ -58,6 +59,7 @@
                     android:clickable="true"
                     android:onClick="doSign"
                     android:padding="10dp"
+                    android:visibility="invisible"
                     app:srcCompat="@drawable/btn_sign" />
 
                 <ImageView
@@ -66,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:clickable="true"
-                    android:onClick="doNext"
+                    android:onClick="doSave"
                     android:rotation="180"
                     app:srcCompat="@drawable/arr_back" />
             </LinearLayout>
@@ -87,18 +89,6 @@
                 android:scaleType="fitXY"
                 android:src="@drawable/mposgerhead" />
 
-            <ImageView
-                android:id="@+id/imageView53"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="5dp"
-                android:adjustViewBounds="true"
-                android:clickable="true"
-                android:onClick="doDelete"
-                android:padding="8dp"
-                app:srcCompat="@drawable/delete" />
-
             <TextView
                 android:id="@+id/textView15"
                 android:layout_width="wrap_content"
@@ -116,6 +106,18 @@
                 android:textColor="#FFFFFF"
                 android:textSize="24sp"
                 android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/imageView51"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="5dp"
+                android:adjustViewBounds="true"
+                android:clickable="true"
+                android:onClick="doAnul"
+                android:padding="8dp"
+                app:srcCompat="@drawable/disabled_white" />
 
         </RelativeLayout>
 
@@ -139,8 +141,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginEnd="0dp"
+                    android:layout_marginTop="-3dp"
+                    android:layout_marginEnd="5dp"
                     android:background="@drawable/color_gray_grad"
                     android:gravity="center_horizontal"
                     android:minWidth="120dp"
@@ -157,28 +159,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView22"
                     android:layout_marginTop="5dp"
-                    android:paddingBottom="10dp">
-
-                    <TextView
-                        android:id="@+id/textView37"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/textView36"
-                        android:layout_alignStart="@+id/textView18"
-                        android:layout_marginStart="-0dp"
-                        android:text="Tiempo trascurrido:"
-                        android:textColor="#202020"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/textView36"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/textView25"
-                        android:layout_alignStart="@+id/textView25"
-                        android:text="Fin atencion:"
-                        android:textColor="#202020"
-                        android:textSize="16sp" />
+                    android:paddingBottom="2dp">
 
                     <TextView
                         android:id="@+id/textView35"
@@ -191,47 +172,24 @@
                         android:background="@drawable/strip_grad"
                         android:gravity="center_horizontal"
                         android:paddingHorizontal="10dp"
-                        android:text="FECHA"
+                        android:text="TIPO SERVICIO"
                         android:textColor="#FFFFFF"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/textView18"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/textView35"
-                        android:layout_marginStart="10dp"
+                        android:layout_marginStart="0dp"
                         android:layout_marginTop="0dp"
-                        android:text="Fecha"
-                        android:textColor="#202020"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/textView23"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/textView35"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="0dp"
-                        android:layout_toEndOf="@+id/textView18"
+                        android:paddingBottom="2dp"
                         android:text="TextView"
                         android:textColor="#202020"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/textView25"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/textView18"
-                        android:layout_alignStart="@+id/textView18"
-                        android:layout_marginStart="-0dp"
-                        android:layout_marginTop="0dp"
-                        android:text="Inicio atencion:"
-                        android:textColor="#202020"
-                        android:textSize="16sp" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -240,19 +198,6 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/rell1"
                     android:layout_marginTop="2dp">
-
-                    <ImageView
-                        android:id="@+id/imageView30"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_below="@+id/textView11"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginTop="3dp"
-                        android:layout_marginEnd="4dp"
-                        android:clickable="true"
-                        android:onClick="doWaze"
-                        android:visibility="visible"
-                        app:srcCompat="@drawable/btn_waze" />
 
                     <TextView
                         android:id="@+id/textView11"
@@ -266,7 +211,7 @@
                         android:background="@drawable/strip_grad"
                         android:gravity="center_horizontal"
                         android:paddingHorizontal="10dp"
-                        android:text="CLIENTE"
+                        android:text="ESPECIFICACIÓN"
                         android:textColor="#FFFFFF"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -278,27 +223,15 @@
                         android:layout_below="@id/textView11"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginStart="10dp"
+                        android:layout_marginStart="0dp"
                         android:layout_marginTop="0dp"
-                        android:layout_marginEnd="40dp"
+                        android:layout_marginEnd="0dp"
+                        android:paddingBottom="2dp"
                         android:text="TextView"
                         android:textColor="#202020"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/textView13"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/textView12"
-                        android:layout_alignStart="@+id/textView12"
-                        android:layout_alignEnd="@+id/textView12"
-                        android:layout_marginStart="0dp"
-                        android:layout_marginEnd="0dp"
-                        android:paddingBottom="10dp"
-                        android:text="TextView"
-                        android:textColor="#202020"
-                        android:textSize="16sp" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -308,20 +241,6 @@
                     android:layout_below="@id/rell2"
                     android:layout_marginTop="2dp">
 
-                    <ImageView
-                        android:id="@+id/imageView31"
-                        android:layout_width="36dp"
-                        android:layout_height="46dp"
-                        android:layout_below="@+id/textView16"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginTop="0dp"
-                        android:layout_marginEnd="2dp"
-                        android:clickable="true"
-                        android:onClick="doPhone"
-                        android:paddingHorizontal="2dp"
-                        android:paddingBottom="10dp"
-                        app:srcCompat="@drawable/btn_phone" />
-
                     <TextView
                         android:id="@+id/textView17"
                         android:layout_width="wrap_content"
@@ -329,12 +248,11 @@
                         android:layout_below="@id/textView16"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="40dp"
-                        android:paddingBottom="10dp"
+                        android:paddingBottom="2dp"
                         android:text="TextView"
                         android:textColor="#202020"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/textView16"
@@ -347,7 +265,7 @@
                         android:background="@drawable/strip_grad"
                         android:gravity="center_horizontal"
                         android:paddingHorizontal="10dp"
-                        android:text="CONTACTO"
+                        android:text="DESCRIPCIÓN"
                         android:textColor="#FFFFFF"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -371,25 +289,10 @@
                         android:background="@drawable/strip_grad"
                         android:gravity="center_horizontal"
                         android:paddingHorizontal="10dp"
-                        android:text="DESCRIPCIÓN"
+                        android:text="ARTÍCULO"
                         android:textColor="#FFFFFF"
                         android:textSize="16sp"
                         android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/textView21"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/textView20"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginHorizontal="10dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:paddingBottom="10dp"
-                        android:text="TextView"
-                        android:textColor="#202020"
-                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/textView20"
@@ -398,8 +301,6 @@
                         android:layout_below="@id/textView19"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
                         android:text="TextView"
                         android:textColor="#202020"
                         android:textSize="16sp"
@@ -425,7 +326,6 @@
                         android:background="@drawable/strip_grad"
                         android:gravity="center_horizontal"
                         android:paddingHorizontal="10dp"
-                        android:text="TAREAS"
                         android:textColor="#FFFFFF"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -434,72 +334,96 @@
                         android:id="@+id/reldet"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/textView26"
-                        android:layout_marginHorizontal="5dp"
-                        android:layout_marginTop="3dp"
-                        android:minHeight="25dp">
+                        android:layout_below="@id/textView26">
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/recview"
+                        <RelativeLayout
+                            android:id="@+id/relserial"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/editTextNumber2"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginBottom="0dp"
+                            android:layout_toEndOf="@+id/textView49">
+
+                            <TextView
+                                android:id="@+id/textView50"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentStart="true"
+                                android:layout_marginStart="0dp"
+                                android:layout_marginEnd="0dp"
+                                android:layout_toStartOf="@+id/imageView52"
+                                android:gravity="center_horizontal"
+                                android:text="# SERIAL"
+                                android:textColor="#202020"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/textView51"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textView50"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginStart="0dp"
+                                android:layout_marginTop="0dp"
+                                android:layout_marginEnd="0dp"
+                                android:layout_marginBottom="0dp"
+                                android:layout_toStartOf="@+id/imageView52"
+                                android:gravity="center|center_horizontal"
+                                android:text="1234567890"
+                                android:textColor="#202020"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <ImageView
+                                android:id="@+id/imageView52"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginStart="3dp"
+                                android:layout_marginTop="3dp"
+                                android:layout_marginEnd="3dp"
+                                android:layout_marginBottom="3dp"
+                                android:adjustViewBounds="true"
+                                android:background="@drawable/frame_btn"
+                                android:clickable="true"
+                                android:longClickable="true"
+                                android:onClick="doScan"
+                                android:padding="8dp"
+                                app:srcCompat="@drawable/btn_barcode" />
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/textView49"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="3dp"
+                            android:text="CANTIDAD"
+                            android:textColor="#202020"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <EditText
+                            android:id="@+id/editTextNumber2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/textView49"
+                            android:layout_alignEnd="@+id/textView49"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginEnd="0dp"
+                            android:ems="10"
+                            android:inputType="number" />
+
                     </RelativeLayout>
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/rell6"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@id/rell5"
-                    android:layout_marginTop="2dp"
-                    android:background="@drawable/frame_rect"
-                    android:paddingBottom="5dp">
-
-                    <TextView
-                        android:id="@+id/textView24"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="1dp"
-                        android:layout_marginTop="1dp"
-                        android:layout_marginEnd="1dp"
-                        android:layout_marginBottom="1dp"
-                        android:background="@drawable/strip_grad"
-                        android:clickable="true"
-                        android:gravity="center_horizontal"
-                        android:onClick="doObserv"
-                        android:paddingHorizontal="10dp"
-                        android:text="OBSERVACION"
-                        android:textColor="#FFFFFF"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <EditText
-                        android:id="@+id/editTextText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/textView24"
-                        android:layout_marginHorizontal="10dp"
-                        android:layout_marginTop="2dp"
-                        android:ems="10"
-                        android:gravity="start|top"
-                        android:inputType="textMultiLine"
-                        android:maxLines="6"
-                        android:minLines="4"
-                        android:paddingBottom="15dp"
-                        android:scrollbars="horizontal" />
 
                 </RelativeLayout>
 
             </RelativeLayout>
         </ScrollView>
 
-        <ProgressBar
-            android:id="@+id/progressBar5"
-            style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Large"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="invisible" />
-
-    </RelativeLayout>
+</RelativeLayout>

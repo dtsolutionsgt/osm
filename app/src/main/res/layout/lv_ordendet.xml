@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="5dp"
         android:layout_marginTop="2dp"
-        android:layout_marginBottom="3dp">
+        android:layout_marginBottom="3dp"
+        android:paddingBottom="5dp">
 
         <TextView
             android:id="@+id/lblV1"
@@ -20,7 +21,7 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="3dp"
             android:ellipsize="middle"
             android:maxLines="2"
             android:text="Medium Text"
@@ -34,18 +35,19 @@
             android:layout_below="@id/lblV1"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="5dp"
+            android:paddingHorizontal="10dp"
             android:text="Medium Text"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/imageView19"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_below="@id/lblV1"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_below="@+id/lblV1"
             android:layout_alignParentStart="true"
             android:layout_marginStart="5dp"
-            android:layout_marginBottom="5dp"
-            app:srcCompat="@drawable/btn_saveb" />
+            app:srcCompat="@drawable/disabled" />
     </RelativeLayout>
 
 

@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="Iniciando\nOrden de Servicio"
+        android:text="Iniciando\nServicio Móvil"
         android:textColor="#202020"
         android:textSize="16sp"
         android:textStyle="bold"

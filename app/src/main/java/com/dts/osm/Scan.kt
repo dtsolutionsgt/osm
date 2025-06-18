@@ -23,7 +23,6 @@ class Scan : PBase() {
     private lateinit var previewView: PreviewView
     private lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider>
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
             super.onCreate(savedInstanceState)

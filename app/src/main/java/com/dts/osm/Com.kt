@@ -1113,6 +1113,7 @@ class Com : PBase() {
                     OrdenencObj?.add(ordenc)
 
                     for (itm in orddetitems!!) {
+                        itm?.activo=0
                         OrdendetObj?.add(itm)
                     }
 
