@@ -223,19 +223,20 @@ class BaseDatosScript(private val vcontext: Context) {
                     ");";
             db?.execSQL(sql);
 
-            sql = "CREATE TABLE [Ordenfoto] (" +
-                    "id INTEGER NOT NULL," +
-                    "idOrden INTEGER NOT NULL," +
-                    "nombre TEXT NOT NULL," +
-                    "nota TEXT NOT NULL," +
-                    "statcom INTEGER NOT NULL," +
-                    "PRIMARY KEY ([id])" +
+            sql="CREATE TABLE [Ordenfoto] ("+
+                    "id INTEGER NOT NULL,"+
+                    "idOrden INTEGER NOT NULL,"+
+                    "idOrdenDet INTEGER NOT NULL,"+
+                    "nombre TEXT NOT NULL,"+
+                    "nota TEXT NOT NULL,"+
+                    "statcom INTEGER NOT NULL,"+
+                    "PRIMARY KEY ([id])"+
                     ");";
             db?.execSQL(sql);
 
-            sql = "CREATE INDEX Ordenfoto_idx1 ON Ordenfoto(idOrden)";db?.execSQL(sql)
-            sql = "CREATE INDEX Ordenfoto_idx2 ON Ordenfoto(statcom)";db?.execSQL(sql)
-
+            sql="CREATE INDEX Ordenfoto_idx1 ON Ordenfoto(idOrden)";db?.execSQL(sql)
+            sql="CREATE INDEX Ordenfoto_idx2 ON Ordenfoto(idOrdenDet)";db?.execSQL(sql)
+            sql="CREATE INDEX Ordenfoto_idx3 ON Ordenfoto(statcom)";db?.execSQL(sql)
 
             sql="CREATE TABLE [Ordenserial] ("+
                     "idorden INTEGER NOT NULL,"+

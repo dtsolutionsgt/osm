@@ -7,6 +7,7 @@ import com.dts.base.BaseDatos
 import com.dts.base.clsClasses
 import com.dts.base.clsClasses.clsOrdenfoto
 
+
 class clsOrdenfotoObj {
 
     var count=0
@@ -77,6 +78,7 @@ class clsOrdenfotoObj {
         ins!!.init("Ordenfoto")
         ins!!.add("id", item.id)
         ins!!.add("idOrden", item.idorden)
+        ins!!.add("idOrdenDet", item.idordendet)
         ins!!.add("nombre", item.nombre)
         ins!!.add("nota", item.nota)
         ins!!.add("statcom", item.statcom)
@@ -86,6 +88,7 @@ class clsOrdenfotoObj {
     private fun updateItem(item: clsOrdenfoto) {
         upd!!.init("Ordenfoto")
         upd!!.add("idOrden", item.idorden)
+        upd!!.add("idOrdenDet", item.idordendet)
         upd!!.add("nombre", item.nombre)
         upd!!.add("nota", item.nota)
         upd!!.add("statcom", item.statcom)
@@ -114,9 +117,10 @@ class clsOrdenfotoObj {
             item = clsOrdenfoto()
             item.id = dt.getInt(0)
             item.idorden = dt.getInt(1)
-            item.nombre = dt.getString(2)
-            item.nota = dt.getString(3)
-            item.statcom = dt.getInt(4)
+            item.idordendet = dt.getInt(2)
+            item.nombre = dt.getString(3)
+            item.nota = dt.getString(4)
+            item.statcom = dt.getInt(5)
             items.add(item)
             dt.moveToNext()
         }
@@ -141,6 +145,7 @@ class clsOrdenfotoObj {
         ins!!.init("Ordenfoto")
         ins!!.add("id", item.id)
         ins!!.add("idOrden", item.idorden)
+        ins!!.add("idOrdenDet", item.idordendet)
         ins!!.add("nombre", item.nombre)
         ins!!.add("nota", item.nota)
         ins!!.add("statcom", item.statcom)
@@ -150,6 +155,7 @@ class clsOrdenfotoObj {
     fun updateItemSql(item: clsOrdenfoto): String? {
         upd!!.init("Ordenfoto")
         upd!!.add("idOrden", item.idorden)
+        upd!!.add("idOrdenDet", item.idordendet)
         upd!!.add("nombre", item.nombre)
         upd!!.add("nota", item.nota)
         upd!!.add("statcom", item.statcom)

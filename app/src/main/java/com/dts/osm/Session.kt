@@ -8,6 +8,8 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.os.StrictMode
 import android.text.InputType
 import android.view.View
@@ -19,9 +21,18 @@ import com.dts.base.clsClasses
 import com.dts.classes.clsSaveposObj
 import com.dts.classes.clsUsuarioObj
 import com.dts.classes.extListDlg
+import com.dts.restapi.HttpCommit
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.IOException
+
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 
 
 class Session : PBase() {
@@ -39,6 +50,8 @@ class Session : PBase() {
 
     var litem: clsClasses.clsLocItem? = null
     var ids: MutableList<Int> = java.util.ArrayList()
+
+    var com : HttpCommit? = null
 
     val vmode = listOf(5,6,7)
     val fdown = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + "")
@@ -124,6 +137,9 @@ class Session : PBase() {
         }
     }
 
+    fun doTest(view: View) {
+        test()
+    }
 
     fun setHandlers() {
         try {
@@ -498,6 +514,59 @@ class Session : PBase() {
         try {
 
         } catch (e: Exception) {}
+    }
+
+
+    fun test() {
+        try {
+            var sqc="UPDATE D_ORDEN_SERVICIO_ENC SET PRIORIDAD=99 WHERE CODIGO_ORDEN_SERVICIO=52;"
+
+            com = HttpCommit(gl?.urlbase+"api/Orden/Commit")
+            com?.commit(sqc, { testcb() })
+
+            //callUpdateApiAsync(sqc)
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
+    }
+
+    fun testcb() {
+        try {
+            if (com?.errflag!!) throw Exception(com?.error)
+
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed( { msgbox("result: OK") }, 200)
+
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
+    }
+
+    fun callUpdateApiAsync(sql: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            callUpdateApi(sql)
+        }
+    }
+
+    fun callUpdateApi(sql: String) {
+        val client = OkHttpClient()
+
+        val json = """{"sql":"$sql"}"""
+        val requestBody = json.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+
+        val request = Request.Builder()
+            .url("http://ec2-52-41-114-122.us-west-2.compute.amazonaws.com:8090/api/Orden/Commit")
+            .post(requestBody)
+            .build()
+
+        client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) {
+                println("Error: ${response.code}")
+            } else {
+                val body = response.body?.string()
+                println("Response: $body")
+            }
+        }
     }
 
     //endregion

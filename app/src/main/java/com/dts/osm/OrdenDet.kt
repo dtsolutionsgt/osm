@@ -79,6 +79,15 @@ class OrdenDet : PBase() {
        msgask(0,"¿Completar tarea?")
     }
 
+    fun doPhoto(view: View) {
+        try {
+            gl?.idordendet=id
+            startActivity(Intent(this,FotoLista::class.java))
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
+    }
+
     fun doExit(view: View) {
         exitItem()
     }
@@ -105,6 +114,7 @@ class OrdenDet : PBase() {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
     }
+
     //endregion
 
     //region Main
@@ -378,7 +388,6 @@ class OrdenDet : PBase() {
 
         return eres
     }
-
 
     //endregion
 

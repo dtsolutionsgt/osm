@@ -47,7 +47,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:clickable="true"
-                    android:onClick="doUbic"
+                    android:onClick="doPhoto"
                     android:padding="8dp"
                     app:srcCompat="@drawable/btn_photo" />
 
@@ -69,8 +69,8 @@
                     android:layout_weight="1"
                     android:clickable="true"
                     android:onClick="doSave"
-                    android:rotation="180"
-                    app:srcCompat="@drawable/arr_back" />
+                    android:rotation="0"
+                    app:srcCompat="@drawable/btn_save_blue" />
             </LinearLayout>
         </RelativeLayout>
 

@@ -35,6 +35,7 @@ class appGlobals : Application() {
     var iduser=0
     var idrol=""
     var idorden=0
+    var idordendet=0
     var idfoto=""
     var idordfoto=0
     var modoapp=0
@@ -62,6 +63,8 @@ class appGlobals : Application() {
     val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
 
     val wsurl = "http://52.41.114.122/MPosWS_QA/Mposws.asmx"
+    val apiurlbase = "http://ec2-52-41-114-122.us-west-2.compute.amazonaws.com:8090/"
+
     val timeout = 6000
 
     override fun onCreate() {
@@ -91,6 +94,7 @@ class appGlobals : Application() {
             savedInstanceState.putInt("gint3", gint3)
             savedInstanceState.putInt("iduser", iduser)
             savedInstanceState.putInt("idorden", idorden)
+            savedInstanceState.putInt("idordendet", idordendet)
             savedInstanceState.putInt("idordfoto", idordfoto)
             savedInstanceState.putInt("modoapp", modoapp)
 
@@ -134,6 +138,7 @@ class appGlobals : Application() {
             gint3 = savedInstanceState.getInt("gint3")
             iduser = savedInstanceState.getInt("iduser")
             idorden = savedInstanceState.getInt("idorden")
+            idordendet = savedInstanceState.getInt("idordendet")
             idordfoto = savedInstanceState.getInt("idordfoto")
             modoapp = savedInstanceState.getInt("modoapp")
 

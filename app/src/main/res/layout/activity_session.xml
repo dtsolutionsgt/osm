@@ -203,4 +203,13 @@
         android:visibility="invisible"
         app:rippleColor="#241D1D" />
 
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reltop"
+        android:layout_marginTop="10dp"
+        android:onClick="doTest"
+        android:text="Button" />
+
 </RelativeLayout>

@@ -25,7 +25,6 @@ class DibujoActivity : PBase() {
     var deshacerButton: ImageView? = null
 
     var OrdenfotoObj: clsOrdenfotoObj? = null
-    var EnvioimagenObj: clsEnvioimagenObj? = null
 
     var item = clsClasses.clsOrdenfoto()
 
@@ -76,8 +75,6 @@ class DibujoActivity : PBase() {
                     finish()
                 }
             }
-
-            EnvioimagenObj = clsEnvioimagenObj(this, Con!!, db!!)
 
             setHandlers()
         } catch (e: Exception) {
@@ -217,13 +214,6 @@ class DibujoActivity : PBase() {
             intent.putExtra("imagePath", imagePath)
             setResult(RESULT_OK, intent)
 
-            var eiitem = clsClasses.clsEnvioimagen(item?.nombre!!, 0)
-            try {
-                EnvioimagenObj?.add(eiitem)
-            } catch (e: Exception) {
-                EnvioimagenObj?.update(eiitem)
-            }
-
             finish()
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
@@ -252,7 +242,6 @@ class DibujoActivity : PBase() {
             super.onResume()
 
             OrdenfotoObj?.reconnect(Con!!, db!!)
-            EnvioimagenObj?.reconnect(Con!!,db!!)
 
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)

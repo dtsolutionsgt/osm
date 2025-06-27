@@ -285,6 +285,7 @@ class clsClasses {
     data class clsOrdenfoto (
         var id : Int = 0,
         var idorden : Int = 0,
+        var idordendet : Int = 0,
         var nombre : String = "",
         var nota : String = "",
         var statcom : Int = 0,

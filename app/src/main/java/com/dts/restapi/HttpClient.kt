@@ -8,7 +8,7 @@ import okhttp3.Response
 import org.json.JSONArray
 import java.io.IOException
 
-class HttpClient {
+class HttpClient() {
 
     var url=""
     var params=""

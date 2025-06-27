@@ -41,6 +41,7 @@ class FotoLista : PBase() {
 
     var selitem= clsClasses.clsOrdenfoto()
     var idorden=0
+    var idordendet=0
     var ssql=""
     var idle=true
 
@@ -60,6 +61,7 @@ class FotoLista : PBase() {
             pbar = findViewById(R.id.progressBar3)
 
             idorden=gl?.idorden!!
+            idordendet=gl?.idordendet!!
             gl?.changed=false
 
             http = HttpClient()
@@ -140,7 +142,8 @@ class FotoLista : PBase() {
 
     fun listItems() {
         try {
-            OrdenfotoObj?.fill("WHERE (idOrden="+idorden+") AND (nombre NOT LIKE '%FIRMA%') ORDER BY id DESC")
+            OrdenfotoObj?.fill("WHERE (idOrden="+idorden+") AND (idOrdendet="+idordendet+") AND " +
+                    "(nombre NOT LIKE '%FIRMA%') ORDER BY id DESC")
             adapter = LA_FotoAdapter(OrdenfotoObj?.items!!,gl?.picdir!!, OrdenfotoObj!!)
             recview?.adapter = adapter
 
@@ -158,6 +161,7 @@ class FotoLista : PBase() {
             var item = clsClasses.clsOrdenfoto()
             item.id = newid!!
             item.idorden = idorden
+            item.idordendet = idordendet
             item.nombre = gl?.idfoto!!
             item.nota = ""
             item.statcom = 0
@@ -265,6 +269,7 @@ class FotoLista : PBase() {
     fun addItemSql(item: clsClasses.clsOrdenfoto): String? {
         ins!!.init("D_ORDEN_SERVICIO_FOTO")
         ins!!.add("CODIGO_ORDEN_SERVICIO", item.idorden)
+        if (item.idordendet>0) ins!!.add("CODIGO_ORDEN_SERVICIO_DET", item.idordendet)
         ins!!.add("DESCRIPCION", item.nombre)
         ins!!.add("NOTA", item.nota)
         return ins!!.sql()

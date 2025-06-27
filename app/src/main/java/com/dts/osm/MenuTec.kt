@@ -185,8 +185,7 @@ class MenuTec : PBase() {
             TiposervicioObj?.fill()
             ClienteObj?.fill()
 
-            OrdenencObj?.fill("WHERE (idestado in (2,3,4,8))  ORDER BY Numero")
-            //OrdenencObj?.fill("WHERE (idUsuario="+gl?.iduser!!+") AND (idestado in (2,3,4,8)) ORDER BY Numero")
+            OrdenencObj?.fill("WHERE (idestado in (2,3,4,5,6))  ORDER BY Numero")
 
             pend=0
 
@@ -205,8 +204,10 @@ class MenuTec : PBase() {
                     //if (ord.idestado!=5) pend++
                 }
 
-                if (item.idestado==listmode) {
-                    items.add(item)
+                when (listmode) {
+                    3 -> { if (item.idestado<=3) items.add(item) }
+                    4 -> { if (item.idestado==4) items.add(item) }
+                    5 -> { if (item.idestado in 5..6 ) items.add(item) }
                 }
 
                 when (item.idestado) {
@@ -228,11 +229,15 @@ class MenuTec : PBase() {
 
     fun abrirOrden() {
         try {
+            startActivity(Intent(this,Orden::class.java))
+
+            /*
             when (listmode) {
                 3 -> { msgask(0,1,"¿Iniciar servicio?") }
                 4 -> { startActivity(Intent(this,Orden::class.java)) }
                 5 -> { startActivity(Intent(this,Orden::class.java)) }
             }
+            */
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
@@ -247,11 +252,22 @@ class MenuTec : PBase() {
             encitem?.idestado=4
             OrdenencObj?.update(encitem)
 
-            var capitem=OrdenenccapObj?.first()
+            cargaCap()
 
-            capitem?.fechaini=du?.actDateTime!!
+            var cap=OrdenenccapObj?.first()!!
 
-            OrdenenccapObj?.update(capitem)
+            cap.activa=1
+            cap.cerrada=0
+            cap.latit=gl?.gpslat!!
+            cap.longit=gl?.gpslong!!
+            cap.fechaini=du?.actDateTime!!
+            var fia=cap.fechaini;
+            cap.nota=""
+            cap.recibido=0
+
+            OrdenenccapObj?.update(cap)
+
+
 
             listItems()
 
@@ -313,6 +329,26 @@ class MenuTec : PBase() {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
         return "-"
+    }
+
+    fun cargaCap() {
+
+        try {
+            var ocap= clsClasses.clsOrdenenccap(gl?.idorden!!, 0, 1, 8, "", "", 0.0, 0.0, 0L, 0L, "", 0)
+            OrdenenccapObj?.add(ocap)
+        } catch (e: Exception) {  }
+
+        try {
+            OrdenenccapObj?.fill("WHERE idorden="+gl?.idorden)
+            var cap=OrdenenccapObj?.first()!!
+
+            gl?.gpslat=cap?.latit!!
+            gl?.gpslong=cap?.longit!!
+
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
+
     }
 
     fun registrosOffline() {

@@ -67,8 +67,7 @@
                     android:layout_weight="1"
                     android:clickable="true"
                     android:onClick="doNext"
-                    android:rotation="180"
-                    app:srcCompat="@drawable/arr_back" />
+                    app:srcCompat="@drawable/arr_next" />
             </LinearLayout>
         </RelativeLayout>
 
@@ -96,7 +95,7 @@
                 android:adjustViewBounds="true"
                 android:clickable="true"
                 android:onClick="doDelete"
-                android:padding="8dp"
+                android:padding="12dp"
                 app:srcCompat="@drawable/delete" />
 
             <TextView
@@ -490,6 +489,13 @@
                         android:scrollbars="horizontal" />
 
                 </RelativeLayout>
+
+                <Button
+                    android:id="@+id/button3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="doButton"
+                    android:text="Button" />
 
             </RelativeLayout>
         </ScrollView>

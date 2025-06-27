@@ -31,6 +31,7 @@ import com.dts.classes.clsClientedirObj
 import com.dts.classes.clsEnvioimagenObj
 import com.dts.classes.clsEstadoordenObj
 import com.dts.classes.clsExistenciaObj
+import com.dts.classes.clsOrdenUpdate
 import com.dts.classes.clsOrdendetObj
 import com.dts.classes.clsOrdenencObj
 import com.dts.classes.clsOrdenenccapObj
@@ -100,6 +101,7 @@ class Orden : PBase() {
     var fbsc : fbServicio? = null
 
     var fbsItem = clsClasses.clsFbServicio()
+    var updord : clsOrdenUpdate? = null
 
     lateinit var fusedLocationClient: FusedLocationProviderClient
 
@@ -187,8 +189,8 @@ class Orden : PBase() {
                 msgbox("¡Falta la firma!")
             } else {
                 when (validaDetalle()) {
-                    1 -> { msgask(1,"Completar servicio?") }
-                    0 -> { msgask(5,"Continuar sin aplicar todo material?") }
+                    1 -> { msgask(1,"¿Completar servicio?") }
+                    0 -> { msgask(5,"¿Completar servicio sin completar todas las tareas?") }
                    -1 -> { return }
                 }
 
@@ -201,6 +203,7 @@ class Orden : PBase() {
     fun doPhoto(view: View) {
         if (idestado==8) return
         try {
+            gl?.idordendet=0
             startActivity(Intent(this,FotoLista::class.java))
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
@@ -227,7 +230,7 @@ class Orden : PBase() {
     }
 
     fun doDelete(view: View) {
-        msgask(2,"Borrar servicio?")
+        showDelMenu()
     }
 
     fun doWaze(view: View) {
@@ -288,6 +291,13 @@ class Orden : PBase() {
 
         finish()
     }
+
+
+
+    fun doButton(view: View) {
+        testUpdate()
+    }
+
 
     fun setHandlers() {
         try {
@@ -512,6 +522,8 @@ class Orden : PBase() {
             enc.idestado=4
             OrdenencObj?.update(enc)
 
+            cargaCap()
+
             cap.activa=1
             cap.cerrada=0
             cap.latit=gl?.gpslat!!
@@ -553,6 +565,8 @@ class Orden : PBase() {
             enc.idestado=5
             OrdenencObj?.update(enc)
 
+            cargaCap()
+
             cap.activa=1
             cap.cerrada=1
             cap.fechafin=du?.actDateTime!!
@@ -591,6 +605,62 @@ class Orden : PBase() {
             }
 
             fbsItem.estado = "Completo"
+            fbsItem.fin = du?.actDateTime!!
+
+            fbsa?.delItem(fbsItem.id)
+            fbsc?.setItem(fbsItem!!)
+
+        } catch (e: java.lang.Exception) {
+            db!!.endTransaction()
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
+        }
+    }
+
+    fun cerrarOrden() {
+        try {
+            db!!.beginTransaction()
+
+            enc.idestado=6
+            OrdenencObj?.update(enc)
+
+            cargaCap()
+
+            cap.activa=0
+            cap.cerrada=1
+            cap.fechafin=du?.actDateTime!!
+            cap.nota=""+txt1?.text?.toString()!!
+            cap.recibido=0
+
+            OrdenenccapObj?.update(cap)
+
+            db!!.setTransactionSuccessful()
+            db!!.endTransaction()
+
+            idestado=enc.idestado
+            mostrarEstado()
+
+            var commitflag=false
+
+            var fs=du?.univfecha(du?.actDateTime!!)
+            var sqle=app?.buildEncUpdate(cap,enc.idestado,fs!!)!!+";"
+            var sqld=updateDetaille()
+            var sqls=updateSerial()
+
+            sql=sqle
+            if (sqld!="#") {
+                sql=sql+sqld;commitflag=true
+            }
+            if (sqls!="#") {
+                sql=sql+sqls;commitflag=true
+            }
+
+            if (commitflag) {
+                sendCommit(sql!!)
+            } else {
+                sendUpdate(sqle!!,"",true)
+            }
+
+            fbsItem.estado = "Cerrado"
             fbsItem.fin = du?.actDateTime!!
 
             fbsa?.delItem(fbsItem.id)
@@ -650,6 +720,8 @@ class Orden : PBase() {
             db!!.setTransactionSuccessful()
             db!!.endTransaction()
 
+            fbsa?.delItem(idorden)
+
             for (itm in fotos) {
                 var ffile = File(gl?.picdir.toString()+itm.toString())
                 try {
@@ -707,7 +779,7 @@ class Orden : PBase() {
                 } catch (e: Exception) {}
             }
 
-            sendUpdateAnul("UPDATE D_ORDEN_SERVICIO_ENC SET CODIGO_ESTADO_ORDEN_SERVICIO=1 " +
+            sendUpdateAnul("UPDATE D_ORDEN_SERVICIO_ENC SET CODIGO_ESTADO_ORDEN_SERVICIO=6 " +
                     "WHERE (CODIGO_ORDEN_SERVICIO="+idorden+")")
 
             try {
@@ -719,7 +791,7 @@ class Orden : PBase() {
                 msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
             }
 
-            toast("Orden anulada.")
+            toast("Servicio cerrado.")
 
             actualizaImagenes()
             finish()
@@ -825,11 +897,14 @@ class Orden : PBase() {
 
     fun resetEstadoDetalle() {
         try {
+            /*
             ditems.get(saveselidx).realizado=0
             OrdendetObj?.update(ditems.get(saveselidx))
             adapter?.notifyDataSetChanged()
 
             db?.execSQL("DELETE FROM Ordenserial WHERE (idordendet="+gl?.gint2+")")
+
+             */
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
@@ -1060,6 +1135,8 @@ class Orden : PBase() {
                 5 -> { msgask(6,"Está seguro?") }
                 6 -> { completarOrden() }
                 7 -> { iniciaEstadoDetalle() }
+                8 -> { msgask(9,"Está seguro?") }
+                9 -> { cerrarOrden() }
             }
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
@@ -1098,6 +1175,34 @@ class Orden : PBase() {
             }
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
+    }
+
+    fun showDelMenu() {
+        try {
+            val listdlg = extListDlg();
+
+            listdlg.buildDialog(this@Orden, "Opciones")
+            listdlg.setLines(2)
+            listdlg.setWidth(-1)
+            listdlg.setCenterScreenPosition()
+
+            listdlg.addData(1,"Borrar")
+            listdlg.addData(2,"Cerrar")
+
+            listdlg.clickListener= Runnable {
+                processItemMenu(listdlg.selcodint)
+                when (listdlg.selcodint) {
+                    1 -> { msgask(2,"Borrar servicio?") }
+                    2 -> { msgask(8,"Cerrar servicio?") }
+                }
+
+            }
+
+            listdlg.setOnLeftClick { v: View? -> listdlg.dismiss() }
+            listdlg.show()
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
         }
     }
 
@@ -1199,16 +1304,20 @@ class Orden : PBase() {
     }
 
     fun aplicaEstado() {
-        val estlist=listOf(2,3,4,8)
+        val estlist=listOf(2,3,4)
         var vis=false
+
         if (idestado in estlist) vis=true
         imgnext?.isVisible=vis
+
         if (idestado==4) {
             imgfoto?.setImageResource(R.drawable.btn_photo)
             imgsign?.setImageResource(R.drawable.btn_sign)
+            imgnext?.setImageResource(R.drawable.btn_save_blue)
         } else {
             imgfoto?.setImageResource(R.drawable.blank)
             imgsign?.setImageResource(R.drawable.blank)
+            imgnext?.setImageResource(R.drawable.arr_next)
         }
     }
 
@@ -1363,6 +1472,30 @@ class Orden : PBase() {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
     }
+
+
+    fun testUpdate() {
+        try {
+            updord =clsOrdenUpdate(this, gl?.wsurl!! ,Con!!, db!!)
+
+            updord?.updateOrden(idorden, { receiveTestUpdate() })
+
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
+    }
+
+    fun receiveTestUpdate() {
+        try {
+            if (updord?.errflag!!) throw Exception(updord?.error!!)
+
+            msgbox("OK")
+
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
+    }
+
 
     //endregion
 

@@ -174,9 +174,9 @@ class FotoDetalle : PBase() {
 
             var eiitem = clsClasses.clsEnvioimagen(item?.nombre!!, 0)
             try {
-                EnvioimagenObj?.add(eiitem)
+                //EnvioimagenObj?.add(eiitem)
             } catch (e: Exception) {
-                EnvioimagenObj?.update(eiitem)
+                //EnvioimagenObj?.update(eiitem)
             }
 
             val sharedPref = getSharedPreferences("FotoPrefs", Context.MODE_PRIVATE)
