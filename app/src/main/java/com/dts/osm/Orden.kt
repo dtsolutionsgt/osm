@@ -32,6 +32,7 @@ import com.dts.classes.clsEnvioimagenObj
 import com.dts.classes.clsEstadoordenObj
 import com.dts.classes.clsExistenciaObj
 import com.dts.classes.clsOrdenUpdate
+import com.dts.classes.clsOrdenUpdateWS
 import com.dts.classes.clsOrdendetObj
 import com.dts.classes.clsOrdenencObj
 import com.dts.classes.clsOrdenenccapObj
@@ -1475,11 +1476,10 @@ class Orden : PBase() {
 
 
     fun testUpdate() {
+
         try {
-            updord =clsOrdenUpdate(this, gl?.wsurl!! ,Con!!, db!!)
-
+            updord =clsOrdenUpdate(this, gl?.urlbase!! ,Con!!, db!!)
             updord?.updateOrden(idorden, { receiveTestUpdate() })
-
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
@@ -1489,10 +1489,13 @@ class Orden : PBase() {
         try {
             if (updord?.errflag!!) throw Exception(updord?.error!!)
 
-            msgbox("OK")
-
+            Thread {
+                Handler(Looper.getMainLooper()).post {msgbox("OK") }
+            }.start()
         } catch (e: Exception) {
-            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+            Thread { Handler(Looper.getMainLooper()).post {
+                msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+            } }.start()
         }
     }
 

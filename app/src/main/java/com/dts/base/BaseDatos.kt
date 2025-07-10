@@ -105,6 +105,17 @@ class BaseDatos(context: Context, dbname: String?) : SQLiteOpenHelper(context, d
             }
         }
 
+        fun add(pField: String, pValue: Long) {
+            val SV: String
+            try {
+                if (pField=="") return
+                SV = pValue.toString()
+                clFList.add(pField)
+                clVList.add(SV)
+            } catch (e: Exception) {
+            }
+        }
+
         fun add(pField: String, pValue: Double) {
             val SV: String
             try {
@@ -206,6 +217,16 @@ class BaseDatos(context: Context, dbname: String?) : SQLiteOpenHelper(context, d
         }
 
         fun add(pField: String, pValue: Double) {
+            val SV: String
+            try {
+                if (pField === "") return
+                SV = pValue.toString()
+                clFList.add("$pField = $SV")
+            } catch (e: Exception) {
+            }
+        }
+
+        fun add(pField: String, pValue: Long) {
             val SV: String
             try {
                 if (pField === "") return

@@ -210,6 +210,7 @@
         android:layout_below="@+id/reltop"
         android:layout_marginTop="10dp"
         android:onClick="doTest"
-        android:text="Button" />
+        android:text="Button"
+        android:visibility="invisible" />
 
 </RelativeLayout>
