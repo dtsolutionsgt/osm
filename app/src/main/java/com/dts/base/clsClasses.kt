@@ -302,6 +302,7 @@ class clsClasses {
         var estado : String = "",
         var idestado : Int = 0,
         var user : String = "",
+        var enviado : Boolean = false
     )
 
     data class clsOrdenserial (

@@ -187,10 +187,6 @@ class FotoDetalle : PBase() {
         }
     }
 
-
-
-
-
     private fun saveImageAndSendToDB() {
         try {
             if (bitmap == null) {

@@ -1,6 +1,5 @@
 package com.dts.osm
 
-import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -95,8 +94,13 @@ class Firma: PBase() {
 
             val bitmap = signatureView?.getBitmap()
 
-            val fileGallery = File(gl?.picdir, signname)
-            val outputStreamGallery = FileOutputStream(fileGallery)
+            val signfile = File(gl?.picdir, signname)
+
+            try {
+                if (signfile.exists()) signfile.delete()
+            } catch (e: Exception) { }
+
+            val outputStreamGallery = FileOutputStream(signfile)
             bitmap?.compress(Bitmap.CompressFormat.JPEG, 80, outputStreamGallery)
             outputStreamGallery.flush()
             outputStreamGallery.close()

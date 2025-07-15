@@ -87,9 +87,9 @@ class clsOrdenUpdate {
             upd!!.init("D_ORDEN_SERVICIO_ENC")
 
             upd!!.add("CODIGO_ESTADO_ORDEN_SERVICIO", eitem.idestado)
-            upd!!.add("OBSERVACION", citem.nota)
-            upd!!.add("HORA_INICIO_HH", univfecha(citem.fechaini))
-            upd!!.add("HORA_FIN_HH", univfecha(citem.fechafin))
+            upd!!.add("OBSERVACION", citem.nota+" ")
+            if (citem.fechaini>0) upd!!.add("HORA_INICIO_HH", univfecha(citem.fechaini))
+            if (citem.fechafin>0) upd!!.add("HORA_FIN_HH", univfecha(citem.fechafin))
             upd!!.add("COORDENADA_X", citem.latit)
             upd!!.add("COORDENADA_Y", citem.longit)
 
@@ -98,6 +98,20 @@ class clsOrdenUpdate {
             items.add(upd!!.sql())
 
             for (itm in OrdendetObj?.items!!) {
+
+                upd!!.init("D_ORDEN_SERVICIO_DET")
+
+                upd!!.add("CANTIDAD", itm.cant)
+                upd!!.add("ACTIVO", itm.activo)
+                upd!!.add("REALIZADO", itm.realizado)
+                if (itm.idnoaten>0) upd!!.add("CODIGO_NO_ATENCION", itm.idnoaten)
+                if (itm.horaini>0) upd!!.add("HORA_INI", univfecha(itm.horaini))
+                if (itm.horafin>0) upd!!.add("HORA_FINAL", univfecha(itm.horafin))
+                upd!!.add("SERIAL", itm.serial+"")
+
+                upd!!.Where("(CODIGO_ORDEN_SERVICIO_DET=" + itm.id + ")")
+
+                items.add(upd!!.sql())
 
             }
 
@@ -111,21 +125,6 @@ class clsOrdenUpdate {
             error = object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message
             return false
         }
-    }
-
-
-    fun updateEncSql(item: clsOrdenenc): String? {
-
-        upd!!.init("Ordenenc")
-
-        upd!!.add("idEstado", item.idestado)
-        upd!!.add("observacion", item.descripcion)
-        upd!!.add("fecha_cierre", item.fecha_cierre.toDouble())
-        upd!!.add("hora_ini", item.hora_ini.toDouble())
-        upd!!.add("hora_fin", item.hora_fin.toDouble())
-
-        upd!!.Where("(idOrden=" + item.idorden + ")")
-        return upd!!.sql()
     }
 
     private fun sendUpdate() : Boolean {

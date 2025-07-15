@@ -116,7 +116,7 @@
                 android:adjustViewBounds="true"
                 android:clickable="true"
                 android:onClick="doAnul"
-                android:padding="8dp"
+                android:padding="12dp"
                 app:srcCompat="@drawable/disabled_white" />
 
         </RelativeLayout>

@@ -59,6 +59,7 @@ class LA_OrdenAdapter(val itemList: ArrayList<clsOrdenlist>) : RecyclerView.Adap
             val lblcli = itemView.findViewById(R.id.textViewUsername2) as TextView
             val lblfecha = itemView.findViewById(R.id.textViewUsername3) as TextView
             val lblest = itemView.findViewById(R.id.textViewUsername4) as TextView
+            val imgsent = itemView.findViewById(R.id.imageView54) as ImageView
             lay = itemView.findViewById(R.id.relitem) as LinearLayout
 
             lblnum.text = mitem.numero+"  "
@@ -67,12 +68,15 @@ class LA_OrdenAdapter(val itemList: ArrayList<clsOrdenlist>) : RecyclerView.Adap
             lblfecha.text = mitem.fecha
             lblest.text = mitem.estado
 
+            imgsent.isVisible=mitem.enviado
+
             var eres=R.drawable.color_gray_grad
             if (mitem.idestado==4) {
                 eres=R.drawable.color_ocra_grad
             } else if (mitem.idestado==5) {
                 eres=R.drawable.color_green_grad
             }
+
             lblest.setBackgroundResource(eres)
         }
 

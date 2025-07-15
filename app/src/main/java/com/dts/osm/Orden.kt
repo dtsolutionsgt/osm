@@ -185,6 +185,9 @@ class Orden : PBase() {
     //region Events
 
     fun doNext(view: View) {
+
+        capturaGPS()
+
         if (idestado==4) {
             if (!tieneFirma()) {
                 msgbox("¡Falta la firma!")
@@ -274,7 +277,6 @@ class Orden : PBase() {
     fun doExit(view: View) {
         try {
             cap.nota=""+txt1?.text?.toString()!!
-            cap.recibido=0
             OrdenenccapObj?.update(cap)
         } catch (e: java.lang.Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
@@ -292,13 +294,6 @@ class Orden : PBase() {
 
         finish()
     }
-
-
-
-    fun doButton(view: View) {
-        testUpdate()
-    }
-
 
     fun setHandlers() {
         try {
@@ -490,30 +485,14 @@ class Orden : PBase() {
             OrdenenccapObj?.fill("WHERE idorden="+idorden)
             cap=OrdenenccapObj?.first()!!
 
-            gl?.gpslat=cap?.latit!!
-            gl?.gpslong=cap?.longit!!
+            //gl?.gpslat=cap?.latit!!
+            //gl?.gpslong=cap?.longit!!
 
             txt1?.setText(""+cap.nota.toString()!!)
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
 
-    }
-
-    fun gpsCap() {
-        try {
-            OrdenenccapObj?.fill("WHERE idorden="+idorden)
-            cap=OrdenenccapObj?.first()!!
-
-            cap?.latit=gl?.gpslat!!
-            cap?.longit=gl?.gpslong!!
-
-            OrdenenccapObj?.update(cap)
-
-            toast("Coordenadas capturadas.")
-        } catch (e: Exception) {
-            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
-        }
     }
 
     fun iniciarOrden() {
@@ -532,7 +511,6 @@ class Orden : PBase() {
             cap.fechaini=du?.actDateTime!!
             var fia=cap.fechaini;lbl11?.text="Inicio atención: "+du?.shora(fia!!).toString()
             cap.nota=""+txt1?.text?.toString()!!
-            cap.recibido=0
 
             OrdenenccapObj?.update(cap)
 
@@ -546,13 +524,12 @@ class Orden : PBase() {
             sql=app?.buildEncUpdate(cap,enc.idestado,fs!!)!!
             var csql=buildCoordUpdate(cap)
 
-            sendUpdate(sql!!,csql,false)
+            //sendUpdate(sql!!,csql,false)
 
             fbsItem.estado = "En proceso"
             fbsItem.inicio = du?.actDateTime!!
             fbsa?.setItem(fbsItem!!)
 
-            capturaGPS()
         } catch (e: java.lang.Exception) {
             db!!.endTransaction()
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
@@ -572,7 +549,8 @@ class Orden : PBase() {
             cap.cerrada=1
             cap.fechafin=du?.actDateTime!!
             cap.nota=""+txt1?.text?.toString()!!
-            cap.recibido=0
+            cap.latit=gl?.gpslat!!
+            cap.longit=gl?.gpslong!!
 
             OrdenenccapObj?.update(cap)
 
@@ -584,26 +562,7 @@ class Orden : PBase() {
             idestado=enc.idestado
             mostrarEstado()
 
-            var commitflag=false
-
-            var fs=du?.univfecha(du?.actDateTime!!)
-            var sqle=app?.buildEncUpdate(cap,enc.idestado,fs!!)!!+";"
-            var sqld=updateDetaille()
-            var sqls=updateSerial()
-
-            sql=sqle
-            if (sqld!="#") {
-                sql=sql+sqld;commitflag=true
-            }
-            if (sqls!="#") {
-                sql=sql+sqls;commitflag=true
-            }
-
-            if (commitflag) {
-                sendCommit(sql!!)
-            } else {
-                sendUpdate(sqle!!,"",true)
-            }
+            sendOrdenCompleto()
 
             fbsItem.estado = "Completo"
             fbsItem.fin = du?.actDateTime!!
@@ -630,7 +589,6 @@ class Orden : PBase() {
             cap.cerrada=1
             cap.fechafin=du?.actDateTime!!
             cap.nota=""+txt1?.text?.toString()!!
-            cap.recibido=0
 
             OrdenenccapObj?.update(cap)
 
@@ -640,6 +598,8 @@ class Orden : PBase() {
             idestado=enc.idestado
             mostrarEstado()
 
+            sendOrdenCompleto()
+            /*
             var commitflag=false
 
             var fs=du?.univfecha(du?.actDateTime!!)
@@ -660,6 +620,7 @@ class Orden : PBase() {
             } else {
                 sendUpdate(sqle!!,"",true)
             }
+            */
 
             fbsItem.estado = "Cerrado"
             fbsItem.fin = du?.actDateTime!!
@@ -915,6 +876,33 @@ class Orden : PBase() {
 
     //region Envio
 
+    fun sendOrdenCompleto() {
+        try {
+            updord =clsOrdenUpdate(this, gl?.urlbase!! ,Con!!, db!!)
+            updord?.updateOrden(idorden, { cbOrdenCompleto() })
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+        }
+    }
+
+    fun cbOrdenCompleto() {
+        try {
+            if (updord?.errflag!!) throw Exception(updord?.error!!)
+
+            Thread {
+                Handler(Looper.getMainLooper()).post {
+                    updateEstadoEnvio()
+                }
+            }.start()
+
+        } catch (e: Exception) {
+            Thread { Handler(Looper.getMainLooper()).post {
+                msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
+            } }.start()
+        }
+
+    }
+
     fun sendUpdate(usql:String,csql:String,close: Boolean) {
         try {
             sqlsave=usql
@@ -1005,6 +993,7 @@ class Orden : PBase() {
     fun updateEstadoEnvio() {
         try {
             cap.activa = 2
+            cap.recibido = 1
             OrdenenccapObj?.update(cap)
 
             actualizaImagenes()
@@ -1144,27 +1133,6 @@ class Orden : PBase() {
         }
     }
 
-    fun showItemMenu() {
-        try {
-            val listdlg = extListDlg();
-
-            listdlg.buildDialog(this@Orden, "Opciones")
-            listdlg.setLines(2)
-            listdlg.setWidth(-1)
-            listdlg.setCenterScreenPosition()
-
-            listdlg.addData(1,"Modificar")
-            listdlg.addData(2,"Marcar como no aplicado")
-
-            listdlg.clickListener= Runnable { processItemMenu(listdlg.selcodint) }
-
-            listdlg.setOnLeftClick { v: View? -> listdlg.dismiss() }
-            listdlg.show()
-        } catch (e: Exception) {
-            msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
-        }
-    }
-
     fun processItemMenu(menuidx:Int) {
         try {
             when (menuidx) {
@@ -1188,16 +1156,15 @@ class Orden : PBase() {
             listdlg.setWidth(-1)
             listdlg.setCenterScreenPosition()
 
-            listdlg.addData(1,"Borrar")
-            listdlg.addData(2,"Cerrar")
+            listdlg.addData(2,"Cerrar orden")
+            listdlg.addData(1,"Borrar orden")
 
             listdlg.clickListener= Runnable {
-                processItemMenu(listdlg.selcodint)
+                //processItemMenu(listdlg.selcodint)
                 when (listdlg.selcodint) {
                     1 -> { msgask(2,"Borrar servicio?") }
                     2 -> { msgask(8,"Cerrar servicio?") }
                 }
-
             }
 
             listdlg.setOnLeftClick { v: View? -> listdlg.dismiss() }
@@ -1205,60 +1172,6 @@ class Orden : PBase() {
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name + " . " + e.message)
         }
-    }
-
-    fun showInputDialog(text: String,title: String,message: String="" ) {
-        try {
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle(title)
-            if (message.isNotBlank()) builder.setMessage(message)
-
-            val input = EditText(this)
-            builder.setView(input)
-            input?.setText(text)
-            input?.selectAll();input?.setSelection(text?.length!!);input?.requestFocus()
-
-            builder.setPositiveButton("OK") { _, _ ->
-                val text = input.text.toString()
-                observ=text
-                //updateObserv()
-            }
-            builder.setNegativeButton("Salir") { _, _ -> }
-
-            builder.show()
-        } catch (e: Exception) {
-            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
-        }
-    }
-
-    fun showLargeTextInputDialog(context: Context, title: String, stext: String, onTextSubmitted: (String) -> Unit) {
-        val layout = LinearLayout(context).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(50, 20, 50, 20)
-        }
-
-        val inputEditText = EditText(context).apply {
-            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
-            minLines = 5
-            maxLines = 10
-            isSingleLine = false
-            setText(stext)
-            setSelection(stext.length)
-        }
-
-        layout.addView(inputEditText)
-
-        AlertDialog.Builder(context)
-            .setTitle(title)
-            .setView(layout)
-            .setPositiveButton("Aplicar") { dialog, _ ->
-                onTextSubmitted(inputEditText.text.toString())
-                dialog.dismiss()
-            }
-            .setNegativeButton("Salir") { dialog, _ -> dialog.cancel() }
-            .show()
-
-        inputEditText.requestFocus()
     }
 
     //endregion
@@ -1309,7 +1222,9 @@ class Orden : PBase() {
         var vis=false
 
         if (idestado in estlist) vis=true
+        vis=true
         imgnext?.isVisible=vis
+
 
         if (idestado==4) {
             imgfoto?.setImageResource(R.drawable.btn_photo)
@@ -1458,7 +1373,6 @@ class Orden : PBase() {
                         location?.let {
                             gl?.gpslong= it.longitude
                             gl?.gpslat=it.latitude
-                            gpsCap()
 
                         } ?: run {
                             msgbox("No se pudo obtener ubicación")
@@ -1473,7 +1387,6 @@ class Orden : PBase() {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
     }
-
 
     fun testUpdate() {
 
@@ -1498,7 +1411,6 @@ class Orden : PBase() {
             } }.start()
         }
     }
-
 
     //endregion
 

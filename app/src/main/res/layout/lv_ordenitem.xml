@@ -120,6 +120,14 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
+            <ImageView
+                android:id="@+id/imageView54"
+                android:layout_width="36dp"
+                android:layout_height="32dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="5dp"
+                app:srcCompat="@drawable/check_double" />
+
         </RelativeLayout>
     </LinearLayout>
 

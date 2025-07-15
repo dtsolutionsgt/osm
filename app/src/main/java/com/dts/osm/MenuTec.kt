@@ -47,7 +47,6 @@ class MenuTec : PBase() {
     var items = ArrayList<clsClasses.clsOrdenlist>()
 
     var saveselidx=-1
-    var afecha=0L
     var idle=false
     var listmode=0
     var tproc=0;var tpend=0;var tcomp=0
@@ -199,15 +198,15 @@ class MenuTec : PBase() {
                 item.fecha = du?.sfecha(ord.fecha).toString()+" "+du?.shora(ord.hora_ini).toString()
                 item.estado = nombreEstado(ord.idestado)
                 item.idestado = ord.idestado
-
-                if (ord.idestado>0) {
-                    //if (ord.idestado!=5) pend++
-                }
+                item.enviado = false
 
                 when (listmode) {
                     3 -> { if (item.idestado<=3) items.add(item) }
                     4 -> { if (item.idestado==4) items.add(item) }
-                    5 -> { if (item.idestado in 5..6 ) items.add(item) }
+                    5 -> { if (item.idestado in 5..6 ) {
+                        items.add(item)
+                        item.enviado =estadoEncio(item.idorden)
+                    } }
                 }
 
                 when (item.idestado) {
@@ -331,6 +330,20 @@ class MenuTec : PBase() {
         return "-"
     }
 
+    fun estadoEncio(codigo:Int):Boolean {
+        var flag=false
+
+        try {
+            OrdenenccapObj?.fill("WHERE (idorden="+codigo+")")
+            if (OrdenenccapObj?.count!!>0) {
+                if (OrdenenccapObj?.first()?.recibido==1) return true
+            }
+        } catch (e: Exception) {
+            msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message);flag=false
+        }
+        return flag
+    }
+
     fun cargaCap() {
 
         try {
@@ -363,12 +376,11 @@ class MenuTec : PBase() {
             var cord=OrdenenccapObj?.count
             var cimg=EnvioimagenObj?.count
 
-            imgpend?.isVisible=(cord!! + cimg!!)>0
+            //imgpend?.isVisible=(cord!! + cimg!!)>0
 
         } catch (e: Exception) {
             msgbox(object : Any() {}.javaClass.enclosingMethod.name+" . "+e.message)
         }
-
     }
 
     fun marcaBoton(bpos:Int) {
